@@ -1,0 +1,4 @@
+*.log
+*.nxd
+*.nxj
+bin/
