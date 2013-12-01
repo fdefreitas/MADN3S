@@ -11,7 +11,7 @@ public class Utils {
 		if(clean){
 			LCD.clear();
 		}
-		if(text.length() > 16){
+		if(text.length() > SCREEN_WIDTH){
 			int total = (int)Math.ceil((double)text.length() / (double)SCREEN_WIDTH);
 			int index = 0;
 			for(int i = 0; i < total; ++i){
@@ -21,6 +21,7 @@ public class Utils {
 		} else {
 			LCD.drawString(text, x, y);
 		}
+		LCD.refresh(); 
 	}
 	
 	public static void printToScreen(String text, int x, int y){
