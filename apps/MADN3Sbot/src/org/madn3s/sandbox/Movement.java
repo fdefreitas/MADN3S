@@ -2,10 +2,33 @@ package org.madn3s.sandbox;
 
 import org.madn3s.robot.common.Utils;
 
+import lejos.nxt.Button;
+import lejos.nxt.LightSensor;
 import lejos.nxt.Motor;
+import lejos.nxt.SensorPort;
+import lejos.nxt.TouchSensor;
 import lejos.util.Delay;
 
 public class Movement {
+	private TouchSensor touch;
+	private LightSensor light;
+	
+	public Movement() {
+		// TODO Auto-generated constructor stub
+		touch = new TouchSensor(SensorPort.S1);
+		light = new LightSensor(SensorPort.S4);
+		Utils.printToScreen("Calibrando...", 0,0, false);
+		while (!touch.isPressed()) {
+			light.calibrateHigh();
+    	}
+    	Utils.printToScreen("Esperando...", 0,1, false);
+    	Button.waitForAnyPress();
+    	while (!touch.isPressed()) {
+    		light.calibrateLow();
+    	}
+    	Utils.printToScreen("Calibrado...", 0,2, false);
+    	Button.waitForAnyPress();
+	}
 	
 	public void test1(){
     	Motor.A.resetTachoCount();
@@ -101,5 +124,17 @@ public class Movement {
         Motor.B.stop();
         Utils.printToScreen("all done here");
     }
+     public void test5(){
+    	 Utils.printToScreen("test5...");
+    	 Motor.A.forward();
+    	 Motor.B.forward();
+    	 Utils.printToScreen("light.gLV() = " + light.getLightValue(), 0,2, false);
+    	 while(light.getLightValue() < 50){
+    		 Utils.printToScreen("light.gLV() = " + light.getLightValue(), 0,2, false);
+    	 }
+    	 Motor.A.stop();
+         Motor.B.stop();
+         Utils.printToScreen("all done here", 0,3, false);
+     }
 
 }
