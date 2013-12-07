@@ -18,16 +18,16 @@ public class Sensors {
 	}
 
 	public void test1(){
-		while (!touch.isPressed()) {
-			light.calibrateHigh();
-		}
-		Utils.printToScreen("Esperando...");
-		Button.waitForAnyPress();
-		while (!touch.isPressed()) {
-			light.calibrateLow();
-		}
-		Utils.printToScreen("Esperando...", 0,1, false);
-		Button.waitForAnyPress();
+//		while (!touch.isPressed()) {
+//			light.calibrateHigh();
+//		}
+//		Utils.printToScreen("Esperando...");
+//		Button.waitForAnyPress();
+//		while (!touch.isPressed()) {
+//			light.calibrateLow();
+//		}
+//		Utils.printToScreen("Esperando...", 0,1, false);
+//		Button.waitForAnyPress();
 		while (!touch.isPressed()) {
 			Utils.printToScreen("light.gLV() = " + light.getLightValue(), 0,2, false);
 			Utils.printToScreen("light.gNLV() = " + light.getNormalizedLightValue(), 0,3, false);
