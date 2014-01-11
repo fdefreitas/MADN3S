@@ -1,20 +1,20 @@
 package org.madn3s.controller;
 
 import android.app.Activity;
-import android.app.ActionBar;
-import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
+import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
 
+import org.madn3s.controller.fragments.BaseFragment;
+import org.madn3s.controller.fragments.ControlsFragment;
 import org.madn3s.controller.fragments.MainFragment;
-import org.madn3s.controller.io.BTConnection;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements BaseFragment.OnItemSelectedListener {
+    String TAG = "DEBUG MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,5 +47,21 @@ public class MainActivity extends Activity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onObjectSelected(Object selected) {
+        if(selected instanceof BluetoothDevice) launchControlsFragment((BluetoothDevice) selected);
+    }
+
+    public void launchControlsFragment(BluetoothDevice device){
+        Log.d(TAG, "launchControlsFragment Device: "+device.getName());
+        ControlsFragment controls = new ControlsFragment(device);
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.container, controls)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .addToBackStack(String.valueOf(controls.getClass()))
+                .commit();
+        Log.d(TAG, "Fin de Transaction de Fragments");
     }
 }

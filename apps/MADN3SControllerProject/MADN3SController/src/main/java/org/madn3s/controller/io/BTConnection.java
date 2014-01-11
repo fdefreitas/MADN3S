@@ -2,13 +2,13 @@ package org.madn3s.controller.io;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -23,23 +23,45 @@ public class BTConnection {
     static BTConnection instance;
     BluetoothAdapter localAdapter;
 //    BluetoothServerSocket nxtSocket;
+    public static Set<BluetoothDevice> pairedDevices;
+    public static Set<BluetoothDevice> newDevices;
     BluetoothSocket nxtSocket;
     boolean success=false;
 
     private BTConnection(){
+        localAdapter=BluetoothAdapter.getDefaultAdapter();
+        setPairedDevices(localAdapter.getBondedDevices());
+        setNewDevices(localAdapter.getBondedDevices());
     }
 
     public static BTConnection getInstance(){
-        if(instance == null){ instance = new BTConnection();}
+        if(instance == null) instance = new BTConnection();
         return instance;
+    }
+
+    public static Set<BluetoothDevice> getNewDevices() {
+        return newDevices;
+    }
+
+    public static void setNewDevices(Set<BluetoothDevice> newDevices) {
+        BTConnection.newDevices = newDevices;
     }
 
     //Enables Bluetooth if not enabled
     private void enableBT(){
-        localAdapter=BluetoothAdapter.getDefaultAdapter();
         if(!localAdapter.isEnabled()){
             localAdapter.enable();
         }
+    }
+
+    public void doDiscovery() {
+        enableBT();
+        if (localAdapter.isDiscovering()) localAdapter.cancelDiscovery();
+        localAdapter.startDiscovery();
+    }
+
+    public void cancelDiscovery(){
+        localAdapter.cancelDiscovery();
     }
 
     public boolean startMindstormConnection(){
@@ -108,4 +130,14 @@ public class BTConnection {
     public boolean isConnected(){
         return nxtSocket.isConnected();
     }
+
+    public Set<BluetoothDevice> getPairedDevices() {
+        return pairedDevices;
+    }
+
+    public void setPairedDevices(Set<BluetoothDevice> pairedDevices) {
+        this.pairedDevices = pairedDevices;
+    }
+
+
 }
