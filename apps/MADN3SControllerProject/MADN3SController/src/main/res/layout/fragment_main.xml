@@ -9,33 +9,23 @@
     tools:context=".MainActivity$PlaceholderFragment"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:text="@string/hello_world"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView"
-            android:layout_marginLeft="8dp" />
-
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Scan"
-            android:id="@+id/button"
-            android:paddingLeft="60dp"
-            android:paddingRight="60dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp" />
-    </LinearLayout>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Scan"
+        android:id="@+id/button"
+        android:paddingLeft="60dp"
+        android:paddingRight="60dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_gravity="center_horizontal" />
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/nxt_devices_layout"
+        android:visibility="visible">
 
         <LinearLayout
             android:orientation="vertical"
@@ -54,7 +44,7 @@
             <ListView
                 android:layout_width="288dp"
                 android:layout_height="wrap_content"
-                android:id="@+id/paired_devices_listView"/>
+                android:id="@+id/nxt_paired_devices_listView"/>
 
         </LinearLayout>
 
@@ -78,15 +68,134 @@
                 android:id="@+id/new_devices_listView" />
         </LinearLayout>
 
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/nxt_discovery_progressBar"
+            android:indeterminate="true"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone" />
+
     </LinearLayout>
 
-    <ProgressBar
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/discovery_progressBar"
-        android:indeterminate="true"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone" />
+        android:focusableInTouchMode="false"
+        android:id="@+id/camera1_layout">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/background_light">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Paired Devices"
+                android:id="@+id/textView2"
+                android:layout_margin="8dp" />
+
+            <ListView
+                android:layout_width="288dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/camera1_paired_devices_listView"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#1db84d">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="New Devices"
+                android:id="@+id/textView3"
+                android:layout_margin="8dp" />
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/camera1_new_devices_listView" />
+        </LinearLayout>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/camera1_discovery_progressBar"
+            android:indeterminate="true"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/camera2_layout">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/background_light">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="Paired Devices"
+                android:id="@+id/textView2"
+                android:layout_margin="8dp" />
+
+            <ListView
+                android:layout_width="288dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/camera2_paired_devices_listView"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#1db84d">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="New Devices"
+                android:id="@+id/textView3"
+                android:layout_margin="8dp" />
+
+            <ListView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/camera2_new_devices_listView" />
+        </LinearLayout>
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/camera2_discovery_progressBar"
+            android:indeterminate="true"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone" />
+
+    </LinearLayout>
 
 </LinearLayout>
+
+

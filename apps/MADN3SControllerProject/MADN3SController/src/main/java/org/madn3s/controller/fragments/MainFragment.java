@@ -1,16 +1,12 @@
 package org.madn3s.controller.fragments;
 
-import android.app.Activity;
-import android.app.Fragment;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.text.method.CharacterPickerDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +15,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import org.madn3s.controller.R;
 import org.madn3s.controller.io.BTConnection;
@@ -55,11 +51,10 @@ public class MainFragment extends BaseFragment{
         getActivity().registerReceiver(mReceiver, filter);
 
         //Obtener vistas de adapters
-        assert getActivity() != null;
         pairedDevicesListView = (ListView) getActivity().findViewById(R.id.paired_devices_listView);
         newDevicesListView = (ListView) getActivity().findViewById(R.id.new_devices_listView);
 
-        discoveryProgress = (ProgressBar) getActivity().findViewById(R.id.discovery_progressBar);
+        discoveryProgress = (ProgressBar) getActivity().findViewById(R.id.nxt_discovery_progressBar);
 
         Button goButton = (Button) view.findViewById(R.id.button);
         goButton.setOnClickListener(new View.OnClickListener() {
@@ -132,6 +127,7 @@ public class MainFragment extends BaseFragment{
 //                    getActivity().findViewById(R.id.no_devices).setVisibility(View.GONE);
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+                Toast.makeText(context, "Busqueda Terminada", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Busqueda Terminada");
                 discoveryProgress.setVisibility(View.GONE);
 //                setProgressBarIndeterminateVisibility(false);
