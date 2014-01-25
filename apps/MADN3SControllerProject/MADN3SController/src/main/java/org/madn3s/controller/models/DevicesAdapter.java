@@ -27,9 +27,9 @@ public class DevicesAdapter extends BaseAdapter {
         devices = new ArrayList<BluetoothDevice>();
     }
 
-    public DevicesAdapter(Set<BluetoothDevice> devices, Context mContext) {
+    public DevicesAdapter(ArrayList<BluetoothDevice> devices, Context mContext) {
         this(mContext);
-        this.devices = new ArrayList<BluetoothDevice>(devices);
+        this.devices = (ArrayList<BluetoothDevice>) devices.clone();
     }
 
     public void add (BluetoothDevice device){

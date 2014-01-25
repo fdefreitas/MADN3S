@@ -1,6 +1,7 @@
 package org.madn3s.controller.fragments;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,18 +22,22 @@ import org.madn3s.controller.R;
 import org.madn3s.controller.io.BTConnection;
 import org.madn3s.controller.models.DevicesAdapter;
 
+import java.util.ArrayList;
+
 /**
  * Created by inaki on 12/7/13.
  */
 public class MainFragment extends BaseFragment{
     public static String EXTRA_DEVICE_ADDRESS = "device_address";
 
-    ListView newDevicesListView, pairedDevicesListView;
-    ProgressBar discoveryProgress;
-    DevicesAdapter newDevicesAdapter, pairedDevicesAdapter;
+    ListView nxtNewDevicesListView, nxtPairedDevicesListView;
+    ListView cameraNewDevicesListView, cameraPairedDevicesListView;
+    ProgressBar nxtDiscoveryProgress, cameraDiscoveryProgress;
+    DevicesAdapter nxtNewDevicesAdapter, nxtPairedDevicesAdapter;
+    DevicesAdapter cameraNewDevicesAdapter, cameraPairedDevicesAdapter;
 
     public MainFragment() {
-        TAG = "DEBUG "+this.getClass().getName();
+        TAG = "DEBUG "+this.getClass().getSimpleName();
     }
 
     @Override
@@ -51,10 +56,13 @@ public class MainFragment extends BaseFragment{
         getActivity().registerReceiver(mReceiver, filter);
 
         //Obtener vistas de adapters
-        pairedDevicesListView = (ListView) getActivity().findViewById(R.id.paired_devices_listView);
-        newDevicesListView = (ListView) getActivity().findViewById(R.id.new_devices_listView);
+        nxtPairedDevicesListView = (ListView) getActivity().findViewById(R.id.nxt_paired_devices_listView);
+        nxtNewDevicesListView = (ListView) getActivity().findViewById(R.id.nxt_new_devices_listView);
+        nxtDiscoveryProgress = (ProgressBar) getActivity().findViewById(R.id.nxt_discovery_progressBar);
 
-        discoveryProgress = (ProgressBar) getActivity().findViewById(R.id.nxt_discovery_progressBar);
+        cameraPairedDevicesListView = (ListView) getActivity().findViewById(R.id.camera_paired_devices_listView);
+        cameraNewDevicesListView = (ListView) getActivity().findViewById(R.id.camera_new_devices_listView);
+        cameraDiscoveryProgress = (ProgressBar) getActivity().findViewById(R.id.camera_discovery_progressBar);
 
         Button goButton = (Button) view.findViewById(R.id.button);
         goButton.setOnClickListener(new View.OnClickListener() {
@@ -63,17 +71,42 @@ public class MainFragment extends BaseFragment{
                 BTConnection btc = BTConnection.getInstance();
 //                btc.startMindstormConnection();
                 btc.doDiscovery();
-                discoveryProgress.setVisibility(View.VISIBLE);
+                nxtDiscoveryProgress.setVisibility(View.VISIBLE);
+                cameraDiscoveryProgress.setVisibility(View.VISIBLE);
 
                 byte b = "hallo!".getBytes()[0];
                 try {
-                    pairedDevicesAdapter = new DevicesAdapter(BTConnection.pairedDevices, getActivity().getBaseContext());
-                    pairedDevicesListView.setAdapter(pairedDevicesAdapter);
-                    pairedDevicesListView.setOnItemClickListener(bla);
+                    ArrayList<BluetoothDevice> pairedDevices = new ArrayList<BluetoothDevice>();
+                    for(BluetoothDevice device:  BTConnection.pairedDevices){
+                        if (device != null && device.getBluetoothClass() != null && device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.TOY_ROBOT){
+                            pairedDevices.add(device);
+                            Log.d(TAG, "for toy filter: "+device.getName());
+                        }
+                    }
+                    nxtPairedDevicesAdapter = new DevicesAdapter(pairedDevices, getActivity().getBaseContext());
+                    nxtPairedDevicesListView.setAdapter(nxtPairedDevicesAdapter);
+                    nxtPairedDevicesListView.setOnItemClickListener(bla);
+                    nxtPairedDevicesAdapter.notifyDataSetChanged();
 
-                    newDevicesAdapter = new DevicesAdapter(getActivity().getBaseContext());
-                    newDevicesListView.setAdapter(newDevicesAdapter);
-                    newDevicesListView.setOnItemClickListener(bla);
+                    nxtNewDevicesAdapter = new DevicesAdapter(getActivity().getBaseContext());
+                    nxtNewDevicesListView.setAdapter(nxtNewDevicesAdapter);
+                    nxtNewDevicesListView.setOnItemClickListener(bla);
+
+                    pairedDevices = new ArrayList<BluetoothDevice>();
+                    for(BluetoothDevice device:  BTConnection.pairedDevices){
+//                        if (device != null && device.getBluetoothClass() != null && device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.PHONE_SMART){
+                            pairedDevices.add(device);
+                            Log.d(TAG, "for camera filter: "+device.getName());
+//                        }
+                    }
+                    cameraPairedDevicesAdapter = new DevicesAdapter(pairedDevices, getActivity().getBaseContext());
+                    cameraPairedDevicesListView.setAdapter(cameraPairedDevicesAdapter);
+                    cameraPairedDevicesListView.setOnItemClickListener(bla);
+                    cameraPairedDevicesAdapter.notifyDataSetChanged();
+
+                    cameraNewDevicesAdapter = new DevicesAdapter(getActivity().getBaseContext());
+                    cameraNewDevicesListView.setAdapter(cameraNewDevicesAdapter);
+                    cameraNewDevicesListView.setOnItemClickListener(bla);
 
 //                    long start = System.currentTimeMillis();
 //                    while(!btc.isConnected() && System.currentTimeMillis()-start < 10000){}
@@ -118,18 +151,22 @@ public class MainFragment extends BaseFragment{
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 
-                if ((device.getBondState() != BluetoothDevice.BOND_BONDED) /*&& (device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.TOY_ROBOT)*/) {
+                if ((device.getBondState() != BluetoothDevice.BOND_BONDED) && (device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.TOY_ROBOT)) {
                     Log.d(TAG, "Device: {Name:"+device.getName()+", Address: "+device.getAddress()+", Class: "+device.getClass()+"}");
-                    newDevicesAdapter.add(device);
-                    newDevicesAdapter.notifyDataSetChanged();
+                    nxtNewDevicesAdapter.add(device);
+                    nxtNewDevicesAdapter.notifyDataSetChanged();
+                }
 
-//                    getActivity().findViewById(R.id.title_new_devices).setVisibility(View.VISIBLE);
-//                    getActivity().findViewById(R.id.no_devices).setVisibility(View.GONE);
+                if ((device.getBondState() != BluetoothDevice.BOND_BONDED) && (device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.PHONE_SMART)) {
+                    Log.d(TAG, "Device: {Name:"+device.getName()+", Address: "+device.getAddress()+", Class: "+device.getBluetoothClass().getDeviceClass()+"}");
+                    cameraNewDevicesAdapter.add(device);
+                    cameraNewDevicesAdapter.notifyDataSetChanged();
                 }
             } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 Toast.makeText(context, "Busqueda Terminada", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Busqueda Terminada");
-                discoveryProgress.setVisibility(View.GONE);
+                nxtDiscoveryProgress.setVisibility(View.GONE);
+                cameraDiscoveryProgress.setVisibility(View.GONE);
 //                setProgressBarIndeterminateVisibility(false);
 //                setTitle("Select device");
 //                findViewById(R.id.button_scan).setVisibility(View.VISIBLE);
