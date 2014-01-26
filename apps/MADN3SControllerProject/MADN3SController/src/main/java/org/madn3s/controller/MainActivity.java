@@ -12,6 +12,9 @@ import android.view.MenuItem;
 import org.madn3s.controller.fragments.BaseFragment;
 import org.madn3s.controller.fragments.ControlsFragment;
 import org.madn3s.controller.fragments.MainFragment;
+import org.madn3s.controller.fragments.ConectionFragment;
+
+import java.util.ArrayList;
 
 public class MainActivity extends Activity implements BaseFragment.OnItemSelectedListener {
     String TAG = "DEBUG MainActivity";
@@ -51,7 +54,11 @@ public class MainActivity extends Activity implements BaseFragment.OnItemSelecte
 
     @Override
     public void onObjectSelected(Object selected) {
-        if(selected instanceof BluetoothDevice) launchControlsFragment((BluetoothDevice) selected);
+        if(selected instanceof BluetoothDevice){
+            launchControlsFragment((BluetoothDevice) selected);
+        } else if(selected instanceof ArrayList){
+            launchConectionFragment((ArrayList<BluetoothDevice>) selected);
+        }
     }
 
     public void launchControlsFragment(BluetoothDevice device){
@@ -61,6 +68,17 @@ public class MainActivity extends Activity implements BaseFragment.OnItemSelecte
         fm.beginTransaction().replace(R.id.container, controls)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(String.valueOf(controls.getClass()))
+                .commit();
+        Log.d(TAG, "Fin de Transaction de Fragments");
+    }
+
+    public void launchConectionFragment(ArrayList<BluetoothDevice> devices){
+        Log.d(TAG, "launchConectionFragment Device: "+devices.size());
+        ConectionFragment conections = new ConectionFragment(devices);
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction().replace(R.id.container, conections)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .addToBackStack(String.valueOf(conections.getClass()))
                 .commit();
         Log.d(TAG, "Fin de Transaction de Fragments");
     }

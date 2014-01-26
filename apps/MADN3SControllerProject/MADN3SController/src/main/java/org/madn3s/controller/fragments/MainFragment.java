@@ -35,9 +35,14 @@ public class MainFragment extends BaseFragment{
     ProgressBar nxtDiscoveryProgress, cameraDiscoveryProgress;
     DevicesAdapter nxtNewDevicesAdapter, nxtPairedDevicesAdapter;
     DevicesAdapter cameraNewDevicesAdapter, cameraPairedDevicesAdapter;
-
+    ArrayList<BluetoothDevice> devices;
+    private boolean nxtDevice;
+    private int cams;
     public MainFragment() {
         TAG = "DEBUG "+this.getClass().getSimpleName();
+        devices = new ArrayList<BluetoothDevice>();
+        nxtDevice =  false;
+        cams = 0;
     }
 
     @Override
@@ -117,6 +122,23 @@ public class MainFragment extends BaseFragment{
                 }
             }
         });
+
+        Button conButton = (Button) view.findViewById(R.id.connect_button);
+        conButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               try {
+                    if(nxtDevice && cams == 2 && devices.size() == 3){
+                        Log.d(TAG, "Go ahead ");
+                        listener.onObjectSelected(devices);
+                    } else {
+                        Log.d(TAG, "Hit it, Gandalf " + devices.size());
+                    }
+               } catch (/*Interrupted*/Exception e) {
+                    e.printStackTrace();
+               }
+            }
+        });
     }
 
     @Override
@@ -136,7 +158,19 @@ public class MainFragment extends BaseFragment{
             Log.d(TAG, "ItemClick Device: "+deviceTemp.getName());
 //            Intent intent = new Intent();
 //            intent.putExtra(EXTRA_DEVICE_ADDRESS, ((BluetoothDevice)parent.getAdapter().getItem(position)).getAddress());
-            listener.onObjectSelected(deviceTemp);
+            if(deviceTemp.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.TOY_ROBOT && !nxtDevice){
+                devices.add(deviceTemp);
+                nxtDevice = true;
+            } else if(cams < 2 && !devices.contains(deviceTemp)){
+                devices.add(deviceTemp);
+                cams++;
+            } else {
+                Log.d(TAG, "Ya existe un NXT en la lista o ya se seleccionaron las 2 camaras");
+            }
+
+            Log.d(TAG, "size = "+devices.size() + " cams = " + cams + " nxtDevice " + nxtDevice);
+
+//            listener.onObjectSelected(deviceTemp);
 
 //            setResult(Activity.RESULT_OK, intent);
 //            finish();

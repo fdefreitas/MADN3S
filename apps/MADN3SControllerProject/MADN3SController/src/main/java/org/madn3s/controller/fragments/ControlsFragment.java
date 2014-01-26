@@ -19,6 +19,8 @@ import org.madn3s.controller.components.NXTTalker;
 /**
  * Created by inaki on 1/11/14.
  */
+
+// de aqui se debe eliminar la parte referente a levantar la conexion y se debe recibir el talker por parametro
 public class ControlsFragment extends BaseFragment {
     public static final int MESSAGE_STATE_CHANGE = 2;
     public static final int MESSAGE_TOAST = 1;
