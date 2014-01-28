@@ -15,7 +15,8 @@ import android.view.ViewGroup;
 import android.widget.*;
 import org.madn3s.controller.R;
 import org.madn3s.controller.io.BTConnection;
-import org.madn3s.controller.models.DevicesAdapter;
+import org.madn3s.controller.models.NewDevicesAdapter;
+import org.madn3s.controller.models.PairedDevicesAdapter;
 
 import java.util.ArrayList;
 
@@ -28,8 +29,8 @@ public class MainFragment extends BaseFragment{
     ListView nxtNewDevicesListView, nxtPairedDevicesListView;
     ListView cameraNewDevicesListView, cameraPairedDevicesListView;
     ProgressBar nxtDiscoveryProgress, cameraDiscoveryProgress;
-    DevicesAdapter nxtNewDevicesAdapter, nxtPairedDevicesAdapter;
-    DevicesAdapter cameraNewDevicesAdapter, cameraPairedDevicesAdapter;
+    NewDevicesAdapter nxtNewDevicesAdapter, cameraNewDevicesAdapter ;
+    PairedDevicesAdapter nxtPairedDevicesAdapter, cameraPairedDevicesAdapter;
     ArrayList<BluetoothDevice> devices;
     private boolean nxtDevice;
     private int cams;
@@ -83,12 +84,12 @@ public class MainFragment extends BaseFragment{
                             Log.d(TAG, "for toy filter: "+device.getName());
                         }
                     }
-                    nxtPairedDevicesAdapter = new DevicesAdapter(pairedDevices, getActivity().getBaseContext());
+                    nxtPairedDevicesAdapter = new PairedDevicesAdapter(pairedDevices, getActivity().getBaseContext());
                     nxtPairedDevicesListView.setAdapter(nxtPairedDevicesAdapter);
                     nxtPairedDevicesListView.setOnItemClickListener(bla);
                     nxtPairedDevicesAdapter.notifyDataSetChanged();
 
-                    nxtNewDevicesAdapter = new DevicesAdapter(getActivity().getBaseContext());
+                    nxtNewDevicesAdapter = new NewDevicesAdapter(getActivity().getBaseContext());
                     nxtNewDevicesListView.setAdapter(nxtNewDevicesAdapter);
                     nxtNewDevicesListView.setOnItemClickListener(bla);
 
@@ -99,12 +100,12 @@ public class MainFragment extends BaseFragment{
                             Log.d(TAG, "for camera filter: "+device.getName());
 //                        }
                     }
-                    cameraPairedDevicesAdapter = new DevicesAdapter(pairedDevices, getActivity().getBaseContext());
+                    cameraPairedDevicesAdapter = new PairedDevicesAdapter(pairedDevices, getActivity().getBaseContext());
                     cameraPairedDevicesListView.setAdapter(cameraPairedDevicesAdapter);
                     cameraPairedDevicesListView.setOnItemClickListener(bla);
                     cameraPairedDevicesAdapter.notifyDataSetChanged();
 
-                    cameraNewDevicesAdapter = new DevicesAdapter(getActivity().getBaseContext());
+                    cameraNewDevicesAdapter = new NewDevicesAdapter(getActivity().getBaseContext());
                     cameraNewDevicesListView.setAdapter(cameraNewDevicesAdapter);
                     cameraNewDevicesListView.setOnItemClickListener(bla);
 
