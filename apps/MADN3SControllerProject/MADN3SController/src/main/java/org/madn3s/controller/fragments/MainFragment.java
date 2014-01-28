@@ -12,12 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.ProgressBar;
-import android.widget.Toast;
-
+import android.widget.*;
 import org.madn3s.controller.R;
 import org.madn3s.controller.io.BTConnection;
 import org.madn3s.controller.models.DevicesAdapter;
@@ -66,8 +61,8 @@ public class MainFragment extends BaseFragment{
         nxtDiscoveryProgress = (ProgressBar) getActivity().findViewById(R.id.nxt_discovery_progressBar);
 
         cameraPairedDevicesListView = (ListView) getActivity().findViewById(R.id.camera_paired_devices_listView);
-        cameraNewDevicesListView = (ListView) getActivity().findViewById(R.id.camera_new_devices_listView);
-        cameraDiscoveryProgress = (ProgressBar) getActivity().findViewById(R.id.camera_discovery_progressBar);
+        cameraNewDevicesListView = (ListView) getActivity().findViewById(R.id.cameras_new_devices_listView);
+        cameraDiscoveryProgress = (ProgressBar) getActivity().findViewById(R.id.cameras_discovery_progressBar);
 
         Button goButton = (Button) view.findViewById(R.id.button);
         goButton.setOnClickListener(new View.OnClickListener() {

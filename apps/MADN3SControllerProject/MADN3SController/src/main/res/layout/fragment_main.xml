@@ -17,29 +17,25 @@
         android:layout_margin="@dimen/container_margin">
 
         <Button
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Scan"
+            android:text="@string/scan"
             android:id="@+id/button"
-            android:paddingLeft="60dp"
-            android:paddingRight="60dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:layout_gravity="center_horizontal|left" />
+            android:layout_gravity="left" android:layout_weight="1"/>
 
         <Button
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Connect"
-            android:id="@+id/connect_button" />
+            android:text="@string/connect"
+            android:id="@+id/connect_button" android:layout_weight="1" android:layout_gravity="right"/>
     </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="NXT"
-        android:id="@+id/textView4"
+        android:text="@string/nxt"
+        android:id="@+id/nxt_connection_textView"
         android:layout_margin="@dimen/container_margin" />
 
     <LinearLayout
@@ -48,24 +44,24 @@
         android:layout_height="200dp"
         android:id="@+id/nxt_devices_layout"
         android:visibility="visible"
-        android:layout_margin="@dimen/container_margin">
+        android:layout_margin="@dimen/container_margin" android:baselineAligned="false">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/background_light">
+            android:background="@android:color/background_light" android:layout_weight="1">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Paired Devices"
-                android:id="@+id/textView2"
+                android:text="@string/paired_devices"
+                android:id="@+id/nxt_paired_devices_textView"
                 android:layout_margin="8dp" />
 
             <ListView
-                android:layout_width="288dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/nxt_paired_devices_listView"/>
 
@@ -75,18 +71,18 @@
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#1db84d">
+            android:background="#1db84d" android:layout_weight="1">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="New Devices"
-                android:id="@+id/textView3"
+                android:text="@string/new_devices"
+                android:id="@+id/nxt_new_devices_textView"
                 android:layout_margin="8dp" />
 
             <ListView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/nxt_new_devices_listView" />
         </LinearLayout>
@@ -106,8 +102,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-        android:text="Cameras"
-        android:id="@+id/textView"
+        android:text="@string/cameras"
+        android:id="@+id/cameras_connection_textView"
         android:layout_margin="@dimen/container_margin" />
 
     <LinearLayout
@@ -115,25 +111,25 @@
         android:layout_width="fill_parent"
         android:layout_height="200dp"
         android:focusableInTouchMode="false"
-        android:id="@+id/camera1_layout"
-        android:layout_margin="@dimen/container_margin">
+        android:id="@+id/cameras_layout"
+        android:layout_margin="@dimen/container_margin" android:baselineAligned="false">
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/background_light">
+            android:background="@android:color/background_light" android:layout_weight="1">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="Paired Devices"
-                android:id="@+id/textView2"
+                android:text="@string/paired_devices"
+                android:id="@+id/cameras_paired_devices_textView"
                 android:layout_margin="8dp" />
 
             <ListView
-                android:layout_width="288dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/camera_paired_devices_listView"
                 android:choiceMode="multipleChoice" />
@@ -142,22 +138,22 @@
 
         <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#1db84d">
+            android:background="#1db84d" android:layout_weight="1">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceLarge"
-                android:text="New Devices"
-                android:id="@+id/textView3"
+                android:text="@string/new_devices"
+                android:id="@+id/cameras_new_devices_textView"
                 android:layout_margin="8dp" />
 
             <ListView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/camera_new_devices_listView"
+                android:id="@+id/cameras_new_devices_listView"
                 android:choiceMode="multipleChoice" />
         </LinearLayout>
 
@@ -167,7 +163,7 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/camera_discovery_progressBar"
+        android:id="@+id/cameras_discovery_progressBar"
         android:indeterminate="true"
         android:layout_gravity="center_horizontal"
         android:visibility="gone" />

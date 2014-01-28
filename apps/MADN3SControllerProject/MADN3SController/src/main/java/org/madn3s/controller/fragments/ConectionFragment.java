@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
-
 import org.madn3s.controller.R;
 import org.madn3s.controller.components.NXTTalker;
 import org.madn3s.controller.models.DevicesAdapter;
@@ -74,7 +73,7 @@ public class ConectionFragment extends BaseFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_conection, container, false);
+        return inflater.inflate(R.layout.fragment_connection, container, false);
     }
 
     //aqui me gustaria q pusiesemos la info del device y un indicador de q la conexion se levanto, esta levantandose o fallo

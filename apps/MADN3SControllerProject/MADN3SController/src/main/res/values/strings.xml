@@ -8,5 +8,11 @@
     <string name="description_arrow_left">Left Arrow</string>
     <string name="description_arrow_back">Back Arrow</string>
     <string name="description_arrow_right">Right Arrow</string>
+    <string name="new_devices">New Devices</string>
+    <string name="paired_devices">Paired Devices</string>
+    <string name="cameras">Cameras</string>
+    <string name="nxt">NXT</string>
+    <string name="connect">Connect</string>
+    <string name="scan">Scan</string>
 
 </resources>
