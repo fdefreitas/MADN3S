@@ -14,5 +14,7 @@
     <string name="nxt">NXT</string>
     <string name="connect">Connect</string>
     <string name="scan">Scan</string>
+    <string name="hint_indicator_device_not_connected_">Device Not Connected Indicator</string>
+    <string name="hint_indicator_device_connected_">Device Connected Indicator</string>
 
 </resources>

@@ -79,7 +79,7 @@ public class BTConnection {
             nxtSocket = nxtBTDevice.createRfcommSocketToServiceRecord(UUID
                     .fromString("00001101-0000-1000-8000-00805F9B34FB"));
 
-            if(nxtSocket != null) success = true;
+            if(null != nxtSocket) success = true;
         } catch (IOException e) {
             Log.d("Bluetooth","Err: Device not found or cannot connect");
             success=false;
@@ -104,8 +104,6 @@ public class BTConnection {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }else{
-            //Error
         }
     }
 
@@ -117,7 +115,6 @@ public class BTConnection {
                 n=in.read();
                 return n;
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
                 return -1;
             }
