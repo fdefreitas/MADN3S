@@ -74,7 +74,7 @@
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#1db84d" android:layout_weight="1"
+            android:layout_weight="1"
             android:layout_marginLeft="@dimen/nested_list_margin" android:id="@+id/nxt_new_devices_layout">
 
             <TextView
@@ -89,7 +89,7 @@
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/nxt_new_devices_listView" android:background="@color/gamebookers_blue"/>
+                android:id="@+id/nxt_new_devices_listView"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -149,7 +149,7 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#1db84d" android:layout_weight="1" android:id="@+id/cameras_new_devices_layout"
+            android:layout_weight="1" android:id="@+id/cameras_new_devices_layout"
             android:layout_marginLeft="@dimen/nested_list_margin">
 
             <TextView
@@ -166,7 +166,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/cameras_new_devices_listView"
-                android:choiceMode="multipleChoice" android:background="@color/gamebookers_blue"/>
+                android:choiceMode="multipleChoice"/>
         </LinearLayout>
 
     </LinearLayout>
