@@ -64,7 +64,7 @@ public class MainFragment extends BaseFragment{
         cameraNewDevicesListView = (ListView) getActivity().findViewById(R.id.cameras_new_devices_listView);
         cameraDiscoveryProgress = (ProgressBar) getActivity().findViewById(R.id.cameras_discovery_progressBar);
 
-        Button goButton = (Button) view.findViewById(R.id.button);
+        Button goButton = (Button) view.findViewById(R.id.scan_button);
         goButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

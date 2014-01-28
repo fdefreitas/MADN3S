@@ -20,7 +20,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:text="@string/scan"
-            android:id="@+id/button"
+            android:id="@+id/scan_button"
             android:layout_gravity="left" android:layout_weight="1"/>
 
         <Button
@@ -41,7 +41,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:id="@+id/nxt_devices_layout"
         android:visibility="visible"
         android:layout_margin="@dimen/container_margin" android:baselineAligned="false">
@@ -109,7 +109,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:focusableInTouchMode="false"
         android:id="@+id/cameras_layout"
         android:layout_margin="@dimen/container_margin" android:baselineAligned="false">
