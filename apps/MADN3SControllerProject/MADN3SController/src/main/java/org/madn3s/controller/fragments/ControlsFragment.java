@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.madn3s.controller.R;
 import org.madn3s.controller.components.NXTTalker;
 
@@ -85,7 +84,7 @@ public class ControlsFragment extends BaseFragment {
         frontImageView = (ImageView) view.findViewById(R.id.front_arrow_imageView);
         backImageView = (ImageView) view.findViewById(R.id.back_arrow_imageView);
         leftImageView = (ImageView) view.findViewById(R.id.left_arrow_imageView);
-        rightImageView = (ImageView) view.findViewById(R.id.right_arrow_imageView4);
+        rightImageView = (ImageView) view.findViewById(R.id.right_arrow_imageView);
         frontImageView.setOnTouchListener(new DirectionButtonOnTouchListener(1,1));
         backImageView.setOnTouchListener(new DirectionButtonOnTouchListener(-1,-1));
         leftImageView.setOnTouchListener(new DirectionButtonOnTouchListener(-0.6,0.6));

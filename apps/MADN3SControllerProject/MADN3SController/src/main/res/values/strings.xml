@@ -2,7 +2,6 @@
 <resources>
 
     <string name="app_name">MADN3SController</string>
-    <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="description_arrow_front">Front Arrow</string>
     <string name="description_arrow_left">Left Arrow</string>

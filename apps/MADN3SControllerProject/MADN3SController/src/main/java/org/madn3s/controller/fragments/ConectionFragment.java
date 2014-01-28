@@ -82,9 +82,9 @@ public class ConectionFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
      //   super.onViewCreated(view, savedInstanceState);
 
-        devicesListView = (ListView) getActivity().findViewById(R.id.devices_to_connect_listView);
-        devicesAdapter = new DevicesAdapter(device,getActivity().getBaseContext());
-        devicesListView.setAdapter(devicesAdapter);
+//        devicesListView = (ListView) getActivity().findViewById(R.id.devices_to_connect_listView);
+//        devicesAdapter = new DevicesAdapter(device,getActivity().getBaseContext());
+//        devicesListView.setAdapter(devicesAdapter);
     }
 
 }
