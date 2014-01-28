@@ -31,17 +31,18 @@
     </LinearLayout>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="@string/nxt"
         android:id="@+id/nxt_connection_textView"
-        android:layout_margin="@dimen/container_margin" />
+        android:layout_margin="@dimen/container_margin" android:background="#FF9900"
+        android:padding="@dimen/subtitle_padding" android:textColor="@color/steady_grey"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:id="@+id/nxt_devices_layout"
         android:visibility="visible"
         android:layout_margin="@dimen/container_margin" android:baselineAligned="false">
@@ -50,7 +51,8 @@
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/background_light" android:layout_weight="1">
+            android:background="@android:color/background_light" android:layout_weight="1"
+            android:layout_marginRight="@dimen/nested_list_margin" android:id="@+id/nxt_paired_devices_layout">
 
             <TextView
                 android:layout_width="match_parent"
@@ -58,7 +60,8 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/paired_devices"
                 android:id="@+id/nxt_paired_devices_textView"
-                android:layout_margin="8dp" />
+                android:background="@color/route_66" android:padding="@dimen/list_item_padding"
+                android:gravity="center_horizontal" android:textColor="@color/steady_grey"/>
 
             <ListView
                 android:layout_width="match_parent"
@@ -71,7 +74,8 @@
             android:orientation="vertical"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#1db84d" android:layout_weight="1">
+            android:background="#1db84d" android:layout_weight="1"
+            android:layout_marginLeft="@dimen/nested_list_margin" android:id="@+id/nxt_new_devices_layout">
 
             <TextView
                 android:layout_width="match_parent"
@@ -79,12 +83,13 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/new_devices"
                 android:id="@+id/nxt_new_devices_textView"
-                android:layout_margin="8dp" />
+                android:padding="@dimen/list_item_padding" android:background="@color/route_66"
+                android:gravity="center_horizontal" android:textColor="@color/steady_grey"/>
 
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/nxt_new_devices_listView" />
+                android:id="@+id/nxt_new_devices_listView" android:background="@color/gamebookers_blue"/>
         </LinearLayout>
 
     </LinearLayout>
@@ -99,26 +104,28 @@
         android:visibility="gone" />
 
     <TextView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
         android:text="@string/cameras"
         android:id="@+id/cameras_connection_textView"
-        android:layout_margin="@dimen/container_margin" />
+        android:layout_margin="@dimen/container_margin" android:padding="@dimen/subtitle_padding"
+        android:textColor="@color/route_66" android:background="@color/BC"/>
 
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:focusableInTouchMode="false"
-        android:id="@+id/cameras_layout"
+        android:id="@+id/cameras_devices_layout"
         android:layout_margin="@dimen/container_margin" android:baselineAligned="false">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/background_light" android:layout_weight="1">
+            android:background="@android:color/background_light" android:layout_weight="1"
+            android:id="@+id/cameras_paired_devices_layout" android:layout_marginRight="@dimen/nested_list_margin">
 
             <TextView
                 android:layout_width="match_parent"
@@ -126,7 +133,9 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/paired_devices"
                 android:id="@+id/cameras_paired_devices_textView"
-                android:layout_margin="8dp" />
+                android:background="@color/route_66"
+                android:textColor="@color/steady_grey" android:padding="@dimen/subtitle_padding"
+                android:gravity="center_horizontal"/>
 
             <ListView
                 android:layout_width="match_parent"
@@ -140,7 +149,8 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#1db84d" android:layout_weight="1">
+            android:background="#1db84d" android:layout_weight="1" android:id="@+id/cameras_new_devices_layout"
+            android:layout_marginLeft="@dimen/nested_list_margin">
 
             <TextView
                 android:layout_width="match_parent"
@@ -148,13 +158,15 @@
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:text="@string/new_devices"
                 android:id="@+id/cameras_new_devices_textView"
-                android:layout_margin="8dp" />
+                android:gravity="center_horizontal"
+                android:padding="@dimen/subtitle_padding" android:background="@color/route_66"
+                android:textColor="@color/steady_grey"/>
 
             <ListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/cameras_new_devices_listView"
-                android:choiceMode="multipleChoice" />
+                android:choiceMode="multipleChoice" android:background="@color/gamebookers_blue"/>
         </LinearLayout>
 
     </LinearLayout>
