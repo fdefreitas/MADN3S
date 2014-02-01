@@ -21,6 +21,7 @@ import android.widget.Toast;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.R;
 import org.madn3s.controller.components.NXTTalker;
+import org.madn3s.controller.io.HiddenMidgetAttackAsyncTask;
 import org.madn3s.controller.models.DevicesAdapter;
 
 import java.util.ArrayList;
@@ -127,6 +128,8 @@ public class ConnectionFragment extends BaseFragment {
                 talker = new NXTTalker(mHandler);
                 talker.connect(b);
             } else {
+                HiddenMidgetAttackAsyncTask task = new HiddenMidgetAttackAsyncTask(b);
+                task.execute();
                 //establecer conexion bluetooth con las camaras
             }
             Log.d(TAG, b.getName());
