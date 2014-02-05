@@ -51,8 +51,8 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void result){
-        if(e!= null){
-            e.printStackTrace();
+        //if(e!= null){
+            //e.printStackTrace();
             if(mSocket != null){
                 Log.d("Awesome AsyncTask", "Conexion levantada");
                 if (mSocket.getRemoteDevice()!= null)
@@ -74,6 +74,11 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
             }else{
                 Log.d("Awesome AsyncTask", "Conexion fallida");
             }
+        //}
+        try{
+            Log.d("Awesome AsyncTask", ""+mSocket.getInputStream().read());
+        } catch (Exception e){
+            Log.d("Awesome AsyncTask", "FUCK You"+e);
         }
     }
 

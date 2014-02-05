@@ -37,8 +37,9 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
         try {
             // Connect the device through the socket. This will block
             // until it succeeds or throws an exception
+            Log.d("AQUI ESTOY", ""+mSocket.isConnected());
             mSocket.connect();
-        } catch (IOException e) {
+        } catch (Exception e) {
             // Unable to connect; close the socket and get out
             this.e = e;
             try {
@@ -55,6 +56,7 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
         if (e!= null) e.printStackTrace();
         if(mSocket.isConnected())
             Log.d("Awesome AsyncTask", "Conexion levantada");
+
         else
             Log.d("Awesome AsyncTask", "Conexion fallida");
 
@@ -73,7 +75,11 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
             default:
                 Log.d("Awesome AsyncTask", "Default");
         }
-
+        try{
+            mSocket.getOutputStream().write(1234);
+        } catch (Exception e){
+            Log.d("Awesome AsyncTask", "FUCK YOU");
+        }
         //poner el socket en algun lado
     }
 
