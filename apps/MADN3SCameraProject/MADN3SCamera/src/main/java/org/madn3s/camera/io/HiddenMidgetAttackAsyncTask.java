@@ -76,10 +76,12 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
             }
         //}
         try{
-            Log.d("Awesome AsyncTask", ""+mSocket.getInputStream().read());
+            Log.d("Awesome AsyncTask", "Lei esto = "+mSocket.getInputStream().read());
         } catch (Exception e){
             Log.d("Awesome AsyncTask", "FUCK You"+e);
         }
+        BTConnection conn = BTConnection.getInstance();
+        conn.setControllerSocket(mSocket);
     }
 
     @Override

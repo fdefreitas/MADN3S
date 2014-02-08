@@ -2,6 +2,7 @@ package org.madn3s.camera.io;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Handler;
@@ -24,6 +25,7 @@ public class BTConnection {
     private BluetoothAdapter mBluetoothAdapter;
     private Handler mHandler;
     private BluetoothServerSocket serverSocket;
+    private BluetoothSocket controllerSocket;
 
     public BTConnection(){
         mHandler = new Handler() {
@@ -69,6 +71,13 @@ public class BTConnection {
         return instance;
     }
 
+    public BluetoothSocket getControllerSocket() {
+        return controllerSocket;
+    }
+
+    public void setControllerSocket(BluetoothSocket controllerSocket) {
+        this.controllerSocket = controllerSocket;
+    }
 }
 
 

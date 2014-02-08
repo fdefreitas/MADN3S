@@ -25,13 +25,14 @@ public class BTConnection {
 //    BluetoothServerSocket nxtSocket;
     public static Set<BluetoothDevice> pairedDevices;
     public static Set<BluetoothDevice> newDevices;
-    BluetoothSocket nxtSocket;
+    BluetoothSocket nxtSocket, cam1Socket, cam2Socket;
     boolean success=false;
 
     private BTConnection(){
         localAdapter=BluetoothAdapter.getDefaultAdapter();
         setPairedDevices(localAdapter.getBondedDevices());
         setNewDevices(localAdapter.getBondedDevices());
+        cam1Socket = cam2Socket = null;
     }
 
     public static BTConnection getInstance(){
@@ -136,5 +137,36 @@ public class BTConnection {
         this.pairedDevices = pairedDevices;
     }
 
+    public BluetoothSocket getCam2Socket() {
+        return cam2Socket;
+    }
 
+    public void setCam2Socket(BluetoothSocket cam2Socket) {
+        this.cam2Socket = cam2Socket;
+    }
+
+    public BluetoothSocket getCam1Socket() {
+        return cam1Socket;
+    }
+
+    public void setCam1Socket(BluetoothSocket cam1Socket) {
+        this.cam1Socket = cam1Socket;
+    }
+
+    public BluetoothSocket getNxtSocket() {
+        return nxtSocket;
+    }
+
+    public void setNxtSocket(BluetoothSocket nxtSocket) {
+        this.nxtSocket = nxtSocket;
+    }
+
+    public void setCamSocket(BluetoothSocket camSocket) {
+        if(cam1Socket == null){
+            this.cam1Socket = camSocket;
+        } else {
+            this.cam2Socket = camSocket;
+        }
+
+    }
 }

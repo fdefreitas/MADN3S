@@ -2,6 +2,7 @@ package org.madn3s.controller.fragments;
 
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.R;
 import org.madn3s.controller.components.NXTTalker;
+import org.madn3s.controller.io.BTConnection;
 import org.madn3s.controller.io.HiddenMidgetAttackAsyncTask;
 import org.madn3s.controller.models.DevicesAdapter;
 
@@ -154,6 +156,10 @@ public class ConnectionFragment extends BaseFragment {
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+                Log.d(TAG, "EL COÑO DE LA MADRE");
+                BTConnection conn = BTConnection.getInstance();
+                BluetoothSocket mSocket1 = conn.getCam1Socket();
+                BluetoothSocket mSocket2 = conn.getCam2Socket();
                 String action = intent.getAction();
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)){
@@ -161,25 +167,50 @@ public class ConnectionFragment extends BaseFragment {
                     String addressCamera2 = MADN3SController.cameras.get(1).getAddress();
 
                     //Camera 1
-                    if(device != null && device.getAddress().equals(addressCamera1)){
-                        if (device.getBondState() == BluetoothDevice.BOND_BONDED){
+                    if(device != null && device.getAddress().equals(addressCamera1) && mSocket1 != null){
+                        //if (device.getBondState() == BluetoothDevice.BOND_BONDED){
+                        if (mSocket1.isConnected()){
                             camera1ConnectedImageView.setVisibility(View.VISIBLE);
                             camera1ConnectingProgressBar.setVisibility(View.GONE);
-                        }else if (device.getBondState() == BluetoothDevice.BOND_NONE){
+                        //}else if (device.getBondState() == BluetoothDevice.BOND_NONE){
+                        }else if (!mSocket1.isConnected()){
                             camera1NotConnectedImageView.setVisibility(View.VISIBLE);
                             camera1ConnectingProgressBar.setVisibility(View.GONE);
                         }
                     }
 
                     //Camera 2
-                    if(device != null && device.getAddress().equals(addressCamera2)){
-                        if (device.getBondState() == BluetoothDevice.BOND_BONDED){
+                    if(device != null && device.getAddress().equals(addressCamera2) && mSocket2 != null){
+                    //    if (device.getBondState() == BluetoothDevice.BOND_BONDED){
+                        if (mSocket2.isConnected()){
                             camera2ConnectedImageView.setVisibility(View.VISIBLE);
                             camera2ConnectingProgressBar.setVisibility(View.GONE);
-                        }else if (device.getBondState() == BluetoothDevice.BOND_NONE){
+                        ///}else if (device.getBondState() == BluetoothDevice.BOND_NONE){
+                        }else if (!mSocket2.isConnected()){
                             camera2NotConnectedImageView.setVisibility(View.VISIBLE);
                             camera2ConnectingProgressBar.setVisibility(View.GONE);
                         }
+                    }
+
+
+                }
+                if(mSocket1 == null){
+                    Log.d(TAG, "mSocket1 es null");
+                } else {
+                    if (mSocket1.isConnected()){
+                        Log.d(TAG, "mSocket1 conectado");
+                    } else {
+                        Log.d(TAG, "mSocket1 NO conectado");
+                    }
+                }
+
+                if(mSocket2 == null){
+                    Log.d(TAG, "mSocket2 es null");
+                } else {
+                    if (mSocket2.isConnected()){
+                        Log.d(TAG, "mSocket2 conectado");
+                    } else {
+                        Log.d(TAG, "mSocket2 NO conectado");
                     }
                 }
             }

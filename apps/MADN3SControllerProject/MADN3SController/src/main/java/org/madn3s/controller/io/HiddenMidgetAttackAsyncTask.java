@@ -76,11 +76,14 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
                 Log.d("Awesome AsyncTask", "Default");
         }
         try{
-            mSocket.getOutputStream().write(1234);
+            mSocket.getOutputStream().write('c');
+            Log.d("Awesome AsyncTask", "envie con " + mSocket.getRemoteDevice().getName());
         } catch (Exception e){
             Log.d("Awesome AsyncTask", "FUCK YOU");
         }
         //poner el socket en algun lado
+        BTConnection conn = BTConnection.getInstance();
+        conn.setCamSocket(mSocket);
     }
 
     @Override
