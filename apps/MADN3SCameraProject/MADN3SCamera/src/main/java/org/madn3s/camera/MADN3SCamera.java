@@ -56,10 +56,39 @@ public class MADN3SCamera extends Application {
         return mediaFile;
     }
 
+    public static Uri getOutputMediaFileUri(int type, String projectName, String position){
+        return Uri.fromFile(getOutputMediaFile(type, projectName, position));
+    }
+
+    public static File getOutputMediaFile(int type, String projectName, String position){
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/"+appContext.getString(R.string.app_name), projectName);
+
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                Log.d(TAG, "failed to create directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        File mediaFile;
+        if (type == MEDIA_TYPE_IMAGE){
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + position +"_"+ timeStamp + ".jpg");
+        } else if(type == MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "VID_"+ timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+
+        return mediaFile;
+    }
+
     public static Camera getCameraInstance(){
         Camera c = null;
         try {
             c = Camera.open();
+            c.getParameters().setFlashMode(Camera.Parameters.FLASH_MODE_ON);
 //            if(c != null) Log.d(MADN3SCamera.TAG, "getCameraInstance: "+c.getParameters().flatten());
         }
         catch (Exception e){

@@ -24,6 +24,8 @@ public class MainActivity extends ActionBarActivity {
     private static BTConnection btc;
     private Camera mCamera;
     private CameraPreview mPreview;
+    private String projectName;
+    private String position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
 //        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 //        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
 //        startActivity(discoverableIntent);
+
 
         mCamera = MADN3SCamera.getCameraInstance();
 
@@ -49,6 +52,9 @@ public class MainActivity extends ActionBarActivity {
                 mCamera.takePicture(null, null, mPicture);
             }
         });
+        projectName = "first";//obtener este valor desde la tablet
+        position = "right";//obtener este valor desde la tablet
+
     }
     @Override
     public void onResume(){
@@ -90,7 +96,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
 
-            File pictureFile = MADN3SCamera.getOutputMediaFile(MADN3SCamera.MEDIA_TYPE_IMAGE);
+            File pictureFile = MADN3SCamera.getOutputMediaFile(MADN3SCamera.MEDIA_TYPE_IMAGE, projectName, position);
             if (pictureFile == null){
                 Log.d(MADN3SCamera.TAG, "Error creating media file, check storage permissions ");
                 return;

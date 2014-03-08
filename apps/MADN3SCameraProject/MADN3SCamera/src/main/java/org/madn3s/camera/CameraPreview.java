@@ -16,7 +16,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public CameraPreview(Context context, Camera camera) {
         super(context);
         mCamera = camera;
-
+        Log.d(MADN3SCamera.TAG, "flash = "+mCamera.getParameters().getFlashMode());
+        Camera.Parameters p = mCamera.getParameters();
+        p.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
+        mCamera.setParameters(p);
+        //mCamera.startPreview();
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
         mHolder = getHolder();
@@ -66,7 +70,10 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         Log.d(MADN3SCamera.TAG, "Before : " + mCamera.getParameters().get("rotation"));
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
-            mCamera.setDisplayOrientation(90);
+       //     mCamera.setDisplayOrientation(90);
+            Camera.Parameters p = mCamera.getParameters();
+            p.set("orientation", "portrait");
+            mCamera.setParameters(p);
 //            mCamera.getParameters().set("orientation", "landscape");
 //            mCamera.getParameters().setRotation(270);
         }else{
@@ -81,7 +88,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         try {
             mCamera.setPreviewDisplay(mHolder);
             mCamera.startPreview();
-
+            mCamera.getParameters().setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+            Log.d(MADN3SCamera.TAG, "setFlash = "+mCamera.getParameters().getFlashMode());
         } catch (Exception e) {
             Log.d(MADN3SCamera.TAG, "Error starting camera preview: " + e.getMessage());
         }
