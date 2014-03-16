@@ -7,7 +7,8 @@
         android:id="@+id/camera_frameLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:text="@string/hello_world"

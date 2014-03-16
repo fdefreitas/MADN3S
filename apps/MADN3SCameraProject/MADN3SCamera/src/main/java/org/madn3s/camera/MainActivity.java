@@ -1,8 +1,13 @@
 package org.madn3s.camera;
 
 import android.bluetooth.BluetoothAdapter;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +16,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import org.madn3s.camera.io.BTConnection;
 
@@ -18,6 +24,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class MainActivity extends ActionBarActivity {
     private BluetoothAdapter mBluetoothAdapter;
@@ -96,7 +104,7 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
 
-            File pictureFile = MADN3SCamera.getOutputMediaFile(MADN3SCamera.MEDIA_TYPE_IMAGE, projectName, position);
+         /*   File pictureFile = MADN3SCamera.getOutputMediaFile(MADN3SCamera.MEDIA_TYPE_IMAGE, projectName, position);
             if (pictureFile == null){
                 Log.d(MADN3SCamera.TAG, "Error creating media file, check storage permissions ");
                 return;
@@ -111,6 +119,68 @@ public class MainActivity extends ActionBarActivity {
             } catch (IOException e) {
                 Log.d(MADN3SCamera.TAG, "Error accessing file: " + e.getMessage());
             }
+           */ int orientation;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 6;
+            options.inDither = false; // Disable Dithering mode
+            options.inPurgeable = true; // Tell to gc that whether it needs free
+            // memory, the Bitmap can be cleared
+            options.inInputShareable = true; // Which kind of reference will be
+            // used to recover the Bitmap
+            // data after being clear, when
+            // it will be used in the future
+            options.inTempStorage = new byte[32 * 1024];
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
+
+            // others devices
+            if(bMap.getHeight() < bMap.getWidth()){
+                orientation = 90;
+            } else {
+                orientation = 0;
+            }
+
+            Bitmap bMapRotate;
+            if (orientation != 0) {
+                Matrix matrix = new Matrix();
+                matrix.postRotate(orientation);
+                bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(),
+                        bMap.getHeight(), matrix, true);
+            } else
+                bMapRotate = Bitmap.createScaledBitmap(bMap, bMap.getWidth(),
+                        bMap.getHeight(), true);
+
+
+            FileOutputStream out;
+            try {
+                File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/MADN3SCamera", projectName);
+
+                if (! mediaStorageDir.exists()){
+                    if (! mediaStorageDir.mkdirs()){
+                        Log.d("ERROR", "failed to create directory");
+                        return;
+                    }
+                }
+
+                // Create a media file name
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                out = new FileOutputStream(
+                        String.format(mediaStorageDir.getPath() + File.separator + position +"_"+ timeStamp + ".jpg"));
+                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                Toast.makeText(MADN3SCamera.appContext, out.toString(), Toast.LENGTH_SHORT).show();
+                if (bMapRotate != null) {
+                    bMapRotate.recycle();
+                    bMapRotate = null;
+                }
+            } catch (FileNotFoundException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+            camera.startPreview();
+
+
+
+
         }
     };
 
