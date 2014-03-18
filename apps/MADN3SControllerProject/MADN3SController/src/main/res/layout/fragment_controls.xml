@@ -43,11 +43,11 @@
                     android:background="@drawable/arrow_left"
                     android:contentDescription="@string/description_arrow_left" />
 
-            <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:id="@+id/imageView"
-                    android:src="@drawable/circle"/>
+            <!--<ImageView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:id="@+id/imageView"-->
+                    <!--android:src="@drawable/circle"/>-->
             <ImageView
                     android:id="@+id/right_arrow_imageView"
                     android:layout_width="@dimen/arrow_side"

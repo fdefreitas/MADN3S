@@ -33,29 +33,33 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Device Name"
-                    android:id="@+id/textView2"/>
+                    android:id="@+id/nxt_name_connection_textView"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Device Address"
-                    android:id="@+id/textView3" android:layout_marginLeft="@dimen/container_margin"/>
+                    android:id="@+id/nxt_address_connection_textView"
+                    android:layout_marginLeft="@dimen/container_margin"/>
         </LinearLayout>
+
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/not_connected_imageView" android:background="@drawable/indicator_not_connected"
-                android:contentDescription="@string/hint_indicator_device_not_connected_"/>
+                android:id="@+id/nxt_not_connected_imageView" android:background="@drawable/indicator_not_connected"
+                android:contentDescription="@string/hint_indicator_device_not_connected_"
+            android:visibility="gone" />
         <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/connecting_progressBar"/>
+                android:id="@+id/nxt_connecting_progressBar"/>
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/connected_imageView" android:contentDescription="@string/hint_indicator_device_connected_"
+                android:id="@+id/nxt_connected_imageView" android:contentDescription="@string/hint_indicator_device_connected_"
                 android:adjustViewBounds="false"
-                android:background="@drawable/indicator_connected"/>
+                android:background="@drawable/indicator_connected"
+            android:visibility="gone" />
     </LinearLayout>
 
     <TextView
@@ -82,29 +86,32 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Device Name"
-                    android:id="@+id/textView2"/>
+                    android:id="@+id/camera1_name_connection_textView"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Device Address"
-                    android:id="@+id/textView3" android:layout_marginLeft="@dimen/container_margin"/>
+                    android:id="@+id/camera1_address_connection_textView"
+                    android:layout_marginLeft="@dimen/container_margin"/>
         </LinearLayout>
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/not_connected_imageView" android:background="@drawable/indicator_not_connected"
-                android:contentDescription="@string/hint_indicator_device_not_connected_"/>
+                android:id="@+id/camera1_not_connected_imageView" android:background="@drawable/indicator_not_connected"
+                android:contentDescription="@string/hint_indicator_device_not_connected_"
+            android:visibility="gone" />
         <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/connecting_progressBar"/>
+                android:id="@+id/camera1_connecting_progressBar"/>
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/connected_imageView" android:contentDescription="@string/hint_indicator_device_connected_"
+                android:id="@+id/camera1_connected_imageView" android:contentDescription="@string/hint_indicator_device_connected_"
                 android:adjustViewBounds="false"
-                android:background="@drawable/indicator_connected"/>
+                android:background="@drawable/indicator_connected"
+            android:visibility="gone" />
     </LinearLayout>
 
     <LinearLayout
@@ -120,31 +127,33 @@
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="Device Name"
-                    android:id="@+id/textView2"/>
+                    android:id="@+id/camera2_name_connection_textView"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:text="Device Address"
-                    android:id="@+id/textView3" android:layout_marginLeft="@dimen/container_margin"/>
+                    android:id="@+id/camera2_address_connection_textView"
+                    android:layout_marginLeft="@dimen/container_margin"/>
         </LinearLayout>
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/not_connected_imageView" android:background="@drawable/indicator_not_connected"
-                android:contentDescription="@string/hint_indicator_device_not_connected_"/>
+                android:id="@+id/camera2_not_connected_imageView" android:background="@drawable/indicator_not_connected"
+                android:contentDescription="@string/hint_indicator_device_not_connected_"
+            android:visibility="gone" />
         <ProgressBar
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/connecting_progressBar"/>
+                android:id="@+id/camera2_connecting_progressBar"/>
         <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/connected_imageView" android:contentDescription="@string/hint_indicator_device_connected_"
+                android:id="@+id/camera2_connected_imageView" android:contentDescription="@string/hint_indicator_device_connected_"
                 android:adjustViewBounds="false"
-                android:background="@drawable/indicator_connected"/>
+                android:background="@drawable/indicator_connected"
+            android:visibility="gone" />
     </LinearLayout>
-
 
     <Button
         android:layout_width="wrap_content"

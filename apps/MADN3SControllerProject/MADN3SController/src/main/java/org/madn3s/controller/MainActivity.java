@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import org.madn3s.controller.fragments.BaseFragment;
 import org.madn3s.controller.fragments.ControlsFragment;
 import org.madn3s.controller.fragments.MainFragment;
-import org.madn3s.controller.fragments.ConectionFragment;
+import org.madn3s.controller.fragments.ConnectionFragment;
 
 import java.util.ArrayList;
 
@@ -74,7 +74,7 @@ public class MainActivity extends Activity implements BaseFragment.OnItemSelecte
 
     public void launchConectionFragment(ArrayList<BluetoothDevice> devices){
         Log.d(TAG, "launchConectionFragment Device: "+devices.size());
-        ConectionFragment conections = new ConectionFragment(devices);
+        ConnectionFragment conections = new ConnectionFragment(devices);
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction().replace(R.id.container, conections)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
