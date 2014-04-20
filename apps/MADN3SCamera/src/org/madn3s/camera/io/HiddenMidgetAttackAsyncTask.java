@@ -16,7 +16,7 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
 
     private BluetoothServerSocket mBluetoothServerSocket;
     private BluetoothSocket mSocket;
-    private Exception e;
+    private Exception ex;
     private final static int SERVER_SOCKET_TIMEOUT = 3000000;
 
     public HiddenMidgetAttackAsyncTask(BluetoothAdapter mBluetoothAdapter){
@@ -44,7 +44,7 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
                 }
             }
         } catch (Exception e) {
-            this.e = e;
+            this.ex = e;
         }
         return null;
     }
@@ -89,7 +89,7 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
         try {
             mBluetoothServerSocket.close();
         } catch (IOException e) {
-            this.e = e;
+            this.ex = e;
             e.printStackTrace();
         }
     }
