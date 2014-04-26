@@ -15,7 +15,8 @@ import java.io.IOException;
 import java.util.List;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
-    private SurfaceHolder mHolder;
+    private static final String tag = "CameraPreview";
+	private SurfaceHolder mHolder;
     private Camera mCamera;
     private Context context;
 
@@ -42,6 +43,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     }
 
     public void surfaceCreated(SurfaceHolder holder) {
+//    	if(holder == null){
+//    		Log.d(tag, "holder null");
+//		}
+//    	
+//    	if(mCamera == null){
+//    		Log.d(tag, "mCamera null");
+//		}
         // The Surface has been created, now tell the camera where to draw the preview.
         try {
             mCamera.setPreviewDisplay(holder);

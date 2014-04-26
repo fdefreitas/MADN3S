@@ -19,6 +19,7 @@ public class MADN3SCamera extends Application {
     public static final String TAG = "MADN3SCamera";
     public static final int DISCOVERABLE_TIME = 300000;
     public static Context appContext;
+	public static boolean isOpenCvLoaded = false;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
 
@@ -85,14 +86,14 @@ public class MADN3SCamera extends Application {
     }
 
     public static Camera getCameraInstance(){
-        Camera c = null;
+        Camera c;
         try {
             c = Camera.open();
             c.getParameters().setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-//            if(c != null) Log.d(MADN3SCamera.TAG, "getCameraInstance: "+c.getParameters().flatten());
         }
         catch (Exception e){
             e.printStackTrace();
+            c = null;
         }
         return c;
     }

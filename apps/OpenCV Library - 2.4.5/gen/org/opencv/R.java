@@ -26,7 +26,7 @@ containing a value of this type.
 <tr><td><code>front</code></td><td>1</td><td></td></tr>
 </table>
          */
-        public static int camera_id=0x7f010001;
+        public static final int camera_id=0x7f010001;
         /** <p>Must be a boolean value, either "<code>true</code>" or "<code>false</code>".
 <p>This may also be a reference to a resource (in the form
 "<code>@[<i>package</i>:]<i>type</i>:<i>name</i></code>") or
@@ -34,12 +34,12 @@ theme attribute (in the form
 "<code>?[<i>package</i>:][<i>type</i>:]<i>name</i></code>")
 containing a value of this type.
          */
-        public static int show_fps=0x7f010000;
+        public static final int show_fps=0x7f010000;
     }
     public static final class id {
-        public static int any=0x7f020000;
-        public static int back=0x7f020001;
-        public static int front=0x7f020002;
+        public static final int any=0x7f020000;
+        public static final int back=0x7f020001;
+        public static final int front=0x7f020002;
     }
     public static final class styleable {
         /** Attributes that can be used with a CameraBridgeViewBase.

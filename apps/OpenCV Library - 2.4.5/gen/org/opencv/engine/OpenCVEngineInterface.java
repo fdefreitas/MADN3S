@@ -1,6 +1,6 @@
 /*
  * This file is auto-generated.  DO NOT MODIFY.
- * Original file: /home/fernando/dev/thesis/MADN3S/apps/OpenCV Library - 2.4.5/src/org/opencv/engine/OpenCVEngineInterface.aidl
+ * Original file: /home/inaki/dev/projects/MADN3S/apps/OpenCV Library - 2.4.5/src/org/opencv/engine/OpenCVEngineInterface.aidl
  */
 package org.opencv.engine;
 /**

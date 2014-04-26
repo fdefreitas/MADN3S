@@ -3,6 +3,7 @@
 	<name>MADN3SCamera</name>
 	<comment></comment>
 	<projects>
+		<project>OpenCV Library - 2.4.5</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

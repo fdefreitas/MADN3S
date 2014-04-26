@@ -7,6 +7,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.madn3s.camera.io.BTConnection;
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.CameraBridgeViewBase;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
+import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Mat;
+import org.opencv.imgproc.Imgproc;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -19,6 +27,7 @@ import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -26,19 +35,38 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
-	
+	private static final String tag = "MainActivity";
 	private BluetoothAdapter mBluetoothAdapter;
     private static BTConnection btc;
+    private static MidgetOfSeville figaro;
     private Camera mCamera;
     private CameraPreview mPreview;
     private String projectName;
     private String position;
+    
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                {
+                    Log.i(tag, "OpenCV loaded successfully");
+                    MADN3SCamera.isOpenCvLoaded = true;
+                } break;
+                default:
+                {
+                    super.onManagerConnected(status);
+                } break;
+            }
+        }
+    };
 	
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
 
 //        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 //        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
@@ -46,6 +74,7 @@ public class MainActivity extends Activity {
 
 
         mCamera = MADN3SCamera.getCameraInstance();
+        figaro = new MidgetOfSeville();
 
         // Create our Preview view and set it as the content of our activity.
         mPreview = new CameraPreview(this, mCamera);
@@ -57,7 +86,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
     //                    btc = new BTConnection();
-                mCamera.takePicture(null, null, mPicture);
+                mCamera.takePicture(null, null, mPictureCallback);
             }
         });
         projectName = "first";//obtener este valor desde la tablet
@@ -68,6 +97,7 @@ public class MainActivity extends Activity {
     public void onResume(){
         super.onResume();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_5, this, mLoaderCallback);
     }
 
     @Override
@@ -82,7 +112,6 @@ public class MainActivity extends Activity {
             mCamera = null;
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -99,7 +128,7 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    private Camera.PictureCallback mPicture = new Camera.PictureCallback() {
+    private Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
@@ -119,7 +148,8 @@ public class MainActivity extends Activity {
             } catch (IOException e) {
                 Log.d(MADN3SCamera.TAG, "Error accessing file: " + e.getMessage());
             }
-           */ int orientation;
+           */
+        	int orientation;
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 6;
             options.inDither = false; // Disable Dithering mode
@@ -153,10 +183,12 @@ public class MainActivity extends Activity {
 
             FileOutputStream out;
             try {
-                File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/MADN3SCamera", projectName);
+                File mediaStorageDir = new File(Environment
+                		.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                		+"/MADN3SCamera", projectName);
 
-                if (! mediaStorageDir.exists()){
-                    if (! mediaStorageDir.mkdirs()){
+                if (!mediaStorageDir.exists()){
+                    if (!mediaStorageDir.mkdirs()){
                         Log.d("ERROR", "failed to create directory");
                         return;
                     }
@@ -164,18 +196,32 @@ public class MainActivity extends Activity {
 
                 // Create a media file name
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                out = new FileOutputStream(
-                        String.format(mediaStorageDir.getPath() + File.separator + position +"_"+ timeStamp + ".jpg"));
+                
+                out = new FileOutputStream(String.format(mediaStorageDir.getPath() 
+                		+ File.separator + position + "_" + timeStamp + ".jpg"));
+                
                 bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                Toast.makeText(MADN3SCamera.appContext, out.toString(), Toast.LENGTH_SHORT).show();
+                
+                Toast.makeText(getBaseContext(), out.toString(), Toast.LENGTH_SHORT).show();
+                
+//                btc.notifyPictureTaken();
+//              figaro.shapeUp(out);
+                Bitmap resultBitmap = figaro.backgroundSubtracting(bMapRotate);
+                
+                out = new FileOutputStream(String.format(mediaStorageDir.getPath() 
+                		+ File.separator + position + "grabCut" + "_" + timeStamp + ".jpg"));
+                
+                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                
                 if (bMapRotate != null) {
                     bMapRotate.recycle();
                     bMapRotate = null;
                 }
+                
             } catch (FileNotFoundException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            
             camera.startPreview();
         }
     };

@@ -78,6 +78,10 @@ public class BTConnection {
     public void setControllerSocket(BluetoothSocket controllerSocket) {
         this.controllerSocket = controllerSocket;
     }
+
+	public void notifyPictureTaken() {
+		//TODO complete, duh 
+	}
 }
 
 
