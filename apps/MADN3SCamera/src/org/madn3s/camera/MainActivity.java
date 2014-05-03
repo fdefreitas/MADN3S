@@ -1,5 +1,8 @@
 package org.madn3s.camera;
 
+import static org.madn3s.camera.MADN3SCamera.position;
+import static org.madn3s.camera.MADN3SCamera.projectName;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -41,8 +44,6 @@ public class MainActivity extends Activity {
     private static MidgetOfSeville figaro;
     private Camera mCamera;
     private CameraPreview mPreview;
-    private String projectName;
-    private String position;
     
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override

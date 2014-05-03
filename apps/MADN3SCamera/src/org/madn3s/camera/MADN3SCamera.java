@@ -3,12 +3,16 @@ package org.madn3s.camera;
 import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -22,6 +26,9 @@ public class MADN3SCamera extends Application {
 	public static boolean isOpenCvLoaded = false;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+
+    public static String projectName;
+    public static String position;
 
     @Override
     public void onCreate() {
@@ -75,27 +82,46 @@ public class MADN3SCamera extends Application {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;
         if (type == MEDIA_TYPE_IMAGE){
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator + position +"_"+ timeStamp + ".jpg");
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + position + "_" + timeStamp + ".jpg");
         } else if(type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "VID_"+ timeStamp + ".mp4");
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "VID_" + position + "_" + timeStamp + ".mp4");
         } else {
             return null;
         }
 
         return mediaFile;
     }
-
-    public static Camera getCameraInstance(){
-        Camera c;
+    
+    public static String saveBitmapAsJpeg(Bitmap bitmap, String tag){
+    	FileOutputStream out;
         try {
-            c = Camera.open();
-            c.getParameters().setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+            File imgFile = getOutputMediaFile(MEDIA_TYPE_IMAGE, projectName, tag);
+
+            out = new FileOutputStream(imgFile.getAbsoluteFile());
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            
+            Toast.makeText(appContext, imgFile.getName(), Toast.LENGTH_SHORT).show();
+            
+            return imgFile.getName();
+            
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Log.d(tag, "saveBitmapAsJpeg: No se pudo guardar el Bitmap");
+            return null;
+        }
+    }
+    
+    public static Camera getCameraInstance(){
+        Camera mCamera;
+        try {
+            mCamera = Camera.open();
+            mCamera.getParameters().setFlashMode(Camera.Parameters.FLASH_MODE_ON);
         }
         catch (Exception e){
             e.printStackTrace();
-            c = null;
+            mCamera = null;
         }
-        return c;
+        return mCamera;
     }
 
     @Deprecated

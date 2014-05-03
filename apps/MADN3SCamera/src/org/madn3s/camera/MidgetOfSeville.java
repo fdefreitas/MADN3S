@@ -80,6 +80,24 @@ public class MidgetOfSeville {
 		Mat bgdModel = new Mat(), fgdModel = new Mat();
 		Imgproc.grabCut(imgMat, mask, rect, bgdModel, fgdModel, iterCount, Imgproc.GC_INIT_WITH_RECT);
 		
+		Log.d(tag, "fgdModel: " + fgdModel.toString());
+		Log.d(tag, "bgdModel: " + bgdModel.toString());
+		
+		String savePath;
+		Bitmap maskBitmap = Bitmap.createBitmap(mask.cols(), mask.rows(), Bitmap.Config.RGB_565);
+		Utils.matToBitmap(mask, maskBitmap);
+		savePath = MADN3SCamera.saveBitmapAsJpeg(maskBitmap, "mask");
+		Log.d(tag, "mask saved at " + savePath);
+		
+		Bitmap bgdBitmap = Bitmap.createBitmap(mask.cols(), mask.rows(), Bitmap.Config.RGB_565);
+		Utils.matToBitmap(bgdModel, bgdBitmap);
+		savePath = MADN3SCamera.saveBitmapAsJpeg(bgdBitmap, "bgdModel");
+		Log.d(tag, "fgd saved at " + savePath);
+		
+		Bitmap fgdBitmap = Bitmap.createBitmap(mask.cols(), mask.rows(), Bitmap.Config.RGB_565);
+		Utils.matToBitmap(fgdModel, fgdBitmap);
+		savePath = MADN3SCamera.saveBitmapAsJpeg(fgdBitmap, "fgdModel");
+		Log.d(tag, "fgd saved at " + savePath);
 		Log.d(tag, "grabCut done");
 	}
 	
