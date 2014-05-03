@@ -214,7 +214,8 @@ public class MainActivity extends Activity {
                 
 //                btc.notifyPictureTaken();
 //              figaro.shapeUp(out);
-                figaro.shapeUp(filePath);
+                //figaro.shapeUp(filePath);
+                MADN3SCamera.saveBitmapAsJpeg(figaro.backgroundSubtracting(filePath), "backgroundSubstract");
                 
                 out = new FileOutputStream(String.format(mediaStorageDir.getPath() 
                 		+ File.separator + position + "grabCut" + "_" + timeStamp + ".jpg"));

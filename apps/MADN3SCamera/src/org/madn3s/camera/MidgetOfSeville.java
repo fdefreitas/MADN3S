@@ -58,7 +58,7 @@ public class MidgetOfSeville {
 		options.inPreferredConfig = Config.RGB_565;
 		options.inDither = true;
 		Bitmap imgBitmap = BitmapFactory.decodeFile(filePath, options);
-		Log.d(tag, "imgBitmap config: " + imgBitmap.getConfig().toString() + "hasAlpha: " + imgBitmap.hasAlpha());
+		Log.d(tag, "imgBitmap config: " + imgBitmap.getConfig().toString() + " hasAlpha: " + imgBitmap.hasAlpha());
 		
 		int height = imgBitmap.getHeight();
 		int width = imgBitmap.getWidth();
@@ -73,10 +73,6 @@ public class MidgetOfSeville {
 		Rect rect = new Rect(0, 0, height/2, width/2);
 		Log.d(tag, "rect: " + rect.toString());
 		
-//		Mat bgdModel = new Mat(height, width, CvType.CV_64FC1);
-//		Log.d(tag, "bgdModel: " + bgdModel.toString());
-//		Mat fgdModel = new Mat(height, width, CvType.CV_64FC1);
-//		Log.d(tag, "fgdModel: " + fgdModel.toString());
 		Mat bgdModel = new Mat(), fgdModel = new Mat();
 		Imgproc.grabCut(imgMat, mask, rect, bgdModel, fgdModel, iterCount, Imgproc.GC_INIT_WITH_RECT);
 		
@@ -99,6 +95,15 @@ public class MidgetOfSeville {
 		savePath = MADN3SCamera.saveBitmapAsJpeg(fgdBitmap, "fgdModel");
 		Log.d(tag, "fgd saved at " + savePath);
 		Log.d(tag, "grabCut done");
+	}
+	
+	public Bitmap backgroundSubtracting(String path) {
+		Options options = new Options();
+		options.inPreferredConfig = Config.RGB_565;
+		options.inDither = true;
+		Bitmap imgBitmap = BitmapFactory.decodeFile(path, options);
+		Log.d(tag, "imgBitmap config: " + imgBitmap.getConfig().toString() + " hasAlpha: " + imgBitmap.hasAlpha());
+		return backgroundSubtracting(imgBitmap);
 	}
 	
 	public Bitmap backgroundSubtracting(Bitmap sourceBitmap) {
