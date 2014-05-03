@@ -11,7 +11,11 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
+import android.R.integer;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 import android.util.Log;
 
 public class MidgetOfSeville {
@@ -47,6 +51,32 @@ public class MidgetOfSeville {
 //	    // display result
 //	    cv::namedWindow("Segmented Image");
 //	    cv::imshow("Segmented Image",foreground);
+	}
+	
+	public void shapeUp(String filePath){
+		Bitmap imgBitmap = BitmapFactory.decodeFile(filePath);
+		Options options = new Options();
+		options.inPreferredConfig = Config.RGB_565;
+		options.inDither = true;
+		imgBitmap.setHasAlpha(false);
+		
+		int height = imgBitmap.getHeight();
+		int width = imgBitmap.getWidth();
+		
+		Mat imgMat = new Mat(height, width, CvType.CV_8UC3);
+		Utils.bitmapToMat(imgBitmap, imgMat);
+		Log.d(tag, "Before:" + imgMat.toString());
+		Imgproc.cvtColor(imgMat, imgMat, CvType.CV_8UC3);
+		Log.d(tag, "After:" + imgMat.toString());
+		
+		Mat mask = new Mat(height, width, CvType.CV_8UC3, ZERO_SCALAR);
+		
+		Rect rect = new Rect(0, 0, imgMat.width()/2, imgMat.height()/2);
+		
+		Mat bgdModel = new Mat(height, width, CvType.CV_8UC3);
+		Mat fgdModel = new Mat(height, width, CvType.CV_8UC3);
+		
+//		Imgproc.grabCut(imgMat, mask, rect, bgdModel, fgdModel, iterCount);
 	}
 	
 	public Bitmap backgroundSubtracting(Bitmap sourceBitmap) {

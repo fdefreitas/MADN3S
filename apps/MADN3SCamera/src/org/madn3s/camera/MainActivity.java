@@ -86,6 +86,7 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
     //                    btc = new BTConnection();
+            	Log.d(tag, "mCamera null?: " + (mCamera == null));
                 mCamera.takePicture(null, null, mPictureCallback);
             }
         });
@@ -197,8 +198,10 @@ public class MainActivity extends Activity {
                 // Create a media file name
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                 
-                out = new FileOutputStream(String.format(mediaStorageDir.getPath() 
-                		+ File.separator + position + "_" + timeStamp + ".jpg"));
+                String filePath = mediaStorageDir.getPath() 
+                		+ File.separator + position + "_" + timeStamp + ".jpg"; 
+                
+                out = new FileOutputStream(filePath);
                 
                 bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
                 
@@ -206,7 +209,7 @@ public class MainActivity extends Activity {
                 
 //                btc.notifyPictureTaken();
 //              figaro.shapeUp(out);
-                Bitmap resultBitmap = figaro.backgroundSubtracting(bMapRotate);
+                figaro.shapeUp(filePath);
                 
                 out = new FileOutputStream(String.format(mediaStorageDir.getPath() 
                 		+ File.separator + position + "grabCut" + "_" + timeStamp + ".jpg"));
