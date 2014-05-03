@@ -54,11 +54,11 @@ public class MidgetOfSeville {
 	}
 	
 	public void shapeUp(String filePath){
-		Bitmap imgBitmap = BitmapFactory.decodeFile(filePath);
 		Options options = new Options();
 		options.inPreferredConfig = Config.RGB_565;
 		options.inDither = true;
-		imgBitmap.setHasAlpha(false);
+		Bitmap imgBitmap = BitmapFactory.decodeFile(filePath, options);
+		Log.d(tag, "imgBitmap config: " + imgBitmap.getConfig().toString() + "hasAlpha: " + imgBitmap.hasAlpha());
 		
 		int height = imgBitmap.getHeight();
 		int width = imgBitmap.getWidth();

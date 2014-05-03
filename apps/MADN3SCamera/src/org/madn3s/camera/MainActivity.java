@@ -86,8 +86,11 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
     //                    btc = new BTConnection();
-            	Log.d(tag, "mCamera null?: " + (mCamera == null));
-                mCamera.takePicture(null, null, mPictureCallback);
+            	if(mCamera != null){
+            		mCamera.takePicture(null, null, mPictureCallback);
+            	} else {
+            		Toast.makeText(v.getContext(), "mCamera == null", Toast.LENGTH_SHORT).show();
+            	}
             }
         });
         projectName = "first";//obtener este valor desde la tablet
@@ -98,7 +101,9 @@ public class MainActivity extends Activity {
     public void onResume(){
         super.onResume();
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_5, this, mLoaderCallback);
+        if(! MADN3SCamera.isOpenCvLoaded) {
+        	OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_5, this, mLoaderCallback);
+        }
     }
 
     @Override
@@ -202,10 +207,9 @@ public class MainActivity extends Activity {
                 		+ File.separator + position + "_" + timeStamp + ".jpg"; 
                 
                 out = new FileOutputStream(filePath);
-                
                 bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
                 
-                Toast.makeText(getBaseContext(), out.toString(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), filePath, Toast.LENGTH_SHORT).show();
                 
 //                btc.notifyPictureTaken();
 //              figaro.shapeUp(out);

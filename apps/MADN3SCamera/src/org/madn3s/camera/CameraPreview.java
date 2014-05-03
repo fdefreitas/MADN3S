@@ -3,6 +3,7 @@ package org.madn3s.camera;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.util.Log;
@@ -100,7 +101,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mHolder.setFixedSize(previewSize.width, previewSize.height);
         }
 
-        Log.d(MADN3SCamera.TAG, "Before : " + mCamera.getParameters().get("rotation"));
+//        Log.d(MADN3SCamera.TAG, "Rotation Before : " + mCamera.getParameters().get("rotation"));
 
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
        //     mCamera.setDisplayOrientation(90);
@@ -110,19 +111,21 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 //            mCamera.getParameters().set("orientation", "landscape");
 //            mCamera.getParameters().setRotation(270);
         }else{
-            Log.d(MADN3SCamera.TAG, "LANDSCAPE "+getResources().getConfiguration().orientation);
+            Log.d(MADN3SCamera.TAG, "Landscape " 
+            		+ (getResources().getConfiguration().orientation 
+            		== Configuration.ORIENTATION_LANDSCAPE));
             mCamera.getParameters().set("orientation", "landscape");
             mCamera.getParameters().setRotation(0);
         }
 
-        Log.d(MADN3SCamera.TAG, "After: " + mCamera.getParameters().get("rotation"));
+//        Log.d(MADN3SCamera.TAG, "Rotation After: " + mCamera.getParameters().get("rotation"));
 
         // start preview with new settings
         try {
             mCamera.setPreviewDisplay(mHolder);
             mCamera.startPreview();
             mCamera.getParameters().setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-            Log.d(MADN3SCamera.TAG, "setFlash = "+mCamera.getParameters().getFlashMode());
+            Log.d(MADN3SCamera.TAG, "FlashMode: "+mCamera.getParameters().getFlashMode());
         } catch (Exception e) {
             Log.d(MADN3SCamera.TAG, "Error starting camera preview: " + e.getMessage());
         }
@@ -139,20 +142,20 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         double minDiff = Double.MAX_VALUE;
 
         int targetHeight = h;
-        Log.d(MADN3SCamera.TAG, " minDiff " + minDiff + " targetHeight " + targetHeight + " targetRatio " + targetRatio + " ASPECT_TOLERANCE " + ASPECT_TOLERANCE);
+//        Log.d(MADN3SCamera.TAG, " minDiff " + minDiff + " targetHeight " + targetHeight + " targetRatio " + targetRatio + " ASPECT_TOLERANCE " + ASPECT_TOLERANCE);
         for (Camera.Size size : sizes) {
             double ratio = (double) size.width / size.height;
-            Log.d(MADN3SCamera.TAG, "size.width " + size.width + " size.height " + size.height + " ratio " + ratio + " Math.abs(ratio - targetRatio) " + Math.abs(ratio - targetRatio));
+//            Log.d(MADN3SCamera.TAG, "size.width " + size.width + " size.height " + size.height + " ratio " + ratio + " Math.abs(ratio - targetRatio) " + Math.abs(ratio - targetRatio));
             if (Math.abs(ratio - targetRatio) > ASPECT_TOLERANCE){
                 continue;
             }
-            Log.d(MADN3SCamera.TAG, "Math.abs(size.height - targetHeight) " + Math.abs(size.height - targetHeight));
+//            Log.d(MADN3SCamera.TAG, "Math.abs(size.height - targetHeight) " + Math.abs(size.height - targetHeight));
             if (Math.abs(size.height - targetHeight) < minDiff) {
                 optimalSize = size;
                 minDiff = Math.abs(size.height - targetHeight);
             }
         }
-        Log.d(MADN3SCamera.TAG, "optimalSize " + (optimalSize==null?"no":"yes"));
+//        Log.d(MADN3SCamera.TAG, "optimalSize " + (optimalSize==null?"no":"yes"));
         if (optimalSize == null) {
             minDiff = Double.MAX_VALUE;
             for (Camera.Size size : sizes) {
@@ -162,7 +165,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
                 }
             }
         }
-        Log.d(MADN3SCamera.TAG, "optimalSize " + (optimalSize==null?"no":"yes"));
+//        Log.d(MADN3SCamera.TAG, "optimalSize " + (optimalSize==null?"no":"yes"));
         return optimalSize;
     }
 }
