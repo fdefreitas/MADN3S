@@ -89,12 +89,12 @@ public class MidgetOfSeville {
 		savePath = MADN3SCamera.saveBitmapAsJpeg(maskBitmap, "mask");
 		Log.d(tag, "mask saved at " + savePath);
 		
-		Bitmap bgdBitmap = Bitmap.createBitmap(mask.cols(), mask.rows(), Bitmap.Config.RGB_565);
+		Bitmap bgdBitmap = Bitmap.createBitmap(bgdModel.cols(), bgdModel.rows(), Bitmap.Config.RGB_565);
 		Utils.matToBitmap(bgdModel, bgdBitmap);
 		savePath = MADN3SCamera.saveBitmapAsJpeg(bgdBitmap, "bgdModel");
 		Log.d(tag, "fgd saved at " + savePath);
 		
-		Bitmap fgdBitmap = Bitmap.createBitmap(mask.cols(), mask.rows(), Bitmap.Config.RGB_565);
+		Bitmap fgdBitmap = Bitmap.createBitmap(fgdModel.cols(), fgdModel.rows(), Bitmap.Config.RGB_565);
 		Utils.matToBitmap(fgdModel, fgdBitmap);
 		savePath = MADN3SCamera.saveBitmapAsJpeg(fgdBitmap, "fgdModel");
 		Log.d(tag, "fgd saved at " + savePath);
