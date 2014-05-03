@@ -22,7 +22,7 @@ public class MidgetOfSeville {
 
 	private static final String tag = "MidgetOfSeville";
 	private static final Scalar ZERO_SCALAR = new Scalar(0);
-	private int iterCount = 50;
+	private int iterCount = 1;
 
 	public void shapeUp(Bitmap imgBitmap) {
 		Mat imgMat = new Mat();
@@ -65,18 +65,22 @@ public class MidgetOfSeville {
 		
 		Mat imgMat = new Mat(height, width, CvType.CV_8UC3);
 		Utils.bitmapToMat(imgBitmap, imgMat);
-		Log.d(tag, "Before:" + imgMat.toString());
-		Imgproc.cvtColor(imgMat, imgMat, CvType.CV_8UC3);
-		Log.d(tag, "After:" + imgMat.toString());
+		Imgproc.cvtColor(imgMat, imgMat, Imgproc.COLOR_RGBA2RGB);
+		Log.d(tag, "imgMat after cvtColor:" + imgMat.toString());
 		
 		Mat mask = new Mat(height, width, CvType.CV_8UC3, ZERO_SCALAR);
+		Log.d(tag, "mask: " + mask.toString());
+		Rect rect = new Rect(0, 0, height/2, width/2);
+		Log.d(tag, "rect: " + rect.toString());
 		
-		Rect rect = new Rect(0, 0, imgMat.width()/2, imgMat.height()/2);
+//		Mat bgdModel = new Mat(height, width, CvType.CV_64FC1);
+//		Log.d(tag, "bgdModel: " + bgdModel.toString());
+//		Mat fgdModel = new Mat(height, width, CvType.CV_64FC1);
+//		Log.d(tag, "fgdModel: " + fgdModel.toString());
+		Mat bgdModel = new Mat(), fgdModel = new Mat();
+		Imgproc.grabCut(imgMat, mask, rect, bgdModel, fgdModel, iterCount, Imgproc.GC_INIT_WITH_RECT);
 		
-		Mat bgdModel = new Mat(height, width, CvType.CV_8UC3);
-		Mat fgdModel = new Mat(height, width, CvType.CV_8UC3);
-		
-//		Imgproc.grabCut(imgMat, mask, rect, bgdModel, fgdModel, iterCount);
+		Log.d(tag, "grabCut done");
 	}
 	
 	public Bitmap backgroundSubtracting(Bitmap sourceBitmap) {
