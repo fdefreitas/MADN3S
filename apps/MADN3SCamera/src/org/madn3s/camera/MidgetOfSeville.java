@@ -24,42 +24,12 @@ public class MidgetOfSeville {
 	private static final Scalar ZERO_SCALAR = new Scalar(0);
 	private int iterCount = 1;
 
+	/**
+	 * <a href="http://hiankun.blogspot.com/2013/08/try-grabcut-using-opencv.html">Example Code</a> 
+	 * @param imgBitmap
+	 */
 	public void shapeUp(Bitmap imgBitmap) {
-		Mat imgMat = new Mat();
-		Utils.bitmapToMat(imgBitmap, imgMat);
-		
-		Mat mask = new Mat(imgMat.height(), imgMat.width(), CvType.CV_8UC4, ZERO_SCALAR);
-		
-		Rect rect = new Rect(0, 0, imgMat.width()/2, imgMat.height()/2);
-		
-		Mat bgdModel = new Mat();
-		Mat fgdModel = new Mat();
-		
-		Imgproc.grabCut(imgMat, mask, rect, bgdModel, fgdModel, iterCount);
-		
-//		// Get the pixels marked as likely foreground
-//	    Core.compare(mask,new Scalar(Imgproc.GC_PR_FGD), mask, Core.CMP_EQ);
-//	    // Generate output image
-//	    cv::Mat foreground(image.size(),CV_8UC3,cv::Scalar(255,255,255));
-//	    image.copyTo(foreground,result); // bg pixels not copied
-//	 
-//	    // draw rectangle on original image
-//	    cv::rectangle(image, rectangle, cv::Scalar(255,255,255),1);
-//	    cv::namedWindow("Image");
-//	    cv::imshow("Image",image);
-//	 
-//	    // display result
-//	    cv::namedWindow("Segmented Image");
-//	    cv::imshow("Segmented Image",foreground);
-	}
-	
-	public void shapeUp(String filePath){
-		Options options = new Options();
-		options.inPreferredConfig = Config.RGB_565;
-		options.inDither = true;
-		Bitmap imgBitmap = BitmapFactory.decodeFile(filePath, options);
-		Log.d(tag, "imgBitmap config: " + imgBitmap.getConfig().toString() + " hasAlpha: " + imgBitmap.hasAlpha());
-		
+		String savePath;
 		int height = imgBitmap.getHeight();
 		int width = imgBitmap.getWidth();
 		
@@ -68,33 +38,55 @@ public class MidgetOfSeville {
 		Imgproc.cvtColor(imgMat, imgMat, Imgproc.COLOR_RGBA2RGB);
 		Log.d(tag, "imgMat after cvtColor:" + imgMat.toString());
 		
+		
 		Mat mask = new Mat(height, width, CvType.CV_8UC3, ZERO_SCALAR);
 		Log.d(tag, "mask: " + mask.toString());
+		
 		Rect rect = new Rect(0, 0, height/2, width/2);
 		Log.d(tag, "rect: " + rect.toString());
 		
-		Mat bgdModel = new Mat(), fgdModel = new Mat();
+		Mat bgdModel = new Mat();
+		Mat fgdModel = new Mat();
+		
 		Imgproc.grabCut(imgMat, mask, rect, bgdModel, fgdModel, iterCount, Imgproc.GC_INIT_WITH_RECT);
 		
-		Log.d(tag, "fgdModel: " + fgdModel.toString());
-		Log.d(tag, "bgdModel: " + bgdModel.toString());
+//		Log.d(tag, "fgdModel: " + fgdModel.toString());
+//		Log.d(tag, "bgdModel: " + bgdModel.toString());
+//
+//		Bitmap maskBitmap = Bitmap.createBitmap(mask.cols(), mask.rows(), Bitmap.Config.RGB_565);
+//		Utils.matToBitmap(mask, maskBitmap);
+//		savePath = MADN3SCamera.saveBitmapAsJpeg(maskBitmap, "mask");
+//		Log.d(tag, "mask saved to " + savePath);
+//		
+//		Bitmap bgdBitmap = Bitmap.createBitmap(bgdModel.cols(), bgdModel.rows(), Bitmap.Config.RGB_565);
+//		Utils.matToBitmap(bgdModel, bgdBitmap);
+//		savePath = MADN3SCamera.saveBitmapAsJpeg(bgdBitmap, "bgdModel");
+//		Log.d(tag, "fgd saved to " + savePath);
 		
-		String savePath;
+//		Bitmap fgdBitmap = Bitmap.createBitmap(fgdModel.cols(), fgdModel.rows(), Bitmap.Config.RGB_565);
+//		Utils.matToBitmap(fgdModel, fgdBitmap);
+//		savePath = MADN3SCamera.saveBitmapAsJpeg(fgdBitmap, "fgdModel");
+//		Log.d(tag, "fgd saved to " + savePath);
+//		Log.d(tag, "grabCut done");
+	
+		Core.compare(mask, new Scalar(Imgproc.GC_PR_FGD), mask, Core.CMP_EQ);
+		Mat foreground = new Mat(imgMat.size(), CvType.CV_8UC3, new Scalar(255, 255, 255));
+		imgMat.copyTo(foreground, mask);
+		
 		Bitmap maskBitmap = Bitmap.createBitmap(mask.cols(), mask.rows(), Bitmap.Config.RGB_565);
 		Utils.matToBitmap(mask, maskBitmap);
 		savePath = MADN3SCamera.saveBitmapAsJpeg(maskBitmap, "mask");
-		Log.d(tag, "mask saved at " + savePath);
-		
-		Bitmap bgdBitmap = Bitmap.createBitmap(bgdModel.cols(), bgdModel.rows(), Bitmap.Config.RGB_565);
-		Utils.matToBitmap(bgdModel, bgdBitmap);
-		savePath = MADN3SCamera.saveBitmapAsJpeg(bgdBitmap, "bgdModel");
-		Log.d(tag, "fgd saved at " + savePath);
-		
-		Bitmap fgdBitmap = Bitmap.createBitmap(fgdModel.cols(), fgdModel.rows(), Bitmap.Config.RGB_565);
-		Utils.matToBitmap(fgdModel, fgdBitmap);
-		savePath = MADN3SCamera.saveBitmapAsJpeg(fgdBitmap, "fgdModel");
-		Log.d(tag, "fgd saved at " + savePath);
+		Log.d(tag, "mask saved to " + savePath);
 		Log.d(tag, "grabCut done");
+	}
+	
+	public void shapeUp(String filePath){
+		Options options = new Options();
+		options.inPreferredConfig = Config.RGB_565;
+		options.inDither = true;
+		Bitmap imgBitmap = BitmapFactory.decodeFile(filePath, options);
+		Log.d(tag, "imgBitmap config: " + imgBitmap.getConfig().toString() + " hasAlpha: " + imgBitmap.hasAlpha());		
+		shapeUp(imgBitmap);
 	}
 	
 	public Bitmap backgroundSubtracting(String path) {
