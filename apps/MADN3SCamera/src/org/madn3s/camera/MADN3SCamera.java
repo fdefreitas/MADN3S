@@ -115,6 +115,7 @@ public class MADN3SCamera extends Application {
         Camera mCamera;
         try {
             mCamera = Camera.open();
+            mCamera.setDisplayOrientation(90);
             mCamera.getParameters().setFlashMode(Camera.Parameters.FLASH_MODE_ON);
         }
         catch (Exception e){

@@ -43,8 +43,6 @@ public class MidgetOfSeville {
 		Mat mask = new Mat(height, width, CvType.CV_8UC3, ZERO_SCALAR);
 		Log.d(tag, "mask: " + mask.toString());
 		
-//		Rect rect = new Rect(0, 0, height/2, width/2);
-		
 		double yOffset = width /4; 
 		
 		Point p1 = new Point(yOffset, 0);
@@ -57,34 +55,33 @@ public class MidgetOfSeville {
 		Mat fgdModel = new Mat();
 		
 		Imgproc.grabCut(imgMat, mask, rect, bgdModel, fgdModel, iterCount, Imgproc.GC_INIT_WITH_RECT);
-		
-//		Log.d(tag, "fgdModel: " + fgdModel.toString());
-//		Log.d(tag, "bgdModel: " + bgdModel.toString());
-//
-//		Bitmap maskBitmap = Bitmap.createBitmap(mask.cols(), mask.rows(), Bitmap.Config.RGB_565);
-//		Utils.matToBitmap(mask, maskBitmap);
-//		savePath = MADN3SCamera.saveBitmapAsJpeg(maskBitmap, "mask");
-//		Log.d(tag, "mask saved to " + savePath);
-//		
-//		Bitmap bgdBitmap = Bitmap.createBitmap(bgdModel.cols(), bgdModel.rows(), Bitmap.Config.RGB_565);
-//		Utils.matToBitmap(bgdModel, bgdBitmap);
-//		savePath = MADN3SCamera.saveBitmapAsJpeg(bgdBitmap, "bgdModel");
-//		Log.d(tag, "fgd saved to " + savePath);
-		
-//		Bitmap fgdBitmap = Bitmap.createBitmap(fgdModel.cols(), fgdModel.rows(), Bitmap.Config.RGB_565);
-//		Utils.matToBitmap(fgdModel, fgdBitmap);
-//		savePath = MADN3SCamera.saveBitmapAsJpeg(fgdBitmap, "fgdModel");
-//		Log.d(tag, "fgd saved to " + savePath);
-//		Log.d(tag, "grabCut done");
 	
 		Core.compare(mask, new Scalar(Imgproc.GC_PR_FGD), mask, Core.CMP_EQ);
+		
 		Mat foreground = new Mat(imgMat.size(), CvType.CV_8UC3, new Scalar(255, 255, 255));
+		
 		imgMat.copyTo(foreground, mask);
 		
 		Bitmap maskBitmap = Bitmap.createBitmap(mask.cols(), mask.rows(), Bitmap.Config.RGB_565);
 		Utils.matToBitmap(mask, maskBitmap);
 		savePath = MADN3SCamera.saveBitmapAsJpeg(maskBitmap, "mask");
 		Log.d(tag, "mask saved to " + savePath);
+		
+		Bitmap fgdBitmap = Bitmap.createBitmap(foreground.cols(), foreground.rows(), Bitmap.Config.RGB_565);
+		Utils.matToBitmap(foreground, fgdBitmap);
+		savePath = MADN3SCamera.saveBitmapAsJpeg(fgdBitmap, "fgd");
+		Log.d(tag, "foreground saved to " + savePath);
+		
+		imgMat.release();
+		mask.release();
+		fgdModel.release();
+		bgdModel.release();
+		foreground.release();
+		
+		imgBitmap.recycle();
+		maskBitmap.recycle();
+		fgdBitmap.recycle();
+		
 		Log.d(tag, "grabCut done");
 	}
 	

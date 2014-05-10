@@ -210,7 +210,7 @@ public class MainActivity extends Activity {
                 out = new FileOutputStream(filePath);
                 bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
                 
-                Toast.makeText(getBaseContext(), filePath, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getBaseContext(), "Imagen almacenada en " + filePath, Toast.LENGTH_SHORT).show();
                 
 //                btc.notifyPictureTaken();
 //              figaro.shapeUp(out);
