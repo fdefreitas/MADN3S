@@ -17,6 +17,7 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.util.Log;
+import android.view.ViewGroup.MarginLayoutParams;
 
 public class MidgetOfSeville {
 
@@ -42,7 +43,14 @@ public class MidgetOfSeville {
 		Mat mask = new Mat(height, width, CvType.CV_8UC3, ZERO_SCALAR);
 		Log.d(tag, "mask: " + mask.toString());
 		
-		Rect rect = new Rect(0, 0, height/2, width/2);
+//		Rect rect = new Rect(0, 0, height/2, width/2);
+		
+		double yOffset = width /4; 
+		
+		Point p1 = new Point(yOffset, 0);
+		Point p2 = new Point(yOffset * 3 ,height);
+		
+		Rect rect = new Rect(p1, p2);
 		Log.d(tag, "rect: " + rect.toString());
 		
 		Mat bgdModel = new Mat();
