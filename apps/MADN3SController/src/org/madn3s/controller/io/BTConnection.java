@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.util.Log;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
@@ -15,6 +16,8 @@ import java.util.UUID;
  * Created by inaki on 12/7/13.
  */
 public class BTConnection {
+
+private static final String tag = "BTConnection";
 
 //    public final static String NXT_MAC_ADDRESS = "00:16:53:02:0E:EC";
 //    public final static String NXT_MAC_ADDRESS = "5C:B5:24:C9:A2:33";
@@ -67,7 +70,7 @@ public class BTConnection {
 
     public boolean startMindstormConnection(){
         enableBT();
-        Log.d("DEBUG","Conectando a "+NXT_MAC_ADDRESS);
+        Log.d(tag,"Conectando a "+NXT_MAC_ADDRESS);
         //get the BluetoothDevice of the NXT
         BluetoothDevice nxtBTDevice = localAdapter.getRemoteDevice(NXT_MAC_ADDRESS);
 
@@ -85,9 +88,9 @@ public class BTConnection {
             Log.d("Bluetooth","Err: Device not found or cannot connect");
             success=false;
         }finally{
-            Log.d("Bluetooth", "isConnected() : " + String.valueOf(nxtSocket.isConnected()));
-            Log.d("DEBUG", "Direccion desde el socket: "+localAdapter.getRemoteDevice(NXT_MAC_ADDRESS).getAddress());
-            Log.d("DEBUG", "Clase desde el socket: "+localAdapter.getRemoteDevice(NXT_MAC_ADDRESS).getBluetoothClass());
+            Log.d(tag, "isConnected() : " + String.valueOf(nxtSocket.isConnected()));
+            Log.d(tag, "Direccion desde el socket: "+localAdapter.getRemoteDevice(NXT_MAC_ADDRESS).getAddress());
+            Log.d(tag, "Clase desde el socket: "+localAdapter.getRemoteDevice(NXT_MAC_ADDRESS).getBluetoothClass());
         }
 
         return success;
@@ -117,12 +120,31 @@ public class BTConnection {
                 return n;
             } catch (IOException e) {
                 e.printStackTrace();
-                return -1;
             }
-        }else{
-            //Error
-            return -1;
         }
+        return -1;
+    }
+    
+    public String readMessage(BluetoothSocket deviceSocket){
+        BufferedReader buffer;
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        
+        if(deviceSocket!=null){
+            try {
+                InputStreamReader in = new InputStreamReader(deviceSocket.getInputStream());
+                buffer = new BufferedReader(in);
+                
+                while ((line = buffer.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+                
+                return stringBuilder.toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
     }
 
     public boolean isConnected(){

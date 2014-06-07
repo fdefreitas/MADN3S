@@ -9,6 +9,8 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.madn3s.camera.io.BTConnection;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -214,7 +216,8 @@ public class MainActivity extends Activity {
                 
 //                btc.notifyPictureTaken();
 //              figaro.shapeUp(out);
-                figaro.shapeUp(filePath);
+                JSONArray result = figaro.shapeUp(filePath);
+                btc.notifyPictureTaken(result);
                 //MADN3SCamera.saveBitmapAsJpeg(figaro.backgroundSubtracting(filePath), "backgroundSubstract");
                 
                 out = new FileOutputStream(String.format(mediaStorageDir.getPath() 
@@ -229,10 +232,16 @@ public class MainActivity extends Activity {
                 
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
-            }
+            } catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
             
             camera.startPreview();
         }
+        
+        
+        
     };
 
 }

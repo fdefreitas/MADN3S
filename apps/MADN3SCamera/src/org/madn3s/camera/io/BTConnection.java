@@ -1,5 +1,6 @@
 package org.madn3s.camera.io;
 
+import android.R.integer;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
@@ -11,14 +12,21 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.nio.CharBuffer;
 import java.util.UUID;
+
+import org.json.JSONArray;
 
 /**
  * Created by inaki on 2/1/14.
  */
 public class BTConnection {
-    public static final String SERVICE_NAME ="MADN3S";
+    private static final String tag = "BTConnection";
+	public static final String SERVICE_NAME ="MADN3S";
     public static final UUID APP_UUID = UUID.fromString("65da7fe0-8b80-11e3-baa8-0800200c9a66");
 
     private static BTConnection instance;
@@ -62,7 +70,7 @@ public class BTConnection {
         if (!mBluetoothAdapter.isEnabled()) mBluetoothAdapter.enable();
 
         HiddenMidgetAttackAsyncTask task = new HiddenMidgetAttackAsyncTask(mBluetoothAdapter);
-        Log.d("BTConnection", "Llamando a AsyncTask");
+        Log.d(tag, "Llamando a AsyncTask");
         task.execute();
     }
 
@@ -79,9 +87,51 @@ public class BTConnection {
         this.controllerSocket = controllerSocket;
     }
 
-	public void notifyPictureTaken() {
-		//TODO complete, duh 
+	public void notifyPictureTaken(JSONArray toSend) {
+		try {
+			writeMessage(toSend.toString());
+		} catch (InterruptedException e) {
+			Log.d(tag, "I pitty the fool!");
+			e.printStackTrace();
+		}
+		
 	}
+	
+	public void writeMessage(String msg) throws InterruptedException{
+        if(controllerSocket!=null){
+            try {
+                OutputStreamWriter out = new OutputStreamWriter(controllerSocket.getOutputStream());
+                out.write(msg);
+                out.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public String readMessage(){
+        BufferedReader buffer;
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        
+        if(controllerSocket!=null){
+            try {
+                InputStreamReader in = new InputStreamReader(controllerSocket.getInputStream());
+                buffer = new BufferedReader(in);
+                
+                while ((line = buffer.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+                
+                return stringBuilder.toString();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+	
+	
 }
 
 

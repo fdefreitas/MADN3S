@@ -14,7 +14,8 @@ import java.io.IOException;
  */
 public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
 
-    private BluetoothServerSocket mBluetoothServerSocket;
+    private static final String tag = "Awesome AsyncTask";
+	private BluetoothServerSocket mBluetoothServerSocket;
     private BluetoothSocket mSocket;
     private Exception ex;
     private final static int SERVER_SOCKET_TIMEOUT = 3000000;
@@ -54,31 +55,31 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
         //if(e!= null){
             //e.printStackTrace();
             if(mSocket != null){
-                Log.d("Awesome AsyncTask", "Conexion levantada");
+                Log.d(tag, "Conexion levantada");
                 if (mSocket.getRemoteDevice()!= null)
-                    Log.d("Awesome AsyncTask", mSocket.getRemoteDevice().getName());
+                    Log.d(tag, mSocket.getRemoteDevice().getName());
                 switch (mSocket.getRemoteDevice().getBondState()){
                     case BluetoothDevice.BOND_BONDED:
-                        Log.d("Awesome AsyncTask", "BOND_BONDED");
+                        Log.d(tag, "BOND_BONDED");
                         break;
                     case BluetoothDevice.BOND_BONDING:
-                        Log.d("Awesome AsyncTask", "BOND_BONDING");
+                        Log.d(tag, "BOND_BONDING");
                         break;
                     case BluetoothDevice.BOND_NONE:
-                        Log.d("Awesome AsyncTask", "BOND_NONE");
+                        Log.d(tag, "BOND_NONE");
                         break;
                     default:
-                        Log.d("Awesome AsyncTask", "Default");
+                        Log.d(tag, "Default");
                 }
             //poner el socket en algun lado
             }else{
-                Log.d("Awesome AsyncTask", "Conexion fallida");
+                Log.d(tag, "Conexion fallida");
             }
         //}
         try{
-            Log.d("Awesome AsyncTask", "Lei esto = "+mSocket.getInputStream().read());
+            Log.d(tag, "Lei esto = "+mSocket.getInputStream().read());
         } catch (Exception e){
-            Log.d("Awesome AsyncTask", "FUCK You"+e);
+            Log.d(tag, "FUCK You "+e);
         }
         BTConnection conn = BTConnection.getInstance();
         conn.setControllerSocket(mSocket);

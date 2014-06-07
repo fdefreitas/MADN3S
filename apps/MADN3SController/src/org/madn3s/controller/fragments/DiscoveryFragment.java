@@ -137,7 +137,8 @@ public class DiscoveryFragment extends BaseFragment{
 			@Override
 			public void onClick(View v) {
 				try {
-					if(isNxtSelected && cams == 2){
+					
+					if(true /*isNxtSelected && cams == 2*/){
 						Log.d(tag, "Mode: SCANNER");
 						listener.onObjectSelected(Mode.SCANNER);
 						

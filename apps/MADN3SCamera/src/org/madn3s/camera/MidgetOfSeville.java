@@ -1,11 +1,16 @@
 package org.madn3s.camera;
 
 import java.io.FileOutputStream;
+import java.util.List;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
@@ -28,8 +33,9 @@ public class MidgetOfSeville {
 	/**
 	 * <a href="http://hiankun.blogspot.com/2013/08/try-grabcut-using-opencv.html">Example Code</a> 
 	 * @param imgBitmap
+	 * @throws JSONException 
 	 */
-	public void shapeUp(Bitmap imgBitmap) {
+	public JSONArray shapeUp(Bitmap imgBitmap) throws JSONException {
 		String savePath;
 		int height = imgBitmap.getHeight();
 		int width = imgBitmap.getWidth();
@@ -55,6 +61,8 @@ public class MidgetOfSeville {
 		Mat fgdModel = new Mat();
 		
 		Imgproc.grabCut(imgMat, mask, rect, bgdModel, fgdModel, iterCount, Imgproc.GC_INIT_WITH_RECT);
+		
+		Log.d(tag, "grabCut done,moving on");
 	
 		Core.compare(mask, new Scalar(Imgproc.GC_PR_FGD), mask, Core.CMP_EQ);
 		
@@ -62,6 +70,38 @@ public class MidgetOfSeville {
 		
 		imgMat.copyTo(foreground, mask);
 		
+		double iCannyLowerThreshold = 35;  
+	    double iCannyUpperThreshold = 75;  
+	    
+	    Mat cannyfied = new Mat(height, width, CvType.CV_8UC3, ZERO_SCALAR);
+	                  
+	    Imgproc.Canny(mask, cannyfied, iCannyLowerThreshold, iCannyUpperThreshold); 
+	    
+	    Log.d(tag, "canny done,moving on");
+	    
+	    MatOfPoint MOPcorners = new MatOfPoint();
+	    
+		Imgproc.goodFeaturesToTrack(cannyfied, MOPcorners, 50, 0.01, 30);  
+        
+		Log.d(tag, "goodFeatures done,moving on");
+	              
+	    List<Point> corners = MOPcorners.toList();  
+	    Scalar color =  new Scalar(255, 0, 0);
+	              
+	    Log.d(tag, "starting point printing for");
+	    JSONObject actual =  new JSONObject();
+	    JSONArray result = new JSONArray();
+	    for (Point point : corners){
+	    	actual.put("x", point.x);
+	    	actual.put("y", point.y);
+	    	result.put(actual);
+			Core.circle(foreground, point, 10, color);
+        }  
+	  
+	    Log.d(tag, "finished point printing");
+		
+	    Log.d(tag, "result " + result.toString(1));
+	    
 		Bitmap maskBitmap = Bitmap.createBitmap(mask.cols(), mask.rows(), Bitmap.Config.RGB_565);
 		Utils.matToBitmap(mask, maskBitmap);
 		savePath = MADN3SCamera.saveBitmapAsJpeg(maskBitmap, "mask");
@@ -71,6 +111,11 @@ public class MidgetOfSeville {
 		Utils.matToBitmap(foreground, fgdBitmap);
 		savePath = MADN3SCamera.saveBitmapAsJpeg(fgdBitmap, "fgd");
 		Log.d(tag, "foreground saved to " + savePath);
+		
+		Bitmap cannyBitmap = Bitmap.createBitmap(cannyfied.cols(), cannyfied.rows(), Bitmap.Config.RGB_565);
+		Utils.matToBitmap(cannyfied, cannyBitmap);
+		savePath = MADN3SCamera.saveBitmapAsJpeg(cannyBitmap, "canny");
+		Log.d(tag, "canny saved to " + savePath);
 		
 		imgMat.release();
 		mask.release();
@@ -83,88 +128,15 @@ public class MidgetOfSeville {
 		fgdBitmap.recycle();
 		
 		Log.d(tag, "grabCut done");
+		return result;
 	}
 	
-	public void shapeUp(String filePath){
+	public JSONArray shapeUp(String filePath) throws JSONException{
 		Options options = new Options();
 		options.inPreferredConfig = Config.RGB_565;
 		options.inDither = true;
 		Bitmap imgBitmap = BitmapFactory.decodeFile(filePath, options);
 		Log.d(tag, "imgBitmap config: " + imgBitmap.getConfig().toString() + " hasAlpha: " + imgBitmap.hasAlpha());		
-		shapeUp(imgBitmap);
+		return shapeUp(imgBitmap);
 	}
-	
-	public Bitmap backgroundSubtracting(String path) {
-		Options options = new Options();
-		options.inPreferredConfig = Config.RGB_565;
-		options.inDither = true;
-		Bitmap imgBitmap = BitmapFactory.decodeFile(path, options);
-		Log.d(tag, "imgBitmap config: " + imgBitmap.getConfig().toString() + " hasAlpha: " + imgBitmap.hasAlpha());
-		return backgroundSubtracting(imgBitmap);
-	}
-	
-	public Bitmap backgroundSubtracting(Bitmap sourceBitmap) {
-		Mat sourceMat = new Mat();
-		Utils.bitmapToMat(sourceBitmap, sourceMat);
-		sourceMat.assignTo(sourceMat, CvType.CV_8UC3);
-		Log.d(tag, sourceMat.toString());
-		
-		Mat firstMask = new Mat(sourceBitmap.getHeight(), sourceBitmap.getWidth(), CvType.CV_8UC3);
-		
-		Point tl = new Point();
-		tl.x = 0;
-		tl.y = 0;
-		
-		Point br = new Point();
-		br.x = 1;
-		br.y = 1;
-		
-		Rect rect = new Rect(tl, br);
-		
-		Mat bgModel = new Mat(sourceBitmap.getHeight(), sourceBitmap.getWidth(), CvType.CV_8UC3);
-		Mat fgModel = new Mat(sourceBitmap.getHeight(), sourceBitmap.getWidth(), CvType.CV_8UC3);
-		
-		Imgproc.grabCut(sourceMat, firstMask, rect, bgModel, fgModel, 1);
-		
-		Mat background = new Mat(sourceBitmap.getHeight(), sourceBitmap.getWidth(), CvType.CV_8UC3);
-		Mat mask;
-		Mat source = new Mat(1, 1, CvType.CV_8UC3, new Scalar(3.0));
-		Mat dst = new Mat(sourceBitmap.getHeight(), sourceBitmap.getWidth(), CvType.CV_8UC3);
-		Scalar color = new Scalar(255, 0, 0, 255);
-		
-		Core.compare(firstMask, source, firstMask, Core.CMP_EQ);
-
-		Mat foreground = new Mat(sourceMat.size(), CvType.CV_8UC3, new Scalar(255,
-				255, 255));
-		sourceMat.copyTo(foreground, firstMask);
-
-		Core.rectangle(sourceMat, tl, br, color);
-
-		Mat tmp = new Mat();
-		Imgproc.resize(background, tmp, sourceMat.size());
-		background = tmp;
-		mask = new Mat(foreground.size(), CvType.CV_8UC3, new Scalar(255, 255, 255));
-
-		Imgproc.cvtColor(foreground, mask, 6/* COLOR_BGR2GRAY */);
-		Imgproc.threshold(mask, mask, 254, 255, 1 /* THRESH_BINARY_INV */);
-
-		Mat vals = new Mat(1, 1, CvType.CV_8UC3, new Scalar(0.0));
-		background.copyTo(dst);
-
-		background.setTo(vals, mask);
-
-		Core.add(background, foreground, dst, mask);
-
-		firstMask.release();
-		source.release();
-		bgModel.release();
-		fgModel.release();
-		vals.release();
-		
-		Bitmap resultBitmap = null;
-		Utils.matToBitmap(background, resultBitmap);
-		
-		return resultBitmap;
-	}
-
 }

@@ -88,10 +88,10 @@ public class ConnectionFragment extends BaseFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        nxtNameTextView = (TextView) view.findViewById(R.id.nxt_name_connection_textView);
-        nxtNameTextView.setText(MADN3SController.nxt.getName());
-        nxtAddressTextView = (TextView) view.findViewById(R.id.nxt_address_connection_textView);
-        nxtAddressTextView.setText(MADN3SController.nxt.getAddress());
+//        nxtNameTextView = (TextView) view.findViewById(R.id.nxt_name_connection_textView);
+//        nxtNameTextView.setText(MADN3SController.nxt.getName());
+//        nxtAddressTextView = (TextView) view.findViewById(R.id.nxt_address_connection_textView);
+//        nxtAddressTextView.setText(MADN3SController.nxt.getAddress());
         nxtConnectingProgressBar = (ProgressBar) view.findViewById(R.id.nxt_connecting_progressBar);
         nxtConnectedImageView = (ImageView) view.findViewById(R.id.nxt_connected_imageView);
         nxtNotConnectedImageView = (ImageView) view.findViewById(R.id.nxt_not_connected_imageView);
@@ -126,8 +126,8 @@ public class ConnectionFragment extends BaseFragment {
             }
         };
 
-        talker = new NXTTalker(mHandler);
-        talker.connect(nxt);
+     //   talker = new NXTTalker(mHandler);
+     //   talker.connect(nxt);
         Log.d(TAG, "Iniciando Conexión con NXT: " + nxt.getName());
         
         HiddenMidgetAttackAsyncTask taskCamera1 = new HiddenMidgetAttackAsyncTask(camera1);

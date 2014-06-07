@@ -119,7 +119,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         		launchControlsFragment();
         		break;
         	case SCANNER:
-        		launchConectionFragment();
+        		launchConnectionFragment();
         		break;
     		default:
         }
@@ -136,7 +136,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         fm.executePendingTransactions();
     }
 
-    public void launchConectionFragment(){
+    public void launchConnectionFragment(){
         Log.d(tag, "launchConectionFragment");
         ConnectionFragment conections = new ConnectionFragment();
         FragmentManager fm = getFragmentManager();
