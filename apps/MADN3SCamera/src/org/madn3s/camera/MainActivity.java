@@ -12,8 +12,8 @@ import java.util.Date;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.madn3s.camera.io.BTConnection;
+import org.madn3s.camera.io.BraveheartMidgetService;
 import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
@@ -23,6 +23,7 @@ import org.opencv.imgproc.Imgproc;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -74,7 +75,9 @@ public class MainActivity extends Activity {
 //        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 //        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
 //        startActivity(discoverableIntent);
-
+        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        BraveheartMidgetService service =  new BraveheartMidgetService();
+        service.startService(discoverableIntent);
 
         mCamera = MADN3SCamera.getCameraInstance();
         figaro = new MidgetOfSeville();
@@ -217,7 +220,9 @@ public class MainActivity extends Activity {
 //                btc.notifyPictureTaken();
 //              figaro.shapeUp(out);
                 JSONArray result = figaro.shapeUp(filePath);
-                btc.notifyPictureTaken(result);
+                
+                
+          //      btc.notifyPictureTaken(result);
                 //MADN3SCamera.saveBitmapAsJpeg(figaro.backgroundSubtracting(filePath), "backgroundSubstract");
                 
                 out = new FileOutputStream(String.format(mediaStorageDir.getPath() 

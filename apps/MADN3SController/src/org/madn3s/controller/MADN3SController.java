@@ -4,6 +4,7 @@ import android.app.Application;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothClass.Device;
 import android.bluetooth.BluetoothDevice;
+import android.os.Handler;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -18,6 +19,9 @@ public class MADN3SController extends Application {
 	public static BluetoothDevice nxt;
     public static BluetoothDevice camera1;
     public static BluetoothDevice camera2;
+    
+    private Handler mBluetoothHandler;
+    private Handler.Callback mBluetoothHandlerCallback = null;
     
     public static enum Mode {
     	SCANNER("SCANNER",0),
@@ -43,11 +47,34 @@ public class MADN3SController extends Application {
     	
     }
 
+    
+    
+	@Override
+	public void onCreate() {
+		// TODO Auto-generated method stub
+		super.onCreate();
+		mBluetoothHandler = new Handler() {
+    	    public void handleMessage(android.os.Message msg) {
+    	        if (mBluetoothHandlerCallback != null) {
+    	            mBluetoothHandlerCallback.handleMessage(msg);
+    	        }
+    	    };
+    	};
+	}
+
 	public static boolean isToyDevice(BluetoothDevice device){
 		return device.getBluetoothClass()!= null && device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.TOY_ROBOT;
 	}
 
 	public static boolean isCameraDevice(BluetoothDevice device){
 		return device.getBluetoothClass()!= null && device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.PHONE_SMART;
+	}
+	
+	public Handler getBluetoothHandler() {
+		return mBluetoothHandler;
+	}
+	
+	public void setBluetoothHandlerCallBack(Handler.Callback callback) {
+	    this.mBluetoothHandlerCallback = callback;
 	}
 }

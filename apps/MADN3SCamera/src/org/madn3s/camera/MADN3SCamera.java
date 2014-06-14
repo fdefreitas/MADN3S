@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,11 +30,22 @@ public class MADN3SCamera extends Application {
 
     public static String projectName;
     public static String position;
+    
+    private Handler mBluetoothHandler;
+    private Handler.Callback mBluetoothHandlerCallback = null;
 
     @Override
     public void onCreate() {
         super.onCreate();
         appContext = super.getBaseContext();
+        
+        mBluetoothHandler = new Handler() {
+    	    public void handleMessage(android.os.Message msg) {
+    	        if (mBluetoothHandlerCallback != null) {
+    	            mBluetoothHandlerCallback.handleMessage(msg);
+    	        }
+    	    };
+    	};
     }
 
     public static Uri getOutputMediaFileUri(int type){
@@ -129,4 +141,12 @@ public class MADN3SCamera extends Application {
     private boolean checkCameraHardware(Context context) {
         return context.getPackageManager() != null && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
+
+	public Handler getBluetoothHandler() {
+		return mBluetoothHandler;
+	}
+	
+	public void setBluetoothHandlerCallBack(Handler.Callback callback) {
+	    this.mBluetoothHandlerCallback = callback;
+	}
 }
