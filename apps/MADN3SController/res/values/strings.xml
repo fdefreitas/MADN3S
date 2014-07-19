@@ -27,5 +27,7 @@
     <string name="device_name">Device Name</string>
     <string name="device_address">Device Address</string>
     <string name="next">Next</string>
+    <string name="error_connect_failed">Connection Failed</string>
+    <string name="error_connect_lost">Connection Lost</string>
     
 </resources>

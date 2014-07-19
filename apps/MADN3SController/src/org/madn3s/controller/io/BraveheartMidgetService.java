@@ -12,6 +12,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
+import org.madn3s.controller.R;
 
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
