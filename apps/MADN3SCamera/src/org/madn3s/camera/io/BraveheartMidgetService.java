@@ -15,6 +15,7 @@ import org.madn3s.camera.MADN3SCamera;
 import org.madn3s.camera.Midgeteer;
 import org.madn3s.camera.R;
 
+import android.app.IntentService;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -28,7 +29,17 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
-public class BraveheartMidgetService extends Service {
+public class BraveheartMidgetService extends IntentService {
+	public BraveheartMidgetService(String name) {
+		super(name);
+		// TODO Auto-generated constructor stub
+	}
+	
+	public BraveheartMidgetService() {
+		super("BraveheartMidgetService");
+		// TODO Auto-generated constructor stub
+	}
+
 	public static final String BT_DEVICE = "btdevice";
 	private static final String tag = "BTConnection";
 	
@@ -57,49 +68,50 @@ public class BraveheartMidgetService extends Service {
     public Vector<Byte> packdata = new Vector<Byte>(2048);
     public static BluetoothDevice device = null;
 	
-	@Override
-    public void onCreate() {
-        Log.d("PrinterService", "Service started");
-        super.onCreate();
-    }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        mHandler = ((MADN3SCamera) getApplication()).getBluetoothHandler();
-        return mBinder;
-    }
-
-    public class LocalBinder extends Binder {
-        BraveheartMidgetService getService() {
-            return BraveheartMidgetService.this;
-        }
-    }
-
-
-
-    private final IBinder mBinder = new LocalBinder();
-
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("PrinterService", "Onstart Command");
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter != null) {
-            device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-            deviceName = device.getName();
-            String macAddress = device.getAddress();
-            if (macAddress != null && macAddress.length() > 0) {
-                connectToDevice(macAddress);
-            } else {
-                stopSelf();
-                return 0;
-            }
-        }
-        String stopservice = intent.getStringExtra("stopservice");
-        if (stopservice != null && stopservice.length() > 0) {
-            stop();
-        }
-        return START_STICKY;
-    }
+//	@Override
+//    public void onCreate() {
+//        Log.d("PrinterService", "Service started");
+//        super.onCreate();
+//    }
+//
+//    @Override
+//    public IBinder onBind(Intent intent) {
+//        mHandler = ((MADN3SCamera) getApplication()).getBluetoothHandler();
+//        Log.d(tag, "mHandler "+ mHandler == null ? "NULL" : mHandler.toString());
+//        Log.d(tag, "mBinder "+ mBinder == null ? "NULL" : mBinder.toString());
+//        return mBinder;
+//    }
+//
+//    public class LocalBinder extends Binder {
+//        BraveheartMidgetService getService() {
+//            return BraveheartMidgetService.this;
+//        }
+//    }
+//
+//
+//    private final IBinder mBinder = new LocalBinder();
+//
+//    @Override
+//    public int onStartCommand(Intent intent, int flags, int startId) {
+//        Log.d("PrinterService", "Onstart Command");
+////        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+////        if (mBluetoothAdapter != null) {
+////            device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+////            deviceName = device.getName();
+////            String macAddress = device.getAddress();
+////            if (macAddress != null && macAddress.length() > 0) {
+////                connectToDevice(macAddress);
+////            } else {
+////                stopSelf();
+////                return 0;
+////            }
+////        }
+////        String stopservice = intent.getStringExtra("stopservice");
+////        if (stopservice != null && stopservice.length() > 0) {
+////            stop();
+////        }
+//        return START_STICKY;
+//    }
 
     private synchronized void connectToDevice(String macAddress) {
         BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(macAddress);
@@ -127,38 +139,38 @@ public class BraveheartMidgetService extends Service {
         }
     }
 
-    public synchronized void stop() {
-        setState(STATE_NONE);
-        if (mBluetoothConnectionThread != null) {
-        	mBluetoothConnectionThread.cancel();
-        	mBluetoothConnectionThread = null;
-        }
-
-        if (mBluetoothConnectedThread != null) {
-        	mBluetoothConnectedThread.cancel();
-        	mBluetoothConnectedThread = null;
-        }
-        if (mBluetoothAdapter != null) {
-            mBluetoothAdapter.cancelDiscovery();
-        }
-        stopSelf();
-    }
-
-    @Override
-    public boolean stopService(Intent name) {
-        setState(STATE_NONE);
-        if (mBluetoothConnectedThread != null) {
-        	mBluetoothConnectionThread.cancel();
-        	mBluetoothConnectionThread = null;
-        }
-
-        if (mBluetoothConnectedThread != null) {
-        	mBluetoothConnectedThread.cancel();
-        	mBluetoothConnectedThread = null;
-        }
-        mBluetoothAdapter.cancelDiscovery();
-        return super.stopService(name);
-    }
+//    public synchronized void stop() {
+//        setState(STATE_NONE);
+//        if (mBluetoothConnectionThread != null) {
+//        	mBluetoothConnectionThread.cancel();
+//        	mBluetoothConnectionThread = null;
+//        }
+//
+//        if (mBluetoothConnectedThread != null) {
+//        	mBluetoothConnectedThread.cancel();
+//        	mBluetoothConnectedThread = null;
+//        }
+//        if (mBluetoothAdapter != null) {
+//            mBluetoothAdapter.cancelDiscovery();
+//        }
+//        stopSelf();
+//    }
+//
+//    @Override
+//    public boolean stopService(Intent name) {
+//        setState(STATE_NONE);
+//        if (mBluetoothConnectedThread != null) {
+//        	mBluetoothConnectionThread.cancel();
+//        	mBluetoothConnectionThread = null;
+//        }
+//
+//        if (mBluetoothConnectedThread != null) {
+//        	mBluetoothConnectedThread.cancel();
+//        	mBluetoothConnectedThread = null;
+//        }
+//        mBluetoothAdapter.cancelDiscovery();
+//        return super.stopService(name);
+//    }
 
     private static Object obj = new Object();
 
@@ -215,8 +227,8 @@ public class BraveheartMidgetService extends Service {
             }
             JSONArray points = new JSONArray();
             JSONObject jsonMsg = readMessage(stringBuilder.toString());
-            Midgeteer midgeteer = new Midgeteer(jsonMsg, getBaseContext(), points, MADN3SCamera.getCameraInstance());
-            midgeteer.start();
+//            Midgeteer midgeteer = new Midgeteer(jsonMsg, getBaseContext(), points, MADN3SCamera.getCameraInstance());
+//            midgeteer.start();
             //enviar points
             return true;
         } catch (IOException e) {
@@ -316,7 +328,7 @@ public class BraveheartMidgetService extends Service {
                 } catch (Exception e) {
                     e.printStackTrace();
                     connectionLost();
-                    BraveheartMidgetService.this.stop();
+//                    BraveheartMidgetService.this.stop();
                     break;
                 }
 
@@ -354,15 +366,15 @@ public class BraveheartMidgetService extends Service {
     }
 
     public void toast(String msg) {
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void onDestroy() {
-        stop();
-        Log.d("Printer Service", "Destroyed");
-        super.onDestroy();
-    }
+//    @Override
+//    public void onDestroy() {
+//        stop();
+//        Log.d("Printer Service", "Destroyed");
+//        super.onDestroy();
+//    }
 
     private void sendMsg(int flag) {
         Message msg = new Message();
@@ -395,19 +407,19 @@ public class BraveheartMidgetService extends Service {
     };
     
     private void connectionFailed() {
-        BraveheartMidgetService.this.stop();
+//        BraveheartMidgetService.this.stop();
         Message msg = mHandler.obtainMessage(MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(TOAST, getString(R.string.error_connect_failed));
+//        bundle.putString(TOAST, getString(R.string.error_connect_failed));
         msg.setData(bundle);
         mHandler.sendMessage(msg);
     }
 
     private void connectionLost() {
-        BraveheartMidgetService.this.stop();
+//        BraveheartMidgetService.this.stop();
         Message msg = mHandler.obtainMessage(MESSAGE_TOAST);
         Bundle bundle = new Bundle();
-        bundle.putString(TOAST, getString(R.string.error_connect_lost));
+//        bundle.putString(TOAST, getString(R.string.error_connect_lost));
         msg.setData(bundle);
         mHandler.sendMessage(msg);
     }
@@ -465,7 +477,7 @@ public class BraveheartMidgetService extends Service {
                 } catch (Exception e) {
                     e.printStackTrace();
                     connectionLost();
-                    BraveheartMidgetService.this.stop();
+//                    BraveheartMidgetService.this.stop();
                     break;
                 }
 
@@ -501,6 +513,12 @@ public class BraveheartMidgetService extends Service {
             }
         }
     }
+
+	@Override
+	protected void onHandleIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		Log.e(tag, "VIVE!!!!!!!");
+	}
     
     
 }

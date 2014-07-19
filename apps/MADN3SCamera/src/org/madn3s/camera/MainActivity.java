@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.madn3s.camera.io.BTConnection;
 import org.madn3s.camera.io.BraveheartMidgetService;
+import org.madn3s.camera.io.test;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
 import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
@@ -28,6 +29,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -75,9 +77,26 @@ public class MainActivity extends Activity {
 //        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 //        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
 //        startActivity(discoverableIntent);
-        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        BraveheartMidgetService service =  new BraveheartMidgetService();
-        service.startService(discoverableIntent);
+//        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+//        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
+//        Log.d(tag, "discoverableIntent "+ (discoverableIntent == null ? "NULL" : discoverableIntent.toString()));
+//        BraveheartMidgetService service =  new BraveheartMidgetService();
+//        Log.d(tag, "service "+ (service == null ? "NULL" : service.toString()));
+//        service.startService(discoverableIntent);
+        
+          Intent i= new Intent(this, BraveheartMidgetService.class);
+     // potentially add data to the intent
+	     i.putExtra("KEY1", "Value to be used by the service");
+	     startService(i); 
+        
+//        Intent discoverableIntent2 = new Intent(this, test.class);
+//        discoverableIntent2.setData(Uri.parse(""));
+//        startService(discoverableIntent2);
+        
+//        Intent discoverableIntent2 = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+//        discoverableIntent2.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
+//        discoverableIntent2.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
+        
 
         mCamera = MADN3SCamera.getCameraInstance();
         figaro = new MidgetOfSeville();
