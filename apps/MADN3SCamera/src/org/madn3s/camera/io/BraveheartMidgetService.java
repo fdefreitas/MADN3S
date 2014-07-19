@@ -21,6 +21,7 @@ import android.app.IntentService;
 import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -36,15 +37,6 @@ import android.view.View;
 import android.widget.Toast;
 
 public class BraveheartMidgetService extends IntentService {
-	public BraveheartMidgetService(String name) {
-		super(name);
-		// TODO Auto-generated constructor stub
-	}
-	
-	public BraveheartMidgetService() {
-		super("BraveheartMidgetService");
-		// TODO Auto-generated constructor stub
-	}
 
 	public static final String BT_DEVICE = "btdevice";
 	private static final String tag = "BTConnection";
@@ -58,11 +50,12 @@ public class BraveheartMidgetService extends IntentService {
     public static final int STATE_CONNECTED = 3;
 	private static final String TOAST = null;
 	
-	//@TODO incluir dentro de Handler Custom
+	//TODO incluir dentro de Handler Custom
 	private static final int MESSAGE_TOAST = 0;
 	private static final int MESSAGE_STATE_CHANGE = 1;
 	public static final int MESSAGE_WRITE = 2;
     
+	private BluetoothServerSocket mBluetoothServerSocket;
     private static BluetoothConnectionThread mBluetoothConnectionThread;
     private static BluetoothConnectedThread mBluetoothConnectedThread;
 
@@ -74,7 +67,9 @@ public class BraveheartMidgetService extends IntentService {
     public Vector<Byte> packdata = new Vector<Byte>(2048);
     public static BluetoothDevice device = null;
 	
-
+    public BraveheartMidgetService() {
+		super("BraveheartMidgetService");
+	}
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -90,24 +85,28 @@ public class BraveheartMidgetService extends IntentService {
         }
     }
 
-
     private final IBinder mBinder = new LocalBinder();
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("PrinterService", "Onstart Command");
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter != null) {
-            device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-            deviceName = device.getName();
-            String macAddress = device.getAddress();
-            if (macAddress != null && macAddress.length() > 0) {
-                connectToDevice(macAddress);
-            } else {
-                stopSelf();
-                return 0;
-            }
-        }
+        HiddenMidgetAttackAsyncTask task = new HiddenMidgetAttackAsyncTask(mBluetoothAdapter, mBluetoothServerSocket);
+        Log.d(tag, "Llamando a AsyncTask");
+        task.execute();
+        
+//        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        if (mBluetoothAdapter != null) {
+//            device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+//            deviceName = device.getName();
+//            String macAddress = device.getAddress();
+//            if (macAddress != null && macAddress.length() > 0) {
+//                connectToDevice(macAddress);
+//            } else {
+//                stopSelf();
+//                return 0;
+//            }
+//        }
         String stopservice = intent.getStringExtra("stopservice");
         if (stopservice != null && stopservice.length() > 0) {
             stop();
