@@ -3,6 +3,7 @@ package org.madn3s.camera;
 import static org.madn3s.camera.MADN3SCamera.position;
 import static org.madn3s.camera.MADN3SCamera.projectName;
 
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -24,7 +25,11 @@ import org.opencv.imgproc.Imgproc;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -32,6 +37,7 @@ import android.hardware.Camera;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,6 +55,33 @@ public class MainActivity extends Activity {
     private static MidgetOfSeville figaro;
     private Camera mCamera;
     private CameraPreview mPreview;
+    
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			String action = intent.getAction();
+			
+			
+			if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+				Log.d(tag, "Busqueda Encontrada");
+				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+
+				Intent i = new Intent(context, BraveheartMidgetService.class);
+				i.putExtra(BluetoothDevice.EXTRA_DEVICE, (Parcelable)device);
+		        startService(i);
+				
+			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+				//TODO validar error
+				Log.d(tag, "Busqueda Terminada");
+				
+				
+			} else {
+				Log.d(tag, "Busqueda SIN  DEFINICION");
+			}
+			
+			 
+		}
+	};
     
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -74,50 +107,37 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         
 
-//        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-//        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
-//        startActivity(discoverableIntent);
-//        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-//        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
-//        Log.d(tag, "discoverableIntent "+ (discoverableIntent == null ? "NULL" : discoverableIntent.toString()));
-//        BraveheartMidgetService service =  new BraveheartMidgetService();
-//        Log.d(tag, "service "+ (service == null ? "NULL" : service.toString()));
-//        service.startService(discoverableIntent);
+        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
+        startActivity(discoverableIntent);
         
-          Intent i= new Intent(this, BraveheartMidgetService.class);
-     // potentially add data to the intent
-	     i.putExtra("KEY1", "Value to be used by the service");
-	     startService(i); 
-        
-//        Intent discoverableIntent2 = new Intent(this, test.class);
-//        discoverableIntent2.setData(Uri.parse(""));
-//        startService(discoverableIntent2);
-        
-//        Intent discoverableIntent2 = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-//        discoverableIntent2.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
-//        discoverableIntent2.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
-        
+        IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+		registerReceiver(mReceiver, intentFilter);
 
-        mCamera = MADN3SCamera.getCameraInstance();
-        figaro = new MidgetOfSeville();
+		intentFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+		registerReceiver(mReceiver, intentFilter);
 
-        // Create our Preview view and set it as the content of our activity.
-        mPreview = new CameraPreview(this, mCamera);
-        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_frameLayout);
-        preview.addView(mPreview);
 
-        Button button = (Button) findViewById(R.id.connect_button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-    //                    btc = new BTConnection();
-            	if(mCamera != null){
-            		mCamera.takePicture(null, null, mPictureCallback);
-            	} else {
-            		Toast.makeText(v.getContext(), "mCamera == null", Toast.LENGTH_SHORT).show();
-            	}
-            }
-        });
+//        mCamera = MADN3SCamera.getCameraInstance();
+//        figaro = new MidgetOfSeville();
+//
+//        // Create our Preview view and set it as the content of our activity.
+//        mPreview = new CameraPreview(this, mCamera);
+//        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_frameLayout);
+//        preview.addView(mPreview);
+//
+//        Button button = (Button) findViewById(R.id.connect_button);
+//        button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//    //                    btc = new BTConnection();
+//            	if(mCamera != null){
+//            		mCamera.takePicture(null, null, mPictureCallback);
+//            	} else {
+//            		Toast.makeText(v.getContext(), "mCamera == null", Toast.LENGTH_SHORT).show();
+//            	}
+//            }
+//        });
         projectName = "first";//obtener este valor desde la tablet
         position = "right";//obtener este valor desde la tablet
     }
