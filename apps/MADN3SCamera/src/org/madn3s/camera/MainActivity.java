@@ -34,7 +34,10 @@ import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -75,6 +78,7 @@ public class MainActivity extends Activity {
 		startActivity(discoverableIntent);
 		
 		Intent i = new Intent(this, BraveheartMidgetService.class);
+		i.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3000000);
 //		i.putExtra(BluetoothDevice.EXTRA_DEVICE, (Parcelable)device);
 		startService(i);
         
@@ -89,7 +93,7 @@ public class MainActivity extends Activity {
 //        button.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-            	btc = new BTConnection();
+////            	btc = new BTConnection();
 //            	if(mCamera != null){
 //            		mCamera.takePicture(null, null, mPictureCallback);
 //            	} else {

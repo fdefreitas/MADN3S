@@ -1,6 +1,5 @@
 package org.madn3s.camera;
 
-import java.io.FileOutputStream;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -16,13 +15,11 @@ import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.imgproc.Imgproc;
 
-import android.R.integer;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.util.Log;
-import android.view.ViewGroup.MarginLayoutParams;
 
 public class MidgetOfSeville {
 
