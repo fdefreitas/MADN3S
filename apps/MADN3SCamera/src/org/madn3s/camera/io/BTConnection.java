@@ -69,9 +69,9 @@ public class BTConnection {
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (!mBluetoothAdapter.isEnabled()) mBluetoothAdapter.enable();
 
-        HiddenMidgetAttackAsyncTask task = new HiddenMidgetAttackAsyncTask(mBluetoothAdapter);
+//        HiddenMidgetAttackAsyncTask task = new HiddenMidgetAttackAsyncTask(mBluetoothAdapter);
         Log.d(tag, "Llamando a AsyncTask");
-        task.execute();
+//        task.execute();
     }
 
     public static BTConnection getInstance(){

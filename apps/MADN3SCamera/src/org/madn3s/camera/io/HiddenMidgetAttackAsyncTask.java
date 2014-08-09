@@ -20,8 +20,9 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
     private Exception ex;
     private final static int SERVER_SOCKET_TIMEOUT = 3000000;
 
-    public HiddenMidgetAttackAsyncTask(BluetoothAdapter mBluetoothAdapter){
-        try {
+    public HiddenMidgetAttackAsyncTask(BluetoothAdapter mBluetoothAdapter, BluetoothServerSocket mBluetoothServerSocket){
+    	this.mBluetoothServerSocket = mBluetoothServerSocket;
+    	try {
             mBluetoothServerSocket = mBluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(BTConnection.SERVICE_NAME, BTConnection.APP_UUID);
         } catch (IOException e) {
             e.printStackTrace();
@@ -71,6 +72,7 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
                     default:
                         Log.d(tag, "Default");
                 }
+                
             //poner el socket en algun lado
             }else{
                 Log.d(tag, "Conexion fallida");

@@ -3,7 +3,6 @@ package org.madn3s.camera;
 import static org.madn3s.camera.MADN3SCamera.position;
 import static org.madn3s.camera.MADN3SCamera.projectName;
 
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -14,14 +13,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.madn3s.camera.io.BTConnection;
 import org.madn3s.camera.io.BraveheartMidgetService;
-import org.madn3s.camera.io.test;
 import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewFrame;
-import org.opencv.android.CameraBridgeViewBase.CvCameraViewListener2;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-import org.opencv.core.Mat;
-import org.opencv.imgproc.Imgproc;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -34,54 +28,23 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SurfaceView;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
+	
 	private static final String tag = "MainActivity";
 	private BluetoothAdapter mBluetoothAdapter;
     private static BTConnection btc;
     private static MidgetOfSeville figaro;
     private Camera mCamera;
     private CameraPreview mPreview;
-    
-    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			String action = intent.getAction();
-			
-			
-			if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-				Log.d(tag, "Busqueda Encontrada");
-				BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-
-				Intent i = new Intent(context, BraveheartMidgetService.class);
-				i.putExtra(BluetoothDevice.EXTRA_DEVICE, (Parcelable)device);
-		        startService(i);
-				
-			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-				//TODO validar error
-				Log.d(tag, "Busqueda Terminada");
-				
-				
-			} else {
-				Log.d(tag, "Busqueda SIN  DEFINICION");
-			}
-			
-			 
-		}
-	};
     
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -103,25 +66,21 @@ public class MainActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		
+		//Reiniciar Activity colocando el Dispositivo en "Discoverable"
+		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
+		startActivity(discoverableIntent);
+		
+		Intent i = new Intent(this, BraveheartMidgetService.class);
+//		i.putExtra(BluetoothDevice.EXTRA_DEVICE, (Parcelable)device);
+		startService(i);
         
-
-        Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-        discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
-        startActivity(discoverableIntent);
-        
-        IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		registerReceiver(mReceiver, intentFilter);
-
-		intentFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-		registerReceiver(mReceiver, intentFilter);
-
-
 //        mCamera = MADN3SCamera.getCameraInstance();
 //        figaro = new MidgetOfSeville();
 //
-//        // Create our Preview view and set it as the content of our activity.
 //        mPreview = new CameraPreview(this, mCamera);
 //        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_frameLayout);
 //        preview.addView(mPreview);
@@ -130,7 +89,7 @@ public class MainActivity extends Activity {
 //        button.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//    //                    btc = new BTConnection();
+            	btc = new BTConnection();
 //            	if(mCamera != null){
 //            		mCamera.takePicture(null, null, mPictureCallback);
 //            	} else {
@@ -154,12 +113,12 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        releaseCamera();              // release the camera immediately on pause event
+        releaseCamera();
     }
 
     private void releaseCamera(){
         if (mCamera != null){
-            mCamera.release();        // release the camera for other applications
+            mCamera.release();
             mCamera = null;
         }
     }
