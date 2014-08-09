@@ -1,5 +1,6 @@
 package org.madn3s.controller.io;
 
+import android.R.string;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
@@ -7,9 +8,13 @@ import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 
 /**
  * Created by ninja_midget on 2/1/14.
@@ -18,8 +23,19 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
 
     private BluetoothSocket mSocket;
     private Exception e;
+    private String side;
 
     public HiddenMidgetAttackAsyncTask(BluetoothDevice mBluetoothDevice){
+    	side = "none";
+        try {
+            mSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(MADN3SController.APP_UUID);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public HiddenMidgetAttackAsyncTask(BluetoothDevice mBluetoothDevice, String side){
+    	this.side = side;
         try {
             mSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(MADN3SController.APP_UUID);
         } catch (IOException e) {
@@ -54,6 +70,7 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void result){
         if (e!= null) e.printStackTrace();
+        Log.d("Awesome AsyncTask", mSocket.getRemoteDevice().getName() + " " + mSocket.toString());
         if(mSocket.isConnected())
             Log.d("Awesome AsyncTask", "Conexion levantada");
 
@@ -76,8 +93,13 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
                 Log.d("Awesome AsyncTask", "Default");
         }
         try{
-            mSocket.getOutputStream().write('c');
-            Log.d("Awesome AsyncTask", "envie con " + mSocket.getRemoteDevice().getName());
+	        JSONObject json = new JSONObject();
+	        json.put("project_name", "first");
+			json.put("camera_number", side);
+			json.put("camera_name", mSocket.getRemoteDevice().getName());
+			sendBytes(json.toString().getBytes());
+        } catch (JSONException e){
+            Log.d("Awesome AsyncTask", "FUCK YOU JSON");
         } catch (Exception e){
             Log.d("Awesome AsyncTask", "FUCK YOU");
         }
@@ -94,5 +116,31 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
             this.e = e;
             e.printStackTrace();
         }
+    }
+    
+    public void sendJSON(JSONObject json){
+    	OutputStreamWriter osw = null;
+    	try{
+    		osw = new OutputStreamWriter(mSocket.getOutputStream());
+    		String jsonString = json.toString();
+    		osw.write(jsonString, 0, jsonString.length());
+            Log.d("Awesome AsyncTask", "envie con " + json.toString() );
+            osw.flush();
+        } catch (Exception e){
+            Log.d("Awesome AsyncTask", "FUCK YOU sendJSON");
+        } finally {
+        	try{osw.close();} catch (Exception e){}
+        }
+    }
+    
+    public void sendBytes(byte[] json){
+    	try{
+    		OutputStream os = mSocket.getOutputStream();
+    		os.flush();
+    		os.write(json);
+    		Log.d("Awesome AsyncTask", "envie con " + json.toString() );
+        } catch (Exception e){
+            Log.d("Awesome AsyncTask", "FUCK YOU sendBytes");
+        } 
     }
 }

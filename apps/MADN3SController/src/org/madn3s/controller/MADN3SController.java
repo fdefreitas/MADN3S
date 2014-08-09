@@ -67,7 +67,7 @@ public class MADN3SController extends Application {
 	}
 
 	public static boolean isCameraDevice(BluetoothDevice device){
-		return device.getBluetoothClass()!= null && device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.PHONE_SMART;
+		return device.getBluetoothClass()!= null && (device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.PHONE_SMART || device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.Major.MISC);
 	}
 	
 	public Handler getBluetoothHandler() {

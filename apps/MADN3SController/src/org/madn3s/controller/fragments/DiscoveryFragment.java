@@ -62,12 +62,6 @@ public class DiscoveryFragment extends BaseFragment{
 	public void onViewCreated (View view, Bundle savedInstanceState){
 		super.onViewCreated(view, savedInstanceState);
 		
-		IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-		getActivity().registerReceiver(mReceiver, intentFilter);
-
-		intentFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-		getActivity().registerReceiver(mReceiver, intentFilter);
-
 		nxtDevicesLayout = (LinearLayout) getView().findViewById(R.id.nxt_devices_layout);
 		cameraDevicesLayout = (LinearLayout) getView().findViewById(R.id.camera_devices_layout);
 		
@@ -126,6 +120,12 @@ public class DiscoveryFragment extends BaseFragment{
 					//                    while(!btc.isConnected() && System.currentTimeMillis()-start < 10000){}
 					//                    btc.writeMessage(b);
 
+					IntentFilter intentFilter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+					getActivity().registerReceiver(mReceiver, intentFilter);
+
+					intentFilter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+					getActivity().registerReceiver(mReceiver, intentFilter);
+					
 				} catch (/*Interrupted*/Exception e) {
 					e.printStackTrace();
 				}

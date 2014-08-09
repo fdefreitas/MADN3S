@@ -128,13 +128,13 @@ public class ConnectionFragment extends BaseFragment {
 
      //   talker = new NXTTalker(mHandler);
      //   talker.connect(nxt);
-        Log.d(TAG, "Iniciando Conexión con NXT: " + nxt.getName());
+//        Log.d(TAG, "Iniciando Conexión con NXT: " + nxt.getName());
         
-        HiddenMidgetAttackAsyncTask taskCamera1 = new HiddenMidgetAttackAsyncTask(camera1);
+        HiddenMidgetAttackAsyncTask taskCamera1 = new HiddenMidgetAttackAsyncTask(camera1, "right");
         taskCamera1.execute();
         Log.d(TAG, "Iniciando conexión con Camara1: " + camera1.getName());
         
-        HiddenMidgetAttackAsyncTask taskCamera2 = new HiddenMidgetAttackAsyncTask(camera2);
+        HiddenMidgetAttackAsyncTask taskCamera2 = new HiddenMidgetAttackAsyncTask(camera2, "left");
         taskCamera2.execute();
         Log.d(TAG, "Iniciando conexión con Camara2: " + camera2.getName());        
 
