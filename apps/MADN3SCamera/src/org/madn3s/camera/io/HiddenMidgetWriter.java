@@ -15,15 +15,15 @@ import org.json.JSONObject;
 /**
  * Created by ninja_midget on 2/1/14.
  */
-public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
+public class HiddenMidgetWriter extends AsyncTask<Void, Void, Void> {
 
-    private static final String tag = "Awesome AsyncTask";
+    private static final String tag = "HiddenMidgetAttackAsyncTask";
 	private BluetoothServerSocket mBluetoothServerSocket;
     private BluetoothSocket mSocket;
     private Exception e;
     private final static int SERVER_SOCKET_TIMEOUT = 3000000;
 
-    public HiddenMidgetAttackAsyncTask(BluetoothAdapter mBluetoothAdapter, BluetoothServerSocket mBluetoothServerSocket){
+    public HiddenMidgetWriter(BluetoothAdapter mBluetoothAdapter, BluetoothServerSocket mBluetoothServerSocket){
     	this.mBluetoothServerSocket = mBluetoothServerSocket;
     	try {
             this.mBluetoothServerSocket = mBluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(BTConnection.SERVICE_NAME, BTConnection.APP_UUID);
@@ -35,7 +35,7 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPreExecute(){
-        Log.d("Camera", "Iniciando task de BT y cosa");
+        Log.d(tag, "Iniciando task de BT y cosa");
     }
 
     @Override

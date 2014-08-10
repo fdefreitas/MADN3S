@@ -77,10 +77,9 @@ public class MainActivity extends Activity {
 		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
 		startActivity(discoverableIntent);
 		
-		Intent i = new Intent(this, BraveheartMidgetService.class);
-		i.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 3000000);
-//		i.putExtra(BluetoothDevice.EXTRA_DEVICE, (Parcelable)device);
-		startService(i);
+		Intent williamWallaceIntent = new Intent(this, BraveheartMidgetService.class);
+		startService(williamWallaceIntent);
+		
         
 //        mCamera = MADN3SCamera.getCameraInstance();
 //        figaro = new MidgetOfSeville();
@@ -142,27 +141,11 @@ public class MainActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
+    //TODO comparar con Callback de Midgeteer
     private Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-
-         /*   File pictureFile = MADN3SCamera.getOutputMediaFile(MADN3SCamera.MEDIA_TYPE_IMAGE, projectName, position);
-            if (pictureFile == null){
-                Log.d(MADN3SCamera.TAG, "Error creating media file, check storage permissions ");
-                return;
-            }
-
-            try {
-                FileOutputStream fos = new FileOutputStream(pictureFile);
-                fos.write(data);
-                fos.close();
-            } catch (FileNotFoundException e) {
-                Log.d(MADN3SCamera.TAG, "File not found: " + e.getMessage());
-            } catch (IOException e) {
-                Log.d(MADN3SCamera.TAG, "Error accessing file: " + e.getMessage());
-            }
-           */
         	int orientation;
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inSampleSize = 6;

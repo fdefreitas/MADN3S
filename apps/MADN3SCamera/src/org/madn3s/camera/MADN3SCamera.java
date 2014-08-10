@@ -137,11 +137,6 @@ public class MADN3SCamera extends Application {
         return mCamera;
     }
 
-    @Deprecated
-    private boolean checkCameraHardware(Context context) {
-        return context.getPackageManager() != null && context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
-    }
-
 	public Handler getBluetoothHandler() {
 		return mBluetoothHandler;
 	}
