@@ -19,33 +19,38 @@ import org.json.JSONObject;
  */
 public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
 
-    private static final String tag = "HiddenMidgetAttackAsyncTask";
+    private static final String tag = "HiddenMidgetConnector";
 	private BluetoothServerSocket mBluetoothServerSocket;
 	private WeakReference<BluetoothServerSocket> mBluetoothServerSocketWeakReference;
+	private WeakReference<BluetoothSocket> mSocketWeakReference;
     private BluetoothSocket mSocket;
     private Exception e;
     private final static int SERVER_SOCKET_TIMEOUT = 3000000;
 
-    public HiddenMidgetConnector(WeakReference<BluetoothServerSocket> mBluetoothServerSocketWeakReference){
+    public HiddenMidgetConnector(WeakReference<BluetoothServerSocket> mBluetoothServerSocketWeakReference, WeakReference<BluetoothSocket> mSocketWeakReference){
     	this.mBluetoothServerSocket = mBluetoothServerSocketWeakReference.get();
+    	this.mSocketWeakReference = mSocketWeakReference;
     }
 
     @Override
     protected void onPreExecute(){
-        Log.d(tag, "Iniciando task de BT y cosa");
+        Log.d(tag, tag + " PreExecute");
     }
 
     @Override
     protected Void doInBackground(Void... params) {
         try {
-            while (true) {
+        	int timeout = 0;
+            while (timeout < SERVER_SOCKET_TIMEOUT) {
                 mSocket = mBluetoothServerSocket.accept(SERVER_SOCKET_TIMEOUT);
 
                 if (mSocket != null){
-                	//TODO creo que no es necesario, si cierra la conexion no se puede seguir escuchando
 	                mBluetoothServerSocket.close();
 	                break;
                 }
+                Log.d(tag, "Esperando conexión... " + timeout);
+                Thread.sleep(5);
+                timeout++;
             }
         } catch (Exception e) {
             this.e = e;
@@ -56,8 +61,7 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
 
     @Override
     protected void onPostExecute(Void result){
-        if(e!= null){
-            e.printStackTrace();
+        if(e == null){
             if(mSocket != null){
                 Log.d(tag, "Conexion levantada");
                 if (mSocket.getRemoteDevice()!= null)
@@ -75,11 +79,19 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
                     default:
                         Log.d(tag, "Default");
                 }
+                                
+                mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
+                Log.d(tag, "mSocketWeakReference.get(): " + mSocketWeakReference.get().toString());
                 
-            //TODO poner el socket en algun lado
+                HiddenMidgetReader readerHandlerThreadThread = new HiddenMidgetReader("readerTask", mSocketWeakReference);
+	            Log.d(tag, "Ejecutando a HiddenMidgetReader");
+	            readerHandlerThreadThread.start();
+                
             }else{
                 Log.d(tag, "Conexion fallida");
             }
+        } else {
+        	Log.d(tag, "Error abriendo Socket.");
         }
     }
 

@@ -7,12 +7,15 @@ import java.lang.ref.WeakReference;
 import java.util.UUID;
 import java.util.Vector;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.madn3s.camera.MADN3SCamera;
 
 import android.app.IntentService;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
@@ -42,6 +45,8 @@ public class BraveheartMidgetService extends IntentService {
     
 	private BluetoothServerSocket mBluetoothServerSocket;
 	private WeakReference<BluetoothServerSocket> mBluetoothServerSocketWeakReference;
+	private BluetoothSocket mSocket;
+	private WeakReference<BluetoothSocket> mSocketWeakReference;
     private static Handler mHandler = null;
     private BluetoothAdapter mBluetoothAdapter;
     public static int mState = STATE_NONE;
@@ -72,31 +77,52 @@ public class BraveheartMidgetService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(tag, "Onstart Command");
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        try {
-            mBluetoothServerSocket = mBluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(BTConnection.SERVICE_NAME, BTConnection.APP_UUID);
-            mBluetoothServerSocketWeakReference = new WeakReference<BluetoothServerSocket>(mBluetoothServerSocket);
-            HiddenMidgetConnector task = new HiddenMidgetConnector(mBluetoothServerSocketWeakReference);
-            Log.d(tag, "Ejecutando a HiddenMidgetConnector");
-            task.execute();
-        } catch (IOException e) {
-        	//TODO transmitir error inicializando servicio
-        	Log.d(tag, "No se pudo inicializar mBluetoothServerSocket. Imprimiendo Stack Trace:");
-            e.printStackTrace();
-        }
-        
-        String stopservice = intent.getStringExtra("stopservice");
-        if (stopservice != null && stopservice.length() > 0) {
-            stopSelf();
-        }
-        bridge.callback(intent);
-        return START_NOT_STICKY;
+    	if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG)){
+    		Log.d(tag, "Onstart Command. Llamando a onHandleIntent.");
+    		return super.onStartCommand(intent,flags,startId);
+    	} else {
+	        Log.d(tag, "Onstart Command");
+	        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+	        try {
+	            mBluetoothServerSocket = mBluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(BTConnection.SERVICE_NAME, BTConnection.APP_UUID);
+	            mBluetoothServerSocketWeakReference = new WeakReference<BluetoothServerSocket>(mBluetoothServerSocket);
+	            
+	            mSocket = null;
+	            mSocketWeakReference = null;
+	            
+	            HiddenMidgetConnector connectorTask = new HiddenMidgetConnector(mBluetoothServerSocketWeakReference, mSocketWeakReference);
+	            Log.d(tag, "Ejecutando a HiddenMidgetConnector");
+	            connectorTask.execute();
+	            
+	            //@ Moviendo a Connector
+//	            HiddenMidgetReader readerHandlerThreadThread = new HiddenMidgetReader("readerTask", mSocketWeakReference);
+//	            Log.d(tag, "Ejecutando a HiddenMidgetReader");
+//	            readerHandlerThreadThread.start();
+	        } catch (IOException e) {
+	        	//TODO transmitir error inicializando servicio
+	        	Log.d(tag, "No se pudo inicializar mBluetoothServerSocket. Imprimiendo Stack Trace:");
+	            e.printStackTrace();
+	        }
+	        
+	        String stopservice = intent.getStringExtra("stopservice");
+	        if (stopservice != null && stopservice.length() > 0) {
+	            stopSelf();
+	        }
+	        return START_NOT_STICKY;
+    	}
     }
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		Log.e(tag, "VIVE!!!!!!!");	
+		String printString;
+		try {
+			printString = new JSONObject(intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG)).toString(1);
+		} catch (JSONException e) {
+			printString = "Could Not Parse JSON";
+			e.printStackTrace();
+		}
+		Log.d(tag, "onHandleIntent:");	
+		Log.d(tag, printString);
 	}
     
 }

@@ -7,7 +7,6 @@ import java.net.ServerSocket;
 
 import org.json.JSONObject;
 
-import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.os.Handler.Callback;
@@ -23,16 +22,14 @@ import android.util.Log;
 public class HiddenMidgetReader extends HandlerThread implements Callback {
 	public static UniversalComms bridge;
 	private final static String tag = "HiddenMidgetReader";
-	private final static int SERVER_SOCKET_TIMEOUT = 3000000;
+	public final static String EXTRA_CALLBACK_MSG = "message";
 	private Handler handler, callback;
-	private WeakReference<BluetoothServerSocket> mBluetoothServerSocketWeakReference;
-    private BluetoothServerSocket mBluetoothServerSocket;
+	private WeakReference<BluetoothSocket> mBluetoothSocketWeakReference;
     private BluetoothSocket mSocket;
-    
 
-	public HiddenMidgetReader(String name, WeakReference<BluetoothServerSocket> mBluetoothServerSocketWeakReference) {
+	public HiddenMidgetReader(String name, WeakReference<BluetoothSocket> mBluetoothSocketWeakReference) {
 		super(name);
-		this.mBluetoothServerSocketWeakReference = mBluetoothServerSocketWeakReference;
+		this.mBluetoothSocketWeakReference = mBluetoothSocketWeakReference;
 	}
 	
 	public HiddenMidgetReader(String name, int priority) {
@@ -53,36 +50,37 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 	public void run() {
 		try {
 			String message;
-			mBluetoothServerSocket = mBluetoothServerSocketWeakReference.get();
+			Log.d(tag, "Intentando abrir Socket. ");
 			while (true) {
-	            mSocket = mBluetoothServerSocket.accept(SERVER_SOCKET_TIMEOUT);
-	            if (mSocket != null){
-	            	mBluetoothServerSocket.close();
-	                break;
-	            }
+				if (mBluetoothSocketWeakReference != null){
+					mSocket = mBluetoothSocketWeakReference.get();
+					Log.d(tag, "Socket obtenido. ");
+					break;
+				}
 	        }
+			
+			Log.d(tag, "Esperando por mensajes. ");
 			while(true){
 				message = getMessage();
-				if(message != null){
+				if(message != null && !message.isEmpty()){
+					//TODO revisar si viene parametro de finalizar para cerrar while
 					bridge.callback(message);
 				}
 			}
 		 } catch (Exception e) {
-			 
 			 e.printStackTrace();
 		 }
 	}
 	
 	private String getMessage(){
-		//TODO Move to Service
-        Log.d(tag, "Intentando hacer lectura de Socket.\n");
+        Log.d(tag, "getMessage. Intentando hacer lectura de Socket.\n");
         try{
-        	Log.d(tag, "Entrando al Try del InputStreamReader.");
+        	int byteTemp = 0;
+        	int threshold = 0;
+        	Log.d(tag, "getMessage. Entrando al Try del InputStreamReader.");
         	ByteArrayOutputStream bao = new ByteArrayOutputStream();
         	bao.reset();
         	InputStream inputStream = mSocket.getInputStream();
-        	int b = 0;
-        	int threshold = 0;
         	while(true){
         		while (inputStream.available() == 0 && threshold < 3000) { 
                     Thread.sleep(1);
@@ -91,9 +89,9 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
         		
         		if(threshold < 3000){
         			threshold = 0;
-        			b = inputStream.read();
-        			bao.write(b);
-            		if(b == 255){
+        			byteTemp = inputStream.read();
+        			bao.write(byteTemp);
+            		if(byteTemp == 255){
             			break;
             		}
             		Thread.sleep(1);
@@ -101,11 +99,9 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
         			break;
         		}
         	}
-        	JSONObject jsonPayload = new JSONObject(bao.toString());
-        	Log.d(tag, "Lei esto: " + jsonPayload.toString(1));
-        	return jsonPayload.toString();
+        	return bao != null ? bao.toString() : null;
         } catch (Exception e){
-            Log.d(tag, "Exception al leer Socket: " + e);
+            Log.d(tag, "getMessage. Exception al leer Socket: " + e);
             e.printStackTrace();
             return null;
         }
