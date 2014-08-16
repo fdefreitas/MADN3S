@@ -3,6 +3,7 @@ package org.madn3s.camera.io;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.net.ServerSocket;
 
 import org.json.JSONObject;
 
@@ -20,11 +21,14 @@ import android.util.Log;
  * Created by ninja_midget on 2/1/14.
  */
 public class HiddenMidgetReader extends HandlerThread implements Callback {
-	
-	private static String tag = "HiddenMidgetReader";
+	public static UniversalComms bridge;
+	private final static String tag = "HiddenMidgetReader";
+	private final static int SERVER_SOCKET_TIMEOUT = 3000000;
 	private Handler handler, callback;
 	private WeakReference<BluetoothServerSocket> mBluetoothServerSocketWeakReference;
-    private BluetoothServerSocket mSocket;
+    private BluetoothServerSocket mBluetoothServerSocket;
+    private BluetoothSocket mSocket;
+    
 
 	public HiddenMidgetReader(String name, WeakReference<BluetoothServerSocket> mBluetoothServerSocketWeakReference) {
 		super(name);
@@ -47,17 +51,26 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 
 	@Override
 	public void run() {
-		String message;
-		//TODO cambiar por el otro handle
-//		Intent williamWallaceIntent = new Intent(this, BraveheartMidgetService.class);
-//		startService(williamWallaceIntent);
-		mSocket = mBluetoothServerSocketWeakReference.get();
-		while(true){
-			message = getMessage();
-			if(message != null){
-				
+		try {
+			String message;
+			mBluetoothServerSocket = mBluetoothServerSocketWeakReference.get();
+			while (true) {
+	            mSocket = mBluetoothServerSocket.accept(SERVER_SOCKET_TIMEOUT);
+	            if (mSocket != null){
+	            	mBluetoothServerSocket.close();
+	                break;
+	            }
+	        }
+			while(true){
+				message = getMessage();
+				if(message != null){
+					bridge.callback(message);
+				}
 			}
-		}
+		 } catch (Exception e) {
+			 
+			 e.printStackTrace();
+		 }
 	}
 	
 	private String getMessage(){
@@ -90,9 +103,11 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
         	}
         	JSONObject jsonPayload = new JSONObject(bao.toString());
         	Log.d(tag, "Lei esto: " + jsonPayload.toString(1));
+        	return jsonPayload.toString();
         } catch (Exception e){
             Log.d(tag, "Exception al leer Socket: " + e);
             e.printStackTrace();
+            return null;
         }
 	}
 }

@@ -21,7 +21,7 @@ import android.util.Log;
 
 public class BraveheartMidgetService extends IntentService {
 	
-	public static UniversalComms bridge;
+	
 
 	public static final String BT_DEVICE = "btdevice";
 	private static final String tag = "BraveheartMidgetService";
