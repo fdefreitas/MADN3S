@@ -81,27 +81,28 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
             Log.d("Awesome AsyncTask", mSocket.getRemoteDevice().getName());
         switch (mSocket.getRemoteDevice().getBondState()){
             case BluetoothDevice.BOND_BONDED:
-                Log.d("Awesome AsyncTask", "BOND_BONDED");
+                Log.d("Awesome AsyncTask", "BOND_BONDED" + mSocket.getRemoteDevice().getName());
                 break;
             case BluetoothDevice.BOND_BONDING:
-                Log.d("Awesome AsyncTask", "BOND_BONDING");
+                Log.d("Awesome AsyncTask", "BOND_BONDING" + mSocket.getRemoteDevice().getName());
                 break;
             case BluetoothDevice.BOND_NONE:
-                Log.d("Awesome AsyncTask", "BOND_NONE");
+                Log.d("Awesome AsyncTask", "BOND_NONE" + mSocket.getRemoteDevice().getName());
                 break;
             default:
-                Log.d("Awesome AsyncTask", "Default");
+                Log.d("Awesome AsyncTask", "Default" + mSocket.getRemoteDevice().getName());
         }
         try{
 	        JSONObject json = new JSONObject();
 	        json.put("project_name", "first");
 			json.put("camera_number", side);
 			json.put("camera_name", mSocket.getRemoteDevice().getName());
+			Log.d("Awesome AsyncTask", "enviando con " + json.toString() + " al device " + mSocket.getRemoteDevice().getName());
 			sendBytes(json.toString().getBytes());
         } catch (JSONException e){
-            Log.d("Awesome AsyncTask", "FUCK YOU JSON");
+            Log.d("Awesome AsyncTask", "FUCK YOU JSON " + " a " + mSocket.getRemoteDevice().getName());
         } catch (Exception e){
-            Log.d("Awesome AsyncTask", "FUCK YOU");
+            Log.d("Awesome AsyncTask", "FUCK YOU " + " a " + mSocket.getRemoteDevice().getName());
         }
         //poner el socket en algun lado
         BTConnection conn = BTConnection.getInstance();
@@ -124,10 +125,10 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
     		osw = new OutputStreamWriter(mSocket.getOutputStream());
     		String jsonString = json.toString();
     		osw.write(jsonString, 0, jsonString.length());
-            Log.d("Awesome AsyncTask", "envie con " + json.toString() );
+            Log.d("Awesome AsyncTask", "envie con " + json.toString() + " a " + mSocket.getRemoteDevice().getName());
             osw.flush();
         } catch (Exception e){
-            Log.d("Awesome AsyncTask", "FUCK YOU sendJSON");
+            Log.d("Awesome AsyncTask", "FUCK YOU sendJSON" + " a " + mSocket.getRemoteDevice().getName());
         } finally {
         	try{osw.close();} catch (Exception e){}
         }
@@ -138,9 +139,9 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
     		OutputStream os = mSocket.getOutputStream();
     		os.flush();
     		os.write(json);
-    		Log.d("Awesome AsyncTask", "envie con " + json.toString() );
+    		Log.d("Awesome AsyncTask", "envie con " + json.toString() + " a " + mSocket.getRemoteDevice().getName());
         } catch (Exception e){
-            Log.d("Awesome AsyncTask", "FUCK YOU sendBytes");
+            Log.d("Awesome AsyncTask", "FUCK YOU sendBytes" + " a " + mSocket.getRemoteDevice().getName());
         } 
     }
 }

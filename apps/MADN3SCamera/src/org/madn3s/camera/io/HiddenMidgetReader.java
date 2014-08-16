@@ -63,7 +63,13 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 			while(true){
 				message = getMessage();
 				if(message != null && !message.isEmpty()){
-					//TODO revisar si viene parametro de finalizar para cerrar while
+					JSONObject msg = new JSONObject(message);
+					if(msg.has("action")){
+						String action = msg.getString("action");
+						 if(action.equalsIgnoreCase("exit_app")){
+							break;
+						}
+					}	
 					bridge.callback(message);
 				}
 			}

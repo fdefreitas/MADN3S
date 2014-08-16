@@ -54,6 +54,8 @@ public class BraveheartMidgetService extends IntentService {
     public static String deviceName;
     public Vector<Byte> packdata = new Vector<Byte>(2048);
     public static BluetoothDevice device = null;
+    
+    private JSONObject config;
 	
     public BraveheartMidgetService() {
 		super("BraveheartMidgetService");
@@ -116,6 +118,26 @@ public class BraveheartMidgetService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		String printString;
 		try {
+			String jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG);
+			JSONObject msg = new JSONObject(jsonString);
+			String side = msg.getString("action");
+			String projectName = msg.getString("project_name");
+			if(msg.has("action")){
+				String action = msg.getString("action");
+				if(action.equalsIgnoreCase("config")){
+					config = msg;
+				} else if(action.equalsIgnoreCase("photo")){
+					takePhoto(config);
+				} else if(action.equalsIgnoreCase("end_project")){
+					if(msg.has("clean")){
+						cleanTakenPictures(projectName);
+					}
+				} else if(action.equalsIgnoreCase("exit_app")){
+					Log.d(tag, "onHandleIntent: NO LLEGA");	
+				} else {
+					Log.d(tag, "onHandleIntent: QUE MIERDA ES ESTO? " + action);	
+				}
+			}
 			printString = new JSONObject(intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG)).toString(1);
 		} catch (JSONException e) {
 			printString = "Could Not Parse JSON";
@@ -123,6 +145,16 @@ public class BraveheartMidgetService extends IntentService {
 		}
 		Log.d(tag, "onHandleIntent:");	
 		Log.d(tag, printString);
+	}
+
+	private void cleanTakenPictures(String projectName) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void takePhoto(JSONObject config2) {
+		// TODO Auto-generated method stub
+		
 	}
     
 }
