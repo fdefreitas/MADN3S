@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.madn3s.camera.io.BTConnection;
 import org.madn3s.camera.io.BraveheartMidgetService;
+import org.madn3s.camera.io.UniversalComms;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
@@ -77,8 +78,19 @@ public class MainActivity extends Activity {
 		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
 		startActivity(discoverableIntent);
 		
+		BraveheartMidgetService.bridge = new UniversalComms() {
+			
+			@Override
+			public void callback(Object msg) {
+				// TODO Auto-generated method stub
+				Log.d(tag, "LLAME AL CALLBACK!!!!!!!!!!");
+			}
+		};
+		
 		Intent williamWallaceIntent = new Intent(this, BraveheartMidgetService.class);
 		startService(williamWallaceIntent);
+		
+		
 		
         
 //        mCamera = MADN3SCamera.getCameraInstance();

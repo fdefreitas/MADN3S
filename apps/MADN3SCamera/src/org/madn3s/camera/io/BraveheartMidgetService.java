@@ -2,42 +2,26 @@ package org.madn3s.camera.io;
 
 
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 import java.util.Vector;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.madn3s.camera.MADN3SCamera;
-import org.madn3s.camera.Midgeteer;
-import org.madn3s.camera.R;
 
 import android.app.IntentService;
-import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
-import android.bluetooth.BluetoothSocket;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Binder;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
 
 public class BraveheartMidgetService extends IntentService {
+	
+	public static UniversalComms bridge;
 
 	public static final String BT_DEVICE = "btdevice";
 	private static final String tag = "BraveheartMidgetService";
@@ -106,6 +90,7 @@ public class BraveheartMidgetService extends IntentService {
         if (stopservice != null && stopservice.length() > 0) {
             stopSelf();
         }
+        bridge.callback(intent);
         return START_NOT_STICKY;
     }
 
