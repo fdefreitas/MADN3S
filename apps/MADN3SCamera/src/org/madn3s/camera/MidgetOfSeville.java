@@ -51,7 +51,7 @@ public class MidgetOfSeville {
 	    double y2 = height;  
 	    double iCannyLowerThreshold = 35;  
 	    double iCannyUpperThreshold = 75;  
-	    int edgeDetectionsAlgorithm = 0;
+	    String edgeDetectionsAlgorithm = "canny";
 	    int maxCorners = 50;
 	    double qualityLevel = 0.01;
 	    double minDistance = 30;
@@ -65,71 +65,83 @@ public class MidgetOfSeville {
 		
 		if (configs != null) {
 			//grabCut
-			if (configs.has("rectangle")) {
-				JSONObject points = configs.getJSONObject("rectangle");
-				JSONObject point1 = points.getJSONObject("point1");
-				JSONObject point2 = points.getJSONObject("point2");
-				x1 = point1.getDouble("x");
-				y1 = point1.getDouble("y");
-				x2 = point2.getDouble("x");
-				y2 = point2.getDouble("y");
-			}
-			if (configs.has("iterations")) {
-				iterCount = configs.getInt("iterations");
+			if (configs.has("grab_cut")) {
+				JSONObject grabCut = configs.getJSONObject("grab_cut");
+				if (grabCut.has("rectangle")) {
+					JSONObject points = grabCut.getJSONObject("rectangle");
+					JSONObject point1 = points.getJSONObject("point_1");
+					JSONObject point2 = points.getJSONObject("point_2");
+					x1 = point1.getDouble("x");
+					y1 = point1.getDouble("y");
+					x2 = point2.getDouble("x");
+					y2 = point2.getDouble("y");
+				}
+				if (grabCut.has("iterations")) {
+					iterCount = grabCut.getInt("iterations");
+				}
 			}
 			
 			//goodFeaturesToTrack
-			if (configs.has("maxCorners")) {
-				maxCorners = configs.getInt("maxCorners");
-			}
-			if (configs.has("qualityLevel")) {
-				qualityLevel = configs.getDouble("qualityLevel");
-			}
-			if (configs.has("minDistance")) {
-				minDistance = configs.getInt("minDistance");
+			if (configs.has("good_features")) {
+				JSONObject goodFeaturesToTrack = configs.getJSONObject("good_features");
+				if (goodFeaturesToTrack.has("max_corners")) {
+					maxCorners = configs.getInt("max_corners");
+				}
+				if (goodFeaturesToTrack.has("quality_level")) {
+					qualityLevel = configs.getDouble("quality_level");
+				}
+				if (goodFeaturesToTrack.has("min_distance")) {
+					minDistance = configs.getInt("min_distance");
+				}
 			}
 			
 			//edge detection
-			if (configs.has("edgeDetectionsAlgorithm")) {
-				edgeDetectionsAlgorithm = configs.getInt("edgeDetectionsAlgorithm");
-				if (edgeDetectionsAlgorithm == 0) {//Canny
-					if (configs.has("cannyLowerThreshold")) {
-						iCannyLowerThreshold = configs.getDouble("cannyLowerThreshold");
+			if (configs.has("edge_detection")) {
+				JSONObject edgeDetection = configs.getJSONObject("edge_detection");
+				if (edgeDetection.has("algorithm")) {
+					edgeDetectionsAlgorithm = edgeDetection.getString("algorithm");
+					if (edgeDetectionsAlgorithm.equalsIgnoreCase("Canny")) {//Canny
+						JSONObject cannyConfig = edgeDetection.getJSONObject("canny_config");
+						if (cannyConfig.has("lower_threshold")) {
+							iCannyLowerThreshold = cannyConfig.getDouble("lower_threshold");
+						}
+						if (cannyConfig.has("upper_threshold")) {
+							iCannyUpperThreshold = cannyConfig.getDouble("upper_threshold");
+						}
+					} else if (edgeDetectionsAlgorithm.equalsIgnoreCase("Sobel")) {//Sobel
+						JSONObject sobelConfig = configs.getJSONObject("sobel_config");
+						if (sobelConfig.has("d_depth")) {
+							ddepth = sobelConfig.getInt("d_depth");
+						}
+						if (sobelConfig.has("d_x")) {
+							dx = sobelConfig.getInt("d_x");
+						}
+						if (sobelConfig.has("d_y")) {
+							dy = sobelConfig.getInt("d_y");
+						}
+					} else {
+						//Mandamos un algoritmo q no sabemos
 					}
-					if (configs.has("cannyUpperThreshold")) {
-						iCannyUpperThreshold = configs.getDouble("cannyUpperThreshold");
-					}
-				} else if (edgeDetectionsAlgorithm == 1) {//Sobel
-					if (configs.has("ddepth")) {
-						ddepth = configs.getInt("ddepth");
-					}
-					if (configs.has("dx")) {
-						dx = configs.getInt("dx");
-					}
-					if (configs.has("dy")) {
-						dy = configs.getInt("dy");
-					}
-				} else {
-					//Mandamos un algoritmo q no sabemos
 				}
 			}
 			
 			//extras
 			if (configs.has("extras")) {
-	        	if (configs.has("r")) {
-	        		r = configs.getDouble("r");
+				JSONObject extras = configs.getJSONObject("extras");
+	        	if (extras.has("r")) {
+	        		r = extras.getDouble("r");
 	        		r = (r<0?0:(r>255?255:r));
 	        	}
-	        	if (configs.has("g")) {
-	        		g = configs.getDouble("g");
+	        	if (extras.has("g")) {
+	        		g = extras.getDouble("g");
 	        		g = (g<0?0:(g>255?255:g));
 	        	}
-	        	if (configs.has("b")) {
-	        		b = configs.getDouble("b");
+	        	if (extras.has("b")) {
+	        		b = extras.getDouble("b");
 	        		b = (b<0?0:(b>255?255:b));
 	        	}
-	        	if (configs.has("radius")) {
-	        		radius = configs.getInt("radius");
+	        	if (extras.has("radius")) {
+	        		radius = extras.getInt("radius");
 	        	}
 			}
 		}
@@ -156,28 +168,40 @@ public class MidgetOfSeville {
 	    String edgeAlgString = "";
 	    Mat edgified = new Mat(height, width, CvType.CV_8UC3, ZERO_SCALAR);
 	    
-	    switch (edgeDetectionsAlgorithm) {
-	        case 0:
-	        	edgeAlgString = "Canny";
-	        	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
-	            break;
-	        case 1:  
-	        	edgeAlgString = "Sobel";
-	        	Imgproc.Sobel(mask, edgified, ddepth, dx, dy);
-	            break;
-//	        case 2:  
+	    edgeDetectionsAlgorithm = edgeDetection.getString("algorithm");
+		if (edgeDetectionsAlgorithm.equalsIgnoreCase("Canny")) {//Canny
+			edgeAlgString = "Canny";
+        	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
+		} else if (edgeDetectionsAlgorithm.equalsIgnoreCase("Sobel")) {//Sobel
+			edgeAlgString = "Sobel";
+        	Imgproc.Sobel(mask, edgified, ddepth, dx, dy);
+		} else {
+			edgeAlgString = "Canny";
+        	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
+		}
+		
+//	    switch (edgeDetectionsAlgorithm) {
+//	        case 0:
+//	        	edgeAlgString = "Canny";
 //	        	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
-//	            edgeAlgString = "Canny";
 //	            break;
-//	        case 3:  
-//	            edgeAlgString = "Canny";
+//	        case 1:  
+//	        	edgeAlgString = "Sobel";
+//	        	Imgproc.Sobel(mask, edgified, ddepth, dx, dy);
+//	            break;
+////	        case 2:  
+////	        	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
+////	            edgeAlgString = "Canny";
+////	            break;
+////	        case 3:  
+////	            edgeAlgString = "Canny";
+////	        	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
+////	            break;
+//	        default: 
+//	        	edgeAlgString = "Canny";
 //	        	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
 //	            break;
-	        default: 
-	        	edgeAlgString = "Canny";
-	        	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
-	            break;
-	    }
+//	    }
 	                  
 //	    Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold); 
 	    

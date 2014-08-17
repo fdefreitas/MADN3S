@@ -1,7 +1,5 @@
 package org.madn3s.camera.io;
 
-
-
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
@@ -11,6 +9,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.madn3s.camera.MADN3SCamera;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.json.JSONArray;
+import org.madn3s.camera.MidgetOfSeville;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.hardware.Camera;
+import android.os.Environment;
+import android.util.Log;
 import android.app.IntentService;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -20,12 +33,14 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
-import android.util.Log;
+
 
 public class BraveheartMidgetService extends IntentService {
 	
 	
-
+	public static String projectName;
+	public static String side;
+	private JSONArray result;
 	public static final String BT_DEVICE = "btdevice";
 	private static final String tag = "BraveheartMidgetService";
 	
@@ -56,6 +71,7 @@ public class BraveheartMidgetService extends IntentService {
     public static BluetoothDevice device = null;
     
     private JSONObject config;
+    private Camera mCamera;
 	
     public BraveheartMidgetService() {
 		super("BraveheartMidgetService");
@@ -96,6 +112,8 @@ public class BraveheartMidgetService extends IntentService {
 	            Log.d(tag, "Ejecutando a HiddenMidgetConnector");
 	            connectorTask.execute();
 	            
+	            mCamera = (Camera)intent.getExtras().get("camera");
+	            
 	            //@ Moviendo a Connector
 //	            HiddenMidgetReader readerHandlerThreadThread = new HiddenMidgetReader("readerTask", mSocketWeakReference);
 //	            Log.d(tag, "Ejecutando a HiddenMidgetReader");
@@ -120,16 +138,19 @@ public class BraveheartMidgetService extends IntentService {
 		try {
 			String jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG);
 			JSONObject msg = new JSONObject(jsonString);
-			String side = msg.getString("action");
-			String projectName = msg.getString("project_name");
+			side = msg.getString("action");
+			projectName = msg.getString("project_name");
 			if(msg.has("action")){
 				String action = msg.getString("action");
 				if(action.equalsIgnoreCase("config")){
 					config = msg;
 				} else if(action.equalsIgnoreCase("photo")){
-					takePhoto(config);
+					takePhoto();
+					if(result != null){
+						sendResult();
+					}
 				} else if(action.equalsIgnoreCase("end_project")){
-					if(msg.has("clean")){
+					if(msg.has("clean") && msg.getBoolean("clean")){
 						cleanTakenPictures(projectName);
 					}
 				} else if(action.equalsIgnoreCase("exit_app")){
@@ -147,14 +168,79 @@ public class BraveheartMidgetService extends IntentService {
 		Log.d(tag, printString);
 	}
 
+	private void sendResult() {
+		// TODO Auto-generated method stub
+		
+	}
+
 	private void cleanTakenPictures(String projectName) {
 		// TODO Auto-generated method stub
 		
 	}
 
-	private void takePhoto(JSONObject config2) {
+	private void takePhoto() {
 		// TODO Auto-generated method stub
+		if(mCamera != null){
+    		mCamera.takePicture(null, null, mPictureCallback);
+    	} else {
+    		result = null;
+    	}
 		
 	}
+	
+	private final Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
+		@Override
+        public void onPictureTaken(byte[] data, Camera camera) {
+        	MidgetOfSeville figaro = new MidgetOfSeville();
+        	int orientation;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 6;
+            options.inDither = false; // Disable Dithering mode
+            options.inPurgeable = true; // Tell to gc that whether it needs free
+            options.inInputShareable = true; // Which kind of reference will be
+            options.inTempStorage = new byte[32 * 1024];
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
+            if(bMap.getHeight() < bMap.getWidth()){
+                orientation = 90;
+            } else {
+                orientation = 0;
+            }
+            Bitmap bMapRotate;
+            if (orientation != 0) {
+                Matrix matrix = new Matrix();
+                matrix.postRotate(orientation);
+                bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(), bMap.getHeight(), matrix, true);
+            } else {
+                bMapRotate = Bitmap.createScaledBitmap(bMap, bMap.getWidth(), bMap.getHeight(), true);
+            }
+            FileOutputStream out;
+            try {
+                File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) +"/MADN3SCamera", projectName);
+                if (!mediaStorageDir.exists()){
+                    if (!mediaStorageDir.mkdirs()){
+                        Log.d("ERROR", "failed to create directory");
+                        return;
+                    }
+                }
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String filePath = mediaStorageDir.getPath() + File.separator + side + "_" + timeStamp + ".jpg"; 
+                out = new FileOutputStream(filePath);
+                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                result = figaro.shapeUp(filePath, config);
+                out = new FileOutputStream(String.format(mediaStorageDir.getPath() + File.separator + side + "grabCut" + "_" + timeStamp + ".jpg"));
+                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                if (bMapRotate != null) {
+                    bMapRotate.recycle();
+                    bMapRotate = null;
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+				e.printStackTrace();
+			}
+	        camera.startPreview();
+        }
+	};
     
 }

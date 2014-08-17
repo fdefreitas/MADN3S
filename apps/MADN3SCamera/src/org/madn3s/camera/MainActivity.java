@@ -92,6 +92,7 @@ public class MainActivity extends Activity {
 		};
 		
 		Intent williamWallaceIntent = new Intent(this, BraveheartMidgetService.class);
+		williamWallaceIntent.putExtra("camera", mCamera);
 		startService(williamWallaceIntent);
 		
 		
