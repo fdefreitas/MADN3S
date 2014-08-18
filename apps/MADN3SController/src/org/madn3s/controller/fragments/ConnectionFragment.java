@@ -3,7 +3,10 @@ package org.madn3s.controller.fragments;
 import static org.madn3s.controller.MADN3SController.camera1;
 import static org.madn3s.controller.MADN3SController.camera2;
 import static org.madn3s.controller.MADN3SController.nxt;
+import static org.madn3s.controller.MADN3SController.camera1WeakReference;
+import static org.madn3s.controller.MADN3SController.camera2WeakReference;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import org.madn3s.controller.MADN3SController;
@@ -11,9 +14,11 @@ import org.madn3s.controller.R;
 import org.madn3s.controller.components.NXTTalker;
 import org.madn3s.controller.io.BTConnection;
 import org.madn3s.controller.io.HiddenMidgetAttackAsyncTask;
+import org.madn3s.controller.io.HiddenMidgetConnector;
 import org.madn3s.controller.models.DevicesAdapter;
 
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -128,15 +133,25 @@ public class ConnectionFragment extends BaseFragment {
 
      //   talker = new NXTTalker(mHandler);
      //   talker.connect(nxt);
-//        Log.d(TAG, "Iniciando Conexión con NXT: " + nxt.getName());
+//        Log.d(TAG, "Iniciando Conexi��n con NXT: " + nxt.getName());
         
-        HiddenMidgetAttackAsyncTask taskCamera1 = new HiddenMidgetAttackAsyncTask(camera1, "right");
-        taskCamera1.execute();
-        Log.d(TAG, "Iniciando conexión con Camara1: " + camera1.getName());
         
-        HiddenMidgetAttackAsyncTask taskCamera2 = new HiddenMidgetAttackAsyncTask(camera2, "left");
-        taskCamera2.execute();
-        Log.d(TAG, "Iniciando conexión con Camara2: " + camera2.getName());        
+        
+        HiddenMidgetConnector connectCamera1 = new HiddenMidgetConnector(camera1, camera1WeakReference);
+        connectCamera1.execute();
+        Log.d(TAG, "Iniciando conexion con Camara1: " + camera1.getName());
+        
+        HiddenMidgetConnector connectCamera2 = new HiddenMidgetConnector(camera2, camera2WeakReference);
+        connectCamera2.execute();
+        Log.d(TAG, "Iniciando conexion con Camara2: " + camera2.getName()); 
+        
+//        HiddenMidgetAttackAsyncTask taskCamera1 = new HiddenMidgetAttackAsyncTask(camera1, "right");
+//        taskCamera1.execute();
+//        Log.d(TAG, "Iniciando conexi��n con Camara1: " + camera1.getName());
+//        
+//        HiddenMidgetAttackAsyncTask taskCamera2 = new HiddenMidgetAttackAsyncTask(camera2, "left");
+//        taskCamera2.execute();
+//        Log.d(TAG, "Iniciando conexi��n con Camara2: " + camera2.getName());        
 
         camera1NameTextView = (TextView) view.findViewById(R.id.camera1_name_connection_textView);
         camera1NameTextView.setText(camera1.getName());
@@ -157,10 +172,11 @@ public class ConnectionFragment extends BaseFragment {
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                Log.d(TAG, "EL COÑO DE LA MADRE");
-                BTConnection conn = BTConnection.getInstance();
-                BluetoothSocket mSocket1 = conn.getCam1Socket();
-                BluetoothSocket mSocket2 = conn.getCam2Socket();
+//                BTConnection conn = BTConnection.getInstance();
+//                BluetoothSocket mSocket1 = conn.getCam1Socket();
+//                BluetoothSocket mSocket2 = conn.getCam2Socket();
+                BluetoothSocket mSocket1 = camera1WeakReference.get();
+                BluetoothSocket mSocket2 = camera2WeakReference.get();
                 String action = intent.getAction();
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                 if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)){

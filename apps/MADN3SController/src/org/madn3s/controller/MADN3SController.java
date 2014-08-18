@@ -2,10 +2,12 @@ package org.madn3s.controller;
 
 import android.app.Application;
 import android.bluetooth.BluetoothClass;
+import android.bluetooth.BluetoothSocket;
 import android.bluetooth.BluetoothClass.Device;
 import android.bluetooth.BluetoothDevice;
 import android.os.Handler;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -22,6 +24,9 @@ public class MADN3SController extends Application {
     
     private Handler mBluetoothHandler;
     private Handler.Callback mBluetoothHandlerCallback = null;
+    
+    public static WeakReference<BluetoothSocket> camera1WeakReference = null;
+    public static WeakReference<BluetoothSocket> camera2WeakReference = null;
     
     public static enum Mode {
     	SCANNER("SCANNER",0),

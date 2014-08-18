@@ -168,8 +168,7 @@ public class MidgetOfSeville {
 	    String edgeAlgString = "";
 	    Mat edgified = new Mat(height, width, CvType.CV_8UC3, ZERO_SCALAR);
 	    
-	    edgeDetectionsAlgorithm = edgeDetection.getString("algorithm");
-		if (edgeDetectionsAlgorithm.equalsIgnoreCase("Canny")) {//Canny
+	    if (edgeDetectionsAlgorithm.equalsIgnoreCase("Canny")) {//Canny
 			edgeAlgString = "Canny";
         	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
 		} else if (edgeDetectionsAlgorithm.equalsIgnoreCase("Sobel")) {//Sobel
