@@ -92,7 +92,6 @@ public class MainActivity extends Activity {
 		};
 		
 		Intent williamWallaceIntent = new Intent(this, BraveheartMidgetService.class);
-		williamWallaceIntent.putExtra("camera", mCamera);
 		startService(williamWallaceIntent);
 		
 		
@@ -130,18 +129,18 @@ public class MainActivity extends Activity {
         }
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        releaseCamera();
-    }
-
-    private void releaseCamera(){
-        if (mCamera != null){
-            mCamera.release();
-            mCamera = null;
-        }
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        releaseCamera();
+//    }
+//
+//    private void releaseCamera(){
+//        if (mCamera != null){
+//            mCamera.release();
+//            mCamera = null;
+//        }
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -159,96 +158,96 @@ public class MainActivity extends Activity {
     }
 
     //TODO comparar con Callback de Midgeteer
-    private Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
-
-        @Override
-        public void onPictureTaken(byte[] data, Camera camera) {
-        	int orientation;
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 6;
-            options.inDither = false; // Disable Dithering mode
-            options.inPurgeable = true; // Tell to gc that whether it needs free
-            // memory, the Bitmap can be cleared
-            options.inInputShareable = true; // Which kind of reference will be
-            // used to recover the Bitmap
-            // data after being clear, when
-            // it will be used in the future
-            options.inTempStorage = new byte[32 * 1024];
-            options.inPreferredConfig = Bitmap.Config.RGB_565;
-            Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
-
-            // others devices
-            if(bMap.getHeight() < bMap.getWidth()){
-                orientation = 90;
-            } else {
-                orientation = 0;
-            }
-
-            Bitmap bMapRotate;
-            if (orientation != 0) {
-                Matrix matrix = new Matrix();
-                matrix.postRotate(orientation);
-                bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(),
-                        bMap.getHeight(), matrix, true);
-            } else
-                bMapRotate = Bitmap.createScaledBitmap(bMap, bMap.getWidth(),
-                        bMap.getHeight(), true);
-
-
-            FileOutputStream out;
-            try {
-                File mediaStorageDir = new File(Environment
-                		.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                		+"/MADN3SCamera", projectName);
-
-                if (!mediaStorageDir.exists()){
-                    if (!mediaStorageDir.mkdirs()){
-                        Log.d("ERROR", "failed to create directory");
-                        return;
-                    }
-                }
-
-                // Create a media file name
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                
-                String filePath = mediaStorageDir.getPath() 
-                		+ File.separator + position + "_" + timeStamp + ".jpg"; 
-                
-                out = new FileOutputStream(filePath);
-                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                
-                Toast.makeText(getBaseContext(), "Imagen almacenada en " + filePath, Toast.LENGTH_SHORT).show();
-                
-//                btc.notifyPictureTaken();
-//              figaro.shapeUp(out);
-                JSONArray result = figaro.shapeUp(filePath);
-                
-                
-          //      btc.notifyPictureTaken(result);
-                //MADN3SCamera.saveBitmapAsJpeg(figaro.backgroundSubtracting(filePath), "backgroundSubstract");
-                
-                out = new FileOutputStream(String.format(mediaStorageDir.getPath() 
-                		+ File.separator + position + "grabCut" + "_" + timeStamp + ".jpg"));
-                
-                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                
-                if (bMapRotate != null) {
-                    bMapRotate.recycle();
-                    bMapRotate = null;
-                }
-                
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-            
-            camera.startPreview();
-        }
-        
-        
-        
-    };
+//    private Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
+//
+//        @Override
+//        public void onPictureTaken(byte[] data, Camera camera) {
+//        	int orientation;
+//            BitmapFactory.Options options = new BitmapFactory.Options();
+//            options.inSampleSize = 6;
+//            options.inDither = false; // Disable Dithering mode
+//            options.inPurgeable = true; // Tell to gc that whether it needs free
+//            // memory, the Bitmap can be cleared
+//            options.inInputShareable = true; // Which kind of reference will be
+//            // used to recover the Bitmap
+//            // data after being clear, when
+//            // it will be used in the future
+//            options.inTempStorage = new byte[32 * 1024];
+//            options.inPreferredConfig = Bitmap.Config.RGB_565;
+//            Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
+//
+//            // others devices
+//            if(bMap.getHeight() < bMap.getWidth()){
+//                orientation = 90;
+//            } else {
+//                orientation = 0;
+//            }
+//
+//            Bitmap bMapRotate;
+//            if (orientation != 0) {
+//                Matrix matrix = new Matrix();
+//                matrix.postRotate(orientation);
+//                bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(),
+//                        bMap.getHeight(), matrix, true);
+//            } else
+//                bMapRotate = Bitmap.createScaledBitmap(bMap, bMap.getWidth(),
+//                        bMap.getHeight(), true);
+//
+//
+//            FileOutputStream out;
+//            try {
+//                File mediaStorageDir = new File(Environment
+//                		.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+//                		+"/MADN3SCamera", projectName);
+//
+//                if (!mediaStorageDir.exists()){
+//                    if (!mediaStorageDir.mkdirs()){
+//                        Log.d("ERROR", "failed to create directory");
+//                        return;
+//                    }
+//                }
+//
+//                // Create a media file name
+//                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//                
+//                String filePath = mediaStorageDir.getPath() 
+//                		+ File.separator + position + "_" + timeStamp + ".jpg"; 
+//                
+//                out = new FileOutputStream(filePath);
+//                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
+//                
+//                Toast.makeText(getBaseContext(), "Imagen almacenada en " + filePath, Toast.LENGTH_SHORT).show();
+//                
+////                btc.notifyPictureTaken();
+////              figaro.shapeUp(out);
+//                JSONArray result = figaro.shapeUp(filePath);
+//                
+//                
+//          //      btc.notifyPictureTaken(result);
+//                //MADN3SCamera.saveBitmapAsJpeg(figaro.backgroundSubtracting(filePath), "backgroundSubstract");
+//                
+//                out = new FileOutputStream(String.format(mediaStorageDir.getPath() 
+//                		+ File.separator + position + "grabCut" + "_" + timeStamp + ".jpg"));
+//                
+//                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
+//                
+//                if (bMapRotate != null) {
+//                    bMapRotate.recycle();
+//                    bMapRotate = null;
+//                }
+//                
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            } catch (JSONException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//            
+//            camera.startPreview();
+//        }
+//        
+//        
+//        
+//    };
 
 }

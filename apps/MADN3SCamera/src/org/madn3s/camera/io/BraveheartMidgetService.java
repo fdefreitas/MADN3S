@@ -72,8 +72,17 @@ public class BraveheartMidgetService extends IntentService {
     
     private JSONObject config;
     private Camera mCamera;
+    
+    
+    
 	
-    public BraveheartMidgetService() {
+    @Override
+	public void onDestroy() {
+		super.onDestroy();
+		releaseCamera();
+	}
+
+	public BraveheartMidgetService() {
 		super("BraveheartMidgetService");
 	}
 
@@ -112,12 +121,7 @@ public class BraveheartMidgetService extends IntentService {
 	            Log.d(tag, "Ejecutando a HiddenMidgetConnector");
 	            connectorTask.execute();
 	            
-	            mCamera = (Camera)intent.getExtras().get("camera");
-	            
-	            //@ Moviendo a Connector
-//	            HiddenMidgetReader readerHandlerThreadThread = new HiddenMidgetReader("readerTask", mSocketWeakReference);
-//	            Log.d(tag, "Ejecutando a HiddenMidgetReader");
-//	            readerHandlerThreadThread.start();
+	            mCamera = MADN3SCamera.getCameraInstance();
 	        } catch (IOException e) {
 	        	//TODO transmitir error inicializando servicio
 	        	Log.d(tag, "No se pudo inicializar mBluetoothServerSocket. Imprimiendo Stack Trace:");
@@ -185,8 +189,14 @@ public class BraveheartMidgetService extends IntentService {
     	} else {
     		result = null;
     	}
-		
 	}
+	
+	private void releaseCamera(){
+        if (mCamera != null){
+            mCamera.release();
+            mCamera = null;
+        }
+    }
 	
 	private final Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
 		@Override
