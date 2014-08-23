@@ -40,7 +40,7 @@ public class BraveheartMidgetService extends IntentService {
 	
 	public static String projectName;
 	public static String side;
-	private JSONArray result;
+	private JSONObject result;
 	public static final String BT_DEVICE = "btdevice";
 	private static final String tag = "BraveheartMidgetService";
 	
@@ -150,13 +150,14 @@ public class BraveheartMidgetService extends IntentService {
 					config = msg;
 				} else if(action.equalsIgnoreCase("photo")){
 					takePhoto();
-					if(result != null){
-						sendResult();
-					}
+					sendResult();
 				} else if(action.equalsIgnoreCase("end_project")){
 					if(msg.has("clean") && msg.getBoolean("clean")){
 						cleanTakenPictures(projectName);
 					}
+				} else if(action.equalsIgnoreCase("calibrate")){
+					calibrate();
+					sendResult();
 				} else if(action.equalsIgnoreCase("exit_app")){
 					Log.d(tag, "onHandleIntent: NO LLEGA");	
 				} else {
@@ -172,8 +173,19 @@ public class BraveheartMidgetService extends IntentService {
 		Log.d(tag, printString);
 	}
 
+	private void calibrate() throws JSONException {
+		try {
+			result.put("error", false);
+	    	if(result.has("points")){
+	    		result.remove("points");
+	    	} 
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("error", true);
+		}
+	}
+
 	private void sendResult() {
-		// TODO Auto-generated method stub
 		
 	}
 
@@ -237,7 +249,15 @@ public class BraveheartMidgetService extends IntentService {
                 String filePath = mediaStorageDir.getPath() + File.separator + side + "_" + timeStamp + ".jpg"; 
                 out = new FileOutputStream(filePath);
                 bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                result = figaro.shapeUp(filePath, config);
+                JSONArray resultSP = figaro.shapeUp(filePath, config);
+                
+                if(resultSP != null && resultSP.length() > 0){
+                	result.put("error", false);
+                	result.put("points", resultSP);
+                } else {
+                	result.put("error", true);
+                }
+                
                 out = new FileOutputStream(String.format(mediaStorageDir.getPath() + File.separator + side + "grabCut" + "_" + timeStamp + ".jpg"));
                 bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
                 if (bMapRotate != null) {
