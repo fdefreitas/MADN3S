@@ -73,6 +73,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 							bridge.callback(message);
 							Log.d(tag, "Iniciando wait().");
 							MADN3SCamera.isPictureTaken.set(false);
+							//TODO hacer un while que alivie el while true usando el atomic boolean
 							Log.d(tag, "Saliendo del wait().");
 						}
 					}
