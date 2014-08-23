@@ -6,6 +6,7 @@ import java.lang.ref.WeakReference;
 import java.net.ServerSocket;
 
 import org.json.JSONObject;
+import org.madn3s.camera.MADN3SCamera;
 
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
@@ -48,42 +49,43 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 
 	@Override
 	public void run() {
-		try {
-			String message;
-			Log.d(tag, "Intentando abrir Socket. ");
-			while (true) {
-				if (mBluetoothSocketWeakReference != null){
-					mSocket = mBluetoothSocketWeakReference.get();
-					Log.d(tag, "Socket obtenido. ");
-					break;
-				}
-	        }
-			
-			Log.d(tag, "Esperando por mensajes. ");
-			while(true){
-				message = getMessage();
-				if(message != null && !message.isEmpty()){
-					JSONObject msg = new JSONObject(message);
-					if(msg.has("action")){
-						String action = msg.getString("action");
-						 if(action.equalsIgnoreCase("exit_app")){
-							break;
+			try {
+				String message;
+				while (true) {
+					if (mBluetoothSocketWeakReference != null){
+						mSocket = mBluetoothSocketWeakReference.get();
+						break;
+					}
+		        }
+				
+				while(true){
+					if(MADN3SCamera.isPictureTaken.get()){
+						Log.d(tag, "Esperando mensaje.");
+						message = getMessage();
+						if(message != null && !message.isEmpty()){
+							JSONObject msg = new JSONObject(message);
+							if(msg.has("action")){
+								String action = msg.getString("action");
+								 if(action.equalsIgnoreCase("exit_app")){
+									break;
+								}
+							}	
+							bridge.callback(message);
+							Log.d(tag, "Iniciando wait().");
+							MADN3SCamera.isPictureTaken.set(false);
+							Log.d(tag, "Saliendo del wait().");
 						}
-					}	
-					bridge.callback(message);
+					}
 				}
-			}
-		 } catch (Exception e) {
-			 e.printStackTrace();
-		 }
+			 } catch (Exception e) {
+				 e.printStackTrace();
+			 }
 	}
 	
 	private String getMessage(){
-        Log.d(tag, "getMessage. Intentando hacer lectura de Socket.\n");
         try{
         	int byteTemp = 0;
         	int threshold = 0;
-        	Log.d(tag, "getMessage. Entrando al Try del InputStreamReader.");
         	ByteArrayOutputStream bao = new ByteArrayOutputStream();
         	bao.reset();
         	InputStream inputStream = mSocket.getInputStream();

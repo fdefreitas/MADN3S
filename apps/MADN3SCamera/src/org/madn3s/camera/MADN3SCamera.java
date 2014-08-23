@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by inaki on 3/4/14.
@@ -30,6 +31,10 @@ public class MADN3SCamera extends Application {
 
     public static String projectName;
     public static String position;
+    
+    public static CameraPreview mPreview;
+    
+    public static AtomicBoolean isPictureTaken; 
     
     private Handler mBluetoothHandler;
     private Handler.Callback mBluetoothHandlerCallback = null;

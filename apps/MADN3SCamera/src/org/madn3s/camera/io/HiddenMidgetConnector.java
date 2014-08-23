@@ -83,9 +83,9 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
                 mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
                 Log.d(tag, "mSocketWeakReference.get(): " + mSocketWeakReference.get().toString());
                 
-                HiddenMidgetReader readerHandlerThreadThread = new HiddenMidgetReader("readerTask", mSocketWeakReference);
+                HiddenMidgetReader readerHandlerThread = new HiddenMidgetReader("readerTask", mSocketWeakReference);
 	            Log.d(tag, "Ejecutando a HiddenMidgetReader");
-	            readerHandlerThreadThread.start();
+	            readerHandlerThread.start();
                 
             }else{
                 Log.d(tag, "Conexion fallida");

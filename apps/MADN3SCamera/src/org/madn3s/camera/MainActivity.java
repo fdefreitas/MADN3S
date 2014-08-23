@@ -8,6 +8,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -22,18 +23,14 @@ import org.opencv.android.OpenCVLoader;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,6 +48,9 @@ public class MainActivity extends Activity {
     private static MidgetOfSeville figaro;
     private Camera mCamera;
     private CameraPreview mPreview;
+    private Context mContext;
+    
+    public JSONObject config, result;
     
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -68,7 +68,6 @@ public class MainActivity extends Activity {
             }
         }
     };
-	
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,12 +78,13 @@ public class MainActivity extends Activity {
 		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
 		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
 		startActivity(discoverableIntent);
+		mContext = this;
 		
 		HiddenMidgetReader.bridge = new UniversalComms() {
 			
 			@Override
 			public void callback(Object msg) {
-				Log.d(tag + ".UniversalComms", "Callback. msg: " + (String)msg + ".-");
+//				Log.d("UniversalComms", "Callback. msg: " + (String)msg + ".-");
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveheartMidgetService.class);
 				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG, (String)msg);
 				startService(williamWallaceIntent);
@@ -94,30 +94,47 @@ public class MainActivity extends Activity {
 		Intent williamWallaceIntent = new Intent(this, BraveheartMidgetService.class);
 		startService(williamWallaceIntent);
 		
+		mCamera = MADN3SCamera.getCameraInstance();
+        mPreview = new CameraPreview(this, mCamera);
+        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_frameLayout);
+        preview.addView(mPreview);
+        MADN3SCamera.mPreview = mPreview;
+		MADN3SCamera.isPictureTaken = new AtomicBoolean(true);
+		BraveheartMidgetService.cameraCallback = new UniversalComms() {
+			
+			@Override
+			public void callback(Object msg) {
+				config = (JSONObject) msg;
+				
+				Log.d(tag, "takePhoto. mPctureCallback == null? " + (mPictureCallback == null));
+				
+				if(mCamera != null){
+					Log.d(tag, "takePhoto. mCamera != null. calling TakePicture()");
+		    		mCamera.takePicture(null, null, mPictureCallback);
+		    	} else {
+		    		Log.d(tag, "takePhoto. mCamera == null.");
+		    		result = new JSONObject();
+		    		try {
+						result.put("error", 1);
+						Log.d(tag, "takePhoto. result: " + result.toString(1));
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+		    	}
+			}
+		};
 		
-		
-        
-//        mCamera = MADN3SCamera.getCameraInstance();
-//        figaro = new MidgetOfSeville();
-//
-//        mPreview = new CameraPreview(this, mCamera);
-//        FrameLayout preview = (FrameLayout) findViewById(R.id.camera_frameLayout);
-//        preview.addView(mPreview);
-//
-//        Button button = (Button) findViewById(R.id.connect_button);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////            	btc = new BTConnection();
-//            	if(mCamera != null){
-//            		mCamera.takePicture(null, null, mPictureCallback);
-//            	} else {
-//            		Toast.makeText(v.getContext(), "mCamera == null", Toast.LENGTH_SHORT).show();
-//            	}
-//            }
-//        });
-        projectName = "first";//obtener este valor desde la tablet
-        position = "right";//obtener este valor desde la tablet
+      Button button = (Button) findViewById(R.id.connect_button);
+      button.setOnClickListener(new View.OnClickListener() {
+          @Override
+          public void onClick(View v) {
+          	if(mCamera != null){
+          		mCamera.takePicture(null, null, mPictureCallback);
+          	} else {
+          		Toast.makeText(v.getContext(), "mCamera == null", Toast.LENGTH_SHORT).show();
+          	}
+          }
+      });
     }
     
     @Override
@@ -156,98 +173,90 @@ public class MainActivity extends Activity {
         }
         return super.onOptionsItemSelected(item);
     }
-
-    //TODO comparar con Callback de Midgeteer
-//    private Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
-//
-//        @Override
-//        public void onPictureTaken(byte[] data, Camera camera) {
-//        	int orientation;
-//            BitmapFactory.Options options = new BitmapFactory.Options();
-//            options.inSampleSize = 6;
-//            options.inDither = false; // Disable Dithering mode
-//            options.inPurgeable = true; // Tell to gc that whether it needs free
-//            // memory, the Bitmap can be cleared
-//            options.inInputShareable = true; // Which kind of reference will be
-//            // used to recover the Bitmap
-//            // data after being clear, when
-//            // it will be used in the future
-//            options.inTempStorage = new byte[32 * 1024];
-//            options.inPreferredConfig = Bitmap.Config.RGB_565;
-//            Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
-//
-//            // others devices
-//            if(bMap.getHeight() < bMap.getWidth()){
-//                orientation = 90;
-//            } else {
-//                orientation = 0;
-//            }
-//
-//            Bitmap bMapRotate;
-//            if (orientation != 0) {
-//                Matrix matrix = new Matrix();
-//                matrix.postRotate(orientation);
-//                bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(),
-//                        bMap.getHeight(), matrix, true);
-//            } else
-//                bMapRotate = Bitmap.createScaledBitmap(bMap, bMap.getWidth(),
-//                        bMap.getHeight(), true);
-//
-//
-//            FileOutputStream out;
-//            try {
-//                File mediaStorageDir = new File(Environment
-//                		.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-//                		+"/MADN3SCamera", projectName);
-//
-//                if (!mediaStorageDir.exists()){
-//                    if (!mediaStorageDir.mkdirs()){
-//                        Log.d("ERROR", "failed to create directory");
-//                        return;
-//                    }
-//                }
-//
-//                // Create a media file name
-//                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//                
-//                String filePath = mediaStorageDir.getPath() 
-//                		+ File.separator + position + "_" + timeStamp + ".jpg"; 
-//                
-//                out = new FileOutputStream(filePath);
-//                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
-//                
-//                Toast.makeText(getBaseContext(), "Imagen almacenada en " + filePath, Toast.LENGTH_SHORT).show();
-//                
-////                btc.notifyPictureTaken();
-////              figaro.shapeUp(out);
-//                JSONArray result = figaro.shapeUp(filePath);
-//                
-//                
-//          //      btc.notifyPictureTaken(result);
-//                //MADN3SCamera.saveBitmapAsJpeg(figaro.backgroundSubtracting(filePath), "backgroundSubstract");
-//                
-//                out = new FileOutputStream(String.format(mediaStorageDir.getPath() 
-//                		+ File.separator + position + "grabCut" + "_" + timeStamp + ".jpg"));
-//                
-//                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
-//                
-//                if (bMapRotate != null) {
-//                    bMapRotate.recycle();
-//                    bMapRotate = null;
-//                }
-//                
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            } catch (JSONException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//            
-//            camera.startPreview();
-//        }
-//        
-//        
-//        
-//    };
+    
+    private final Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
+		@Override
+        public void onPictureTaken(byte[] data, Camera camera) {
+			String side;
+			try {
+				config = new JSONObject("{action: 'config', camera_name: 'Cam1', side: 'right', project_name: 'HereIAm'}");
+				side = config.getString("side");
+				projectName = config.getString("project_name");
+//			} catch (JSONException e) {
+			} catch (Exception e) {
+				side ="default";
+				e.printStackTrace();
+			}
+			Log.d(tag, "onPicureTaken. Callback triggered.");
+        	MidgetOfSeville figaro = new MidgetOfSeville();
+        	int orientation;
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 6;
+            options.inDither = false; // Disable Dithering mode
+            options.inPurgeable = true; // Tell to gc that whether it needs free
+            options.inInputShareable = true; // Which kind of reference will be
+            options.inTempStorage = new byte[32 * 1024];
+            options.inPreferredConfig = Bitmap.Config.RGB_565;
+            Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
+            if(bMap.getHeight() < bMap.getWidth()){
+                orientation = 90;
+            } else {
+                orientation = 0;
+            }
+            Bitmap bMapRotate;
+            if (orientation != 0) {
+                Matrix matrix = new Matrix();
+                matrix.postRotate(orientation);
+                bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(), bMap.getHeight(), matrix, true);
+            } else {
+                bMapRotate = Bitmap.createScaledBitmap(bMap, bMap.getWidth(), bMap.getHeight(), true);
+            }
+            FileOutputStream out;
+            try {
+                File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) +"/MADN3SCamera", projectName);
+                if (!mediaStorageDir.exists()){
+                    if (!mediaStorageDir.mkdirs()){
+                        Log.d(tag, "Failed to create directory");
+                        return;
+                    }
+                }
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                String filePath = mediaStorageDir.getPath() + File.separator + side + "_" + timeStamp + ".jpg"; 
+                out = new FileOutputStream(filePath);
+                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                Log.d(tag, "Saving as JPEG file: " + filePath);
+                
+                JSONArray resultSP = figaro.shapeUp(filePath, config);
+                
+                if(resultSP != null && resultSP.length() > 0){
+                	result = new JSONObject();
+                	result.put("error", false);
+                	result.put("points", resultSP);
+                } else {
+                	result.put("error", true);
+                }
+                Log.d(tag, "mPictureCalback. result: ");
+                Log.d(tag, result.toString(1));
+                
+                filePath = String.format(mediaStorageDir.getPath() + File.separator + side + "grabCut" + "_" + timeStamp + ".jpg");
+                out = new FileOutputStream(filePath);
+                Log.d(tag, "Saving as JPEG grabCut file: " + filePath);
+                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                if (bMapRotate != null) {
+                    bMapRotate.recycle();
+                    bMapRotate = null;
+                }
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+				e.printStackTrace();
+			}
+	        camera.startPreview();
+			Log.d(tag, "onPicureTaken. Call to onStartCommand() with result inside intent");
+			Intent williamWallaceIntent = new Intent(mContext, BraveheartMidgetService.class);
+			williamWallaceIntent.putExtra("result", result.toString());
+			startService(williamWallaceIntent);
+        }
+	};
 
 }

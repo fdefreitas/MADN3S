@@ -21,26 +21,29 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private Camera mCamera;
     private Context context;
 
-    public CameraPreview(Context context, Camera camera) {
+    public Camera getmCamera() {
+		return mCamera;
+	}
+
+	public CameraPreview(Context context, Camera camera) {
         super(context);
         this.context = context;
         mCamera = camera;
         boolean hasFlash = context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);//this is lying...
         if(hasFlash){
-            Log.d(MADN3SCamera.TAG, "FLASH AVAILABLE");//+mCamera.getParameters().getFlashMode());
+            Log.d(tag, "FLASH AVAILABLE");
 //            Camera.Parameters p = mCamera.getParameters();
 //            p.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
 //            mCamera.setParameters(p);
         } else {
-            Log.d(MADN3SCamera.TAG, "NO FLASH AVAILABLE");
+            Log.d(tag, "NO FLASH AVAILABLE");
         }
-        //mCamera.startPreview();
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
         mHolder = getHolder();
         mHolder.addCallback(this);
         // deprecated setting, but required on Android versions prior to 3.0
-        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+//        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
     public void surfaceCreated(SurfaceHolder holder) {

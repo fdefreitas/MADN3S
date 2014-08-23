@@ -69,6 +69,7 @@ public class BraveheartMidgetService extends IntentService {
     public static String deviceName;
     public Vector<Byte> packdata = new Vector<Byte>(2048);
     public static BluetoothDevice device = null;
+	public static UniversalComms cameraCallback;
     
     private JSONObject config;
     private Camera mCamera;
@@ -79,11 +80,11 @@ public class BraveheartMidgetService extends IntentService {
     @Override
 	public void onDestroy() {
 		super.onDestroy();
-		releaseCamera();
+//		releaseCamera();
 	}
 
 	public BraveheartMidgetService() {
-		super("BraveheartMidgetService");
+		super(tag);
 	}
 
     @Override
@@ -104,7 +105,7 @@ public class BraveheartMidgetService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-    	if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG)){
+    	if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG) || intent.hasExtra("result")){
     		Log.d(tag, "Onstart Command. Llamando a onHandleIntent.");
     		return super.onStartCommand(intent,flags,startId);
     	} else {
@@ -121,10 +122,9 @@ public class BraveheartMidgetService extends IntentService {
 	            Log.d(tag, "Ejecutando a HiddenMidgetConnector");
 	            connectorTask.execute();
 	            
-	            mCamera = MADN3SCamera.getCameraInstance();
+	            mCamera = MADN3SCamera.mPreview.getmCamera();
 	        } catch (IOException e) {
-	        	//TODO transmitir error inicializando servicio
-	        	Log.d(tag, "No se pudo inicializar mBluetoothServerSocket. Imprimiendo Stack Trace:");
+	        	Log.d(tag, "No se pudo inicializar mBluetoothServerSocket.");
 	            e.printStackTrace();
 	        }
 	        
@@ -138,39 +138,50 @@ public class BraveheartMidgetService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		String printString;
 		try {
-			String jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG);
-			JSONObject msg = new JSONObject(jsonString);
-			side = msg.getString("action");
-			projectName = msg.getString("project_name");
-			if(msg.has("action")){
-				String action = msg.getString("action");
-				if(action.equalsIgnoreCase("config")){
-					config = msg;
-				} else if(action.equalsIgnoreCase("photo")){
-					takePhoto();
-					sendResult();
-				} else if(action.equalsIgnoreCase("end_project")){
-					if(msg.has("clean") && msg.getBoolean("clean")){
-						cleanTakenPictures(projectName);
+			String jsonString = "{}";
+			JSONObject msg;
+			if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG)){
+				jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG);
+				msg = new JSONObject(jsonString);
+				if(msg.has("action")){
+					String action = msg.getString("action");
+					side = msg.getString("side");
+					projectName = msg.getString("project_name");
+					
+					if(action.equalsIgnoreCase("config")){
+						config = msg;
+					} else if(action.equalsIgnoreCase("photo")){
+						Log.d(tag, "action: photo");
+						Log.d(tag, "call to cameraCallback()");
+//						takePhoto();
+						cameraCallback.callback(config);
+					} else if(action.equalsIgnoreCase("end_project")){
+						if(msg.has("clean") && msg.getBoolean("clean")){
+							cleanTakenPictures(projectName);
+						}
+					} else if(action.equalsIgnoreCase("calibrate")){
+						calibrate();
+						sendResult();
+					} else if(action.equalsIgnoreCase("exit_app")){
+						Log.d(tag, "onHandleIntent: NO LLEGA");	
+					} else {
+						Log.d(tag, "onHandleIntent: QUE MIERDA ES ESTO? " + action);	
 					}
-				} else if(action.equalsIgnoreCase("calibrate")){
-					calibrate();
-					sendResult();
-				} else if(action.equalsIgnoreCase("exit_app")){
-					Log.d(tag, "onHandleIntent: NO LLEGA");	
-				} else {
-					Log.d(tag, "onHandleIntent: QUE MIERDA ES ESTO? " + action);	
+				}
+			} else if (intent.hasExtra("result")) {
+				jsonString = intent.getExtras().getString("result");
+				msg = new JSONObject(jsonString);
+				
+				if(msg.has("error")){
+					Log.d(tag, "recibido Error.");
+					MADN3SCamera.isPictureTaken.set(true);
 				}
 			}
-			printString = new JSONObject(intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG)).toString(1);
 		} catch (JSONException e) {
-			printString = "Could Not Parse JSON";
+			Log.d(tag, "Could Not Parse JSON");
 			e.printStackTrace();
 		}
-		Log.d(tag, "onHandleIntent:");	
-		Log.d(tag, printString);
 	}
 
 	private void calibrate() throws JSONException {
@@ -186,7 +197,7 @@ public class BraveheartMidgetService extends IntentService {
 	}
 
 	private void sendResult() {
-		
+		Log.d(tag, "inside sendResult()");
 	}
 
 	private void cleanTakenPictures(String projectName) {
@@ -195,16 +206,24 @@ public class BraveheartMidgetService extends IntentService {
 	}
 
 	private void takePhoto() {
-		// TODO Auto-generated method stub
 		if(mCamera != null){
+			Log.d(tag, "takePhoto. mCamera != null. calling TakePicture()");
     		mCamera.takePicture(null, null, mPictureCallback);
     	} else {
-    		result = null;
+    		Log.d(tag, "takePhoto. mCamera == null.");
+    		result = new JSONObject();
+    		try {
+				result.put("error", 1);
+				Log.d(tag, "takePhoto. result: " + result.toString(1));
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
     	}
 	}
 	
 	private void releaseCamera(){
         if (mCamera != null){
+        	mCamera.stopPreview();
             mCamera.release();
             mCamera = null;
         }
@@ -213,6 +232,7 @@ public class BraveheartMidgetService extends IntentService {
 	private final Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
 		@Override
         public void onPictureTaken(byte[] data, Camera camera) {
+			Log.d(tag, "onPicureTaken. Callback triggered.");
         	MidgetOfSeville figaro = new MidgetOfSeville();
         	int orientation;
             BitmapFactory.Options options = new BitmapFactory.Options();
@@ -241,7 +261,7 @@ public class BraveheartMidgetService extends IntentService {
                 File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) +"/MADN3SCamera", projectName);
                 if (!mediaStorageDir.exists()){
                     if (!mediaStorageDir.mkdirs()){
-                        Log.d("ERROR", "failed to create directory");
+                        Log.d(tag, "Failed to create directory");
                         return;
                     }
                 }
@@ -249,6 +269,8 @@ public class BraveheartMidgetService extends IntentService {
                 String filePath = mediaStorageDir.getPath() + File.separator + side + "_" + timeStamp + ".jpg"; 
                 out = new FileOutputStream(filePath);
                 bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                Log.d(tag, "Saving as JPEG file: " + filePath);
+                
                 JSONArray resultSP = figaro.shapeUp(filePath, config);
                 
                 if(resultSP != null && resultSP.length() > 0){
@@ -257,8 +279,12 @@ public class BraveheartMidgetService extends IntentService {
                 } else {
                 	result.put("error", true);
                 }
+                Log.d(tag, "mPictureCalback. result: ");
+                Log.d(tag, resultSP.toString(1));
                 
-                out = new FileOutputStream(String.format(mediaStorageDir.getPath() + File.separator + side + "grabCut" + "_" + timeStamp + ".jpg"));
+                filePath = String.format(mediaStorageDir.getPath() + File.separator + side + "grabCut" + "_" + timeStamp + ".jpg");
+                out = new FileOutputStream(filePath);
+                Log.d(tag, "Saving as JPEG grabCut file: " + filePath);
                 bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
                 if (bMapRotate != null) {
                     bMapRotate.recycle();
@@ -270,7 +296,8 @@ public class BraveheartMidgetService extends IntentService {
 				e.printStackTrace();
 			}
 	        camera.startPreview();
+			Log.d(tag, "onPicureTaken. Call to sendResult()");
+			sendResult();
         }
 	};
-    
 }
