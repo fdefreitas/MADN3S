@@ -81,21 +81,22 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
             Log.d("Awesome AsyncTask", mSocket.getRemoteDevice().getName());
         switch (mSocket.getRemoteDevice().getBondState()){
             case BluetoothDevice.BOND_BONDED:
-                Log.d("Awesome AsyncTask", "BOND_BONDED" + mSocket.getRemoteDevice().getName());
+                Log.d("Awesome AsyncTask", "BOND_BONDED - " + mSocket.getRemoteDevice().getName());
                 break;
             case BluetoothDevice.BOND_BONDING:
-                Log.d("Awesome AsyncTask", "BOND_BONDING" + mSocket.getRemoteDevice().getName());
+                Log.d("Awesome AsyncTask", "BOND_BONDING - " + mSocket.getRemoteDevice().getName());
                 break;
             case BluetoothDevice.BOND_NONE:
-                Log.d("Awesome AsyncTask", "BOND_NONE" + mSocket.getRemoteDevice().getName());
+                Log.d("Awesome AsyncTask", "BOND_NONE - " + mSocket.getRemoteDevice().getName());
                 break;
             default:
-                Log.d("Awesome AsyncTask", "Default" + mSocket.getRemoteDevice().getName());
+                Log.d("Awesome AsyncTask", "Default - " + mSocket.getRemoteDevice().getName());
         }
         try{
 	        JSONObject json = new JSONObject();
-	        json.put("project_name", "first");
-			json.put("camera_number", side);
+	        json.put("action", "config");
+	        json.put("project_name", "HereIAm");
+			json.put("side", side);
 			json.put("camera_name", mSocket.getRemoteDevice().getName());
 			Log.d("Awesome AsyncTask", "enviando con " + json.toString() + " al device " + mSocket.getRemoteDevice().getName());
 			sendBytes(json.toString().getBytes());
