@@ -177,14 +177,14 @@ public class MainActivity extends Activity {
     private final Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
 		@Override
         public void onPictureTaken(byte[] data, Camera camera) {
-			String side;
+		//	String side;
 			try {
 				config = new JSONObject("{action: 'config', camera_name: 'Cam1', side: 'right', project_name: 'HereIAm'}");
-				side = config.getString("side");
+				position = config.getString("side");
 				projectName = config.getString("project_name");
 //			} catch (JSONException e) {
 			} catch (Exception e) {
-				side ="default";
+				position ="default";
 				e.printStackTrace();
 			}
 			Log.d(tag, "onPicureTaken. Callback triggered.");
@@ -221,7 +221,7 @@ public class MainActivity extends Activity {
                     }
                 }
                 String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String filePath = mediaStorageDir.getPath() + File.separator + side + "_" + timeStamp + ".jpg"; 
+                String filePath = mediaStorageDir.getPath() + File.separator + position + "_" + timeStamp + ".jpg"; 
                 out = new FileOutputStream(filePath);
                 bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
                 Log.d(tag, "Saving as JPEG file: " + filePath);
@@ -238,7 +238,7 @@ public class MainActivity extends Activity {
                 Log.d(tag, "mPictureCalback. result: ");
                 Log.d(tag, result.toString(1));
                 
-                filePath = String.format(mediaStorageDir.getPath() + File.separator + side + "grabCut" + "_" + timeStamp + ".jpg");
+                filePath = String.format(mediaStorageDir.getPath() + File.separator + position + "grabCut" + "_" + timeStamp + ".jpg");
                 out = new FileOutputStream(filePath);
                 Log.d(tag, "Saving as JPEG grabCut file: " + filePath);
                 bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
