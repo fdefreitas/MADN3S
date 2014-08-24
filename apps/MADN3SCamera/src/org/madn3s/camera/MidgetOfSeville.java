@@ -228,7 +228,7 @@ public class MidgetOfSeville {
 	  
 	    Log.d(tag, "finished point printing, point count: " + result.length());
 		
-	    Log.d(tag, "result " + result.toString(1));
+//	    Log.d(tag, "result " + result.toString(1));
 	    
 		Bitmap maskBitmap = Bitmap.createBitmap(mask.cols(), mask.rows(), Bitmap.Config.RGB_565);
 		Utils.matToBitmap(mask, maskBitmap);

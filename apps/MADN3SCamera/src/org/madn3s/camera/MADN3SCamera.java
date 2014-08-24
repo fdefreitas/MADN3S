@@ -35,9 +35,12 @@ public class MADN3SCamera extends Application {
     public static CameraPreview mPreview;
     
     public static AtomicBoolean isPictureTaken; 
+    public static AtomicBoolean isRunning; 
     
     private Handler mBluetoothHandler;
     private Handler.Callback mBluetoothHandlerCallback = null;
+    
+    private static Camera mCamera;
 
     @Override
     public void onCreate() {
@@ -129,15 +132,16 @@ public class MADN3SCamera extends Application {
     }
     
     public static Camera getCameraInstance(){
-        Camera mCamera;
-        try {
-            mCamera = Camera.open();
-            mCamera.setDisplayOrientation(90);
-            mCamera.getParameters().setFlashMode(Camera.Parameters.FLASH_MODE_ON);
-        }
-        catch (Exception e){
-            e.printStackTrace();
-            mCamera = null;
+        if(mCamera == null){
+	        try {
+	            mCamera = Camera.open();
+	            mCamera.setDisplayOrientation(90);
+	            mCamera.getParameters().setFlashMode(Camera.Parameters.FLASH_MODE_ON);
+	        }
+	        catch (Exception e){
+	            e.printStackTrace();
+	            mCamera = null;
+	        }
         }
         return mCamera;
     }

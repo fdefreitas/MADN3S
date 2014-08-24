@@ -15,6 +15,11 @@ import org.madn3s.controller.MADN3SController;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 /**
  * Created by ninja_midget on 2/1/14.
@@ -93,9 +98,10 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
                 Log.d("Awesome AsyncTask", "Default - " + mSocket.getRemoteDevice().getName());
         }
         try{
+        	String timeStamp = new SimpleDateFormat("yyyyMMdd_HH").format(new Date());
 	        JSONObject json = new JSONObject();
-	        json.put("action", "config");
-	        json.put("project_name", "HereIAm");
+	        json.put("action", "photo");
+	        json.put("project_name", "HereIAm-" + timeStamp);
 			json.put("side", side);
 			json.put("camera_name", mSocket.getRemoteDevice().getName());
 			Log.d("Awesome AsyncTask", "enviando con " + json.toString() + " al device " + mSocket.getRemoteDevice().getName());

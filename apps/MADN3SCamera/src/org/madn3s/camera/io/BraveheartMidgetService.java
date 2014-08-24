@@ -148,13 +148,16 @@ public class BraveheartMidgetService extends IntentService {
 					String action = msg.getString("action");
 					side = msg.getString("side");
 					projectName = msg.getString("project_name");
-					
+					if(config == null){//kind of cheating...
+						config = msg;
+					}
 					if(action.equalsIgnoreCase("config")){
 						config = msg;
 					} else if(action.equalsIgnoreCase("photo")){
 						Log.d(tag, "action: photo");
 						Log.d(tag, "call to cameraCallback()");
 //						takePhoto();
+						Log.d(tag, "config == null? " + (config == null));
 						cameraCallback.callback(config);
 					} else if(action.equalsIgnoreCase("end_project")){
 						if(msg.has("clean") && msg.getBoolean("clean")){
@@ -175,7 +178,9 @@ public class BraveheartMidgetService extends IntentService {
 				
 				if(msg.has("error")){
 					Log.d(tag, "recibido Error.");
+					sendResult();
 					MADN3SCamera.isPictureTaken.set(true);
+					
 				}
 			}
 		} catch (JSONException e) {

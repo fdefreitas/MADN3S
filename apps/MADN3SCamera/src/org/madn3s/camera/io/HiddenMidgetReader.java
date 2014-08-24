@@ -58,11 +58,12 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 					}
 		        }
 				
-				while(true){
+				while(MADN3SCamera.isRunning.get()){
 					if(MADN3SCamera.isPictureTaken.get()){
 						Log.d(tag, "Esperando mensaje.");
 						message = getMessage();
 						if(message != null && !message.isEmpty()){
+							Log.d(tag, "Llego " + message);
 							JSONObject msg = new JSONObject(message);
 							if(msg.has("action")){
 								String action = msg.getString("action");
@@ -73,8 +74,6 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 							bridge.callback(message);
 							Log.d(tag, "Iniciando wait().");
 							MADN3SCamera.isPictureTaken.set(false);
-							//TODO hacer un while que alivie el while true usando el atomic boolean
-							Log.d(tag, "Saliendo del wait().");
 						}
 					}
 				}

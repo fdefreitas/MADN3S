@@ -100,14 +100,15 @@ public class MainActivity extends Activity {
         preview.addView(mPreview);
         MADN3SCamera.mPreview = mPreview;
 		MADN3SCamera.isPictureTaken = new AtomicBoolean(true);
+		MADN3SCamera.isRunning = new AtomicBoolean(true);
 		BraveheartMidgetService.cameraCallback = new UniversalComms() {
 			
 			@Override
 			public void callback(Object msg) {
 				config = (JSONObject) msg;
-				
+				Log.d(tag, "takePhoto. config == null? " + (config == null));
 				Log.d(tag, "takePhoto. mPctureCallback == null? " + (mPictureCallback == null));
-				
+				Log.d(tag, "takePhoto. mContext == null? " + (mContext == null));
 				if(mCamera != null){
 					Log.d(tag, "takePhoto. mCamera != null. calling TakePicture()");
 		    		mCamera.takePicture(null, null, mPictureCallback);
@@ -144,13 +145,22 @@ public class MainActivity extends Activity {
         if(! MADN3SCamera.isOpenCvLoaded) {
         	OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_5, this, mLoaderCallback);
         }
+//        MADN3SCamera.isPictureTaken.set(true);
     }
+    
+    @Override
+	protected void onDestroy() {
+		super.onDestroy();
+//		MADN3SCamera.isRunning.set(false);
+	}
+    
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
+    @Override
+    protected void onPause() {
+        super.onPause();
 //        releaseCamera();
-//    }
+//        MADN3SCamera.isPictureTaken.set(false);
+    }
 //
 //    private void releaseCamera(){
 //        if (mCamera != null){
@@ -159,13 +169,17 @@ public class MainActivity extends Activity {
 //        }
 //    }
 
+    
+    
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
-    @Override
+    
+
+	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_settings:
@@ -179,13 +193,16 @@ public class MainActivity extends Activity {
         public void onPictureTaken(byte[] data, Camera camera) {
 		//	String side;
 			try {
-				config = new JSONObject("{action: 'config', camera_name: 'Cam1', side: 'right', project_name: 'HereIAm'}");
+//				config = new JSONObject("{action: 'config', camera_name: 'Cam1', side: 'right', project_name: 'HereIAm'}");
+				Log.d(tag, "onPicureTaken. config: " + config.toString());
 				position = config.getString("side");
 				projectName = config.getString("project_name");
 //			} catch (JSONException e) {
 			} catch (Exception e) {
 				position ="default";
-				e.printStackTrace();
+				projectName ="default";
+//				e.printStackTrace();
+				Log.d(tag, "onPicureTaken. default config");
 			}
 			Log.d(tag, "onPicureTaken. Callback triggered.");
         	MidgetOfSeville figaro = new MidgetOfSeville();
@@ -236,7 +253,7 @@ public class MainActivity extends Activity {
                 	result.put("error", true);
                 }
                 Log.d(tag, "mPictureCalback. result: ");
-                Log.d(tag, result.toString(1));
+                Log.d(tag, result.toString());
                 
                 filePath = String.format(mediaStorageDir.getPath() + File.separator + position + "grabCut" + "_" + timeStamp + ".jpg");
                 out = new FileOutputStream(filePath);
