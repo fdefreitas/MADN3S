@@ -1,6 +1,7 @@
 package org.madn3s.controller;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.madn3s.controller.MADN3SController.Mode;
 import org.madn3s.controller.fragments.BaseFragment;
@@ -48,6 +49,9 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+        
+        MADN3SController.isPictureTaken = new AtomicBoolean(true);
+        MADN3SController.isRunning = new AtomicBoolean(true);
         
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()

@@ -1,27 +1,21 @@
-package org.madn3s.camera.io;
+package org.madn3s.controller.io;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.net.ServerSocket;
 
 import org.json.JSONObject;
-import org.madn3s.camera.MADN3SCamera;
+import org.madn3s.controller.MADN3SController;
 
 import android.bluetooth.BluetoothSocket;
-import android.content.Intent;
-import android.os.Handler.Callback;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
-import android.text.StaticLayout;
+import android.os.Handler.Callback;
 import android.util.Log;
 
-/**
- * Created by ninja_midget on 2/1/14.
- */
 public class HiddenMidgetReader extends HandlerThread implements Callback {
-	public static UniversalComms bridge;
+//	public static UniversalComms bridge;
 	private final static String tag = "HiddenMidgetReader";
 	public final static String EXTRA_CALLBACK_MSG = "message";
 	private Handler handler, callback;
@@ -57,13 +51,12 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 						break;
 					}
 		        }
-				
-				while(MADN3SCamera.isRunning.get()){
-					if(MADN3SCamera.isPictureTaken.get()){
-						Log.d(tag, "Esperando mensaje.");
+				while(MADN3SController.isRunning.get()){
+					if(MADN3SController.isPictureTaken.get()){
+						Log.d(tag, "Esperando mensaje de " + mSocket.getRemoteDevice().getName());
 						message = getMessage();
 						if(message != null && !message.isEmpty()){
-							Log.d(tag, "Llego " + message);
+							Log.d(tag, "Llego " + message + " de " + mSocket.getRemoteDevice().getName());
 							JSONObject msg = new JSONObject(message);
 							if(msg.has("action")){
 								String action = msg.getString("action");
@@ -71,9 +64,9 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 									break;
 								}
 							}	
-							bridge.callback(message);
-							Log.d(tag, "Iniciando wait().");
-							MADN3SCamera.isPictureTaken.set(false);
+//							bridge.callback(message);
+//							Log.d(tag, "Iniciando wait().");
+//							MADN3SController.isPictureTaken.set(false);
 						}
 					}
 				}

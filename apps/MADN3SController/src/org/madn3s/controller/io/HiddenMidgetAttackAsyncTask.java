@@ -12,9 +12,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.ref.WeakReference;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -111,9 +114,14 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
         } catch (Exception e){
             Log.d("Awesome AsyncTask", "FUCK YOU " + " a " + mSocket.getRemoteDevice().getName());
         }
+        
+        WeakReference<BluetoothSocket> mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
+        HiddenMidgetReader readerHandlerThread = new HiddenMidgetReader("readerTask-" + mSocket.getRemoteDevice().getName(), mSocketWeakReference);
+        Log.d("Awesome AsyncTask", "Ejecutando a HiddenMidgetReader");
+        readerHandlerThread.start();
         //poner el socket en algun lado
-        BTConnection conn = BTConnection.getInstance();
-        conn.setCamSocket(mSocket);
+//        BTConnection conn = BTConnection.getInstance();
+//        conn.setCamSocket(mSocket);
     }
 
     @Override
@@ -151,4 +159,6 @@ public class HiddenMidgetAttackAsyncTask extends AsyncTask<Void, Void, Void> {
             Log.d("Awesome AsyncTask", "FUCK YOU sendBytes" + " a " + mSocket.getRemoteDevice().getName());
         } 
     }
+    
+    
 }

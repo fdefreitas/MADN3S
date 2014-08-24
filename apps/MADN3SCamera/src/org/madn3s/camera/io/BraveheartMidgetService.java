@@ -1,5 +1,7 @@
 package org.madn3s.camera.io;
 
+import static org.madn3s.camera.MADN3SCamera.projectName;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
@@ -61,7 +63,7 @@ public class BraveheartMidgetService extends IntentService {
 	private BluetoothServerSocket mBluetoothServerSocket;
 	private WeakReference<BluetoothServerSocket> mBluetoothServerSocketWeakReference;
 	private BluetoothSocket mSocket;
-	private WeakReference<BluetoothSocket> mSocketWeakReference;
+	public static WeakReference<BluetoothSocket> mSocketWeakReference;
     private static Handler mHandler = null;
     private BluetoothAdapter mBluetoothAdapter;
     public static int mState = STATE_NONE;
@@ -72,8 +74,6 @@ public class BraveheartMidgetService extends IntentService {
 	public static UniversalComms cameraCallback;
     
     private JSONObject config;
-    private Camera mCamera;
-    
     
     
 	
@@ -122,7 +122,6 @@ public class BraveheartMidgetService extends IntentService {
 	            Log.d(tag, "Ejecutando a HiddenMidgetConnector");
 	            connectorTask.execute();
 	            
-	            mCamera = MADN3SCamera.mPreview.getmCamera();
 	        } catch (IOException e) {
 	        	Log.d(tag, "No se pudo inicializar mBluetoothServerSocket.");
 	            e.printStackTrace();
@@ -151,18 +150,16 @@ public class BraveheartMidgetService extends IntentService {
 					if(config == null){//kind of cheating...
 						config = msg;
 					}
+					Log.d(tag, "action: " + action);
 					if(action.equalsIgnoreCase("config")){
 						config = msg;
 					} else if(action.equalsIgnoreCase("photo")){
-						Log.d(tag, "action: photo");
-						Log.d(tag, "call to cameraCallback()");
-//						takePhoto();
-						Log.d(tag, "config == null? " + (config == null));
 						cameraCallback.callback(config);
 					} else if(action.equalsIgnoreCase("end_project")){
 						if(msg.has("clean") && msg.getBoolean("clean")){
 							cleanTakenPictures(projectName);
 						}
+						projectName = null;
 					} else if(action.equalsIgnoreCase("calibrate")){
 						calibrate();
 						sendResult();
@@ -174,13 +171,11 @@ public class BraveheartMidgetService extends IntentService {
 				}
 			} else if (intent.hasExtra("result")) {
 				jsonString = intent.getExtras().getString("result");
-				msg = new JSONObject(jsonString);
-				
-				if(msg.has("error")){
+				result = new JSONObject(jsonString);
+				if(result.has("error")){
 					Log.d(tag, "recibido Error.");
 					sendResult();
 					MADN3SCamera.isPictureTaken.set(true);
-					
 				}
 			}
 		} catch (JSONException e) {
@@ -202,107 +197,28 @@ public class BraveheartMidgetService extends IntentService {
 	}
 
 	private void sendResult() {
-		Log.d(tag, "inside sendResult()");
-	}
-
-	private void cleanTakenPictures(String projectName) {
-		// TODO Auto-generated method stub
+		Log.d(tag, "mSocketWeakReference == null: " + (mSocketWeakReference == null));
+		if(mSocketWeakReference != null){
+			HiddenMidgetWriter writerTask = new HiddenMidgetWriter(mSocketWeakReference, result.toString());
+	        Log.d(tag, "Ejecutando a HiddenMidgetWriter");
+	        writerTask.execute();
+		}
 		
 	}
 
-	private void takePhoto() {
-		if(mCamera != null){
-			Log.d(tag, "takePhoto. mCamera != null. calling TakePicture()");
-    		mCamera.takePicture(null, null, mPictureCallback);
-    	} else {
-    		Log.d(tag, "takePhoto. mCamera == null.");
-    		result = new JSONObject();
-    		try {
-				result.put("error", 1);
-				Log.d(tag, "takePhoto. result: " + result.toString(1));
-			} catch (JSONException e) {
-				e.printStackTrace();
+	private void cleanTakenPictures(String projectName) {
+		Log.d(tag, "Limpiando " + projectName);
+		File projectMediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) +"/MADN3SCamera", projectName);
+		if (projectMediaStorageDir.exists()){
+			String[] files = projectMediaStorageDir.list();
+			if(files != null){
+				for (int i = 0; i < files.length; i++) {
+					Log.d(tag, "Limpiando " + files[i]);
+		            new File(projectMediaStorageDir, files[i]).delete();
+		        }
 			}
-    	}
+			projectMediaStorageDir.delete();
+        }
 	}
 	
-	private void releaseCamera(){
-        if (mCamera != null){
-        	mCamera.stopPreview();
-            mCamera.release();
-            mCamera = null;
-        }
-    }
-	
-	private final Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
-		@Override
-        public void onPictureTaken(byte[] data, Camera camera) {
-			Log.d(tag, "onPicureTaken. Callback triggered.");
-        	MidgetOfSeville figaro = new MidgetOfSeville();
-        	int orientation;
-            BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inSampleSize = 6;
-            options.inDither = false; // Disable Dithering mode
-            options.inPurgeable = true; // Tell to gc that whether it needs free
-            options.inInputShareable = true; // Which kind of reference will be
-            options.inTempStorage = new byte[32 * 1024];
-            options.inPreferredConfig = Bitmap.Config.RGB_565;
-            Bitmap bMap = BitmapFactory.decodeByteArray(data, 0, data.length, options);
-            if(bMap.getHeight() < bMap.getWidth()){
-                orientation = 90;
-            } else {
-                orientation = 0;
-            }
-            Bitmap bMapRotate;
-            if (orientation != 0) {
-                Matrix matrix = new Matrix();
-                matrix.postRotate(orientation);
-                bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(), bMap.getHeight(), matrix, true);
-            } else {
-                bMapRotate = Bitmap.createScaledBitmap(bMap, bMap.getWidth(), bMap.getHeight(), true);
-            }
-            FileOutputStream out;
-            try {
-                File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) +"/MADN3SCamera", projectName);
-                if (!mediaStorageDir.exists()){
-                    if (!mediaStorageDir.mkdirs()){
-                        Log.d(tag, "Failed to create directory");
-                        return;
-                    }
-                }
-                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                String filePath = mediaStorageDir.getPath() + File.separator + side + "_" + timeStamp + ".jpg"; 
-                out = new FileOutputStream(filePath);
-                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                Log.d(tag, "Saving as JPEG file: " + filePath);
-                
-                JSONArray resultSP = figaro.shapeUp(filePath, config);
-                
-                if(resultSP != null && resultSP.length() > 0){
-                	result.put("error", false);
-                	result.put("points", resultSP);
-                } else {
-                	result.put("error", true);
-                }
-                Log.d(tag, "mPictureCalback. result: ");
-                Log.d(tag, resultSP.toString(1));
-                
-                filePath = String.format(mediaStorageDir.getPath() + File.separator + side + "grabCut" + "_" + timeStamp + ".jpg");
-                out = new FileOutputStream(filePath);
-                Log.d(tag, "Saving as JPEG grabCut file: " + filePath);
-                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
-                if (bMapRotate != null) {
-                    bMapRotate.recycle();
-                    bMapRotate = null;
-                }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (JSONException e) {
-				e.printStackTrace();
-			}
-	        camera.startPreview();
-			Log.d(tag, "onPicureTaken. Call to sendResult()");
-			sendResult();
-        }
-	};
 }

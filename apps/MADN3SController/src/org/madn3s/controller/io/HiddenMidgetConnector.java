@@ -58,16 +58,16 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
         
         switch (mSocket.getRemoteDevice().getBondState()){
             case BluetoothDevice.BOND_BONDED:
-                Log.d(tag, "BOND_BONDED");
+                Log.d(tag, "BOND_BONDED - " + mSocket.getRemoteDevice().getName());
                 break;
             case BluetoothDevice.BOND_BONDING:
-                Log.d(tag, "BOND_BONDING");
+                Log.d(tag, "BOND_BONDING - " + mSocket.getRemoteDevice().getName());
                 break;
             case BluetoothDevice.BOND_NONE:
-                Log.d(tag, "BOND_NONE");
+                Log.d(tag, "BOND_NONE - " + mSocket.getRemoteDevice().getName());
                 break;
             default:
-                Log.d(tag, "Default");
+                Log.d(tag, "Default - " + mSocket.getRemoteDevice().getName());
         }
         mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
     }

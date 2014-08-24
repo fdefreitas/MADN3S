@@ -10,6 +10,7 @@ import android.os.Handler;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Created by inaki on 1/11/14.
@@ -27,6 +28,9 @@ public class MADN3SController extends Application {
     
     public static WeakReference<BluetoothSocket> camera1WeakReference = null;
     public static WeakReference<BluetoothSocket> camera2WeakReference = null;
+    
+    public static AtomicBoolean isPictureTaken; 
+    public static AtomicBoolean isRunning; 
     
     public static enum Mode {
     	SCANNER("SCANNER",0),

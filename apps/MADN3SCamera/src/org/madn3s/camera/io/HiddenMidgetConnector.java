@@ -80,6 +80,7 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
                         Log.d(tag, "Default");
                 }
                                 
+                BraveheartMidgetService.mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);//this is cheating
                 mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
                 Log.d(tag, "mSocketWeakReference.get(): " + mSocketWeakReference.get().toString());
                 
