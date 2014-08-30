@@ -5,9 +5,17 @@ import static org.madn3s.controller.MADN3SController.camera2;
 import static org.madn3s.controller.MADN3SController.isCameraDevice;
 import static org.madn3s.controller.MADN3SController.isToyDevice;
 import static org.madn3s.controller.MADN3SController.nxt;
+
+import java.util.ArrayList;
+
+import org.madn3s.controller.MADN3SController.Mode;
+import org.madn3s.controller.R;
+import org.madn3s.controller.io.BTConnection;
+import org.madn3s.controller.models.NewDevicesAdapter;
+import org.madn3s.controller.models.PairedDevicesAdapter;
+
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -19,16 +27,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.*;
-
-import org.madn3s.controller.MADN3SController;
-import org.madn3s.controller.MADN3SController.Mode;
-import org.madn3s.controller.R;
-import org.madn3s.controller.io.BTConnection;
-import org.madn3s.controller.models.NewDevicesAdapter;
-import org.madn3s.controller.models.PairedDevicesAdapter;
-
-import java.util.ArrayList;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 /**
  * Created by inaki on 12/7/13.
@@ -232,7 +236,7 @@ public class DiscoveryFragment extends BaseFragment{
 			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
 				Log.d(tag, "Busqueda Terminada");
 				
-				discoveryProgress.setVisibility(View.GONE);
+				discoveryProgress.setVisibility(View.INVISIBLE);
 				nxtDevicesLayout.setVisibility(View.VISIBLE);
 				cameraDevicesLayout.setVisibility(View.VISIBLE);
 				connectButton.setEnabled(true);

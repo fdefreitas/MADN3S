@@ -11,188 +11,179 @@
 
     <LinearLayout
         android:id="@+id/buttons_layout"
-        style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
         android:orientation="horizontal" >
 
         <Button
             android:id="@+id/scan_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="left"
             android:layout_weight="1"
             android:text="@string/scan" />
 
         <Button
             android:id="@+id/connect_button"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="right"
+            android:layout_toRightOf="@id/connect_button"
             android:layout_weight="1"
             android:text="@string/connect" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/connection_listViews_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/buttons_layout" >
-
-        <TextView
-            android:id="@+id/nxt_connection_textView"
-            style="@style/Controller.OrangeTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:labelFor="@+id/nxt_devices_layout"
-            android:text="@string/nxt" />
-
-        <LinearLayout
-            android:id="@+id/nxt_devices_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/nxt_connection_textView"
-            android:baselineAligned="false"
-            android:orientation="horizontal" >
-
-            <LinearLayout
-                android:id="@+id/nxt_paired_devices_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/nested_list_margin"
-                android:layout_weight="1"
-                android:background="@android:color/background_light"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/nxt_paired_devices_textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/route_66"
-                    android:gravity="center_horizontal"
-                    android:padding="@dimen/list_item_padding"
-                    android:text="@string/paired_devices"
-                    android:textColor="@color/steady_grey" />
-
-                <ListView
-                    android:id="@+id/nxt_paired_devices_listView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:listitem="@android:layout/simple_list_item_1" >
-                </ListView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/nxt_new_devices_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/nested_list_margin"
-                android:layout_weight="1"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/nxt_new_devices_textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/route_66"
-                    android:gravity="center_horizontal"
-                    android:padding="@dimen/list_item_padding"
-                    android:text="@string/new_devices"
-                    android:textColor="@color/steady_grey" />
-
-                <ListView
-                    android:id="@+id/nxt_new_devices_listView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    tools:listitem="@android:layout/simple_list_item_1" >
-                </ListView>
-            </LinearLayout>
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/cameras_connection_textView"
-            style="@style/Controller.GreyTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/nxt_devices_layout"
-            android:labelFor="@+id/camera_devices_layout"
-            android:text="@string/cameras" />
-
-        <LinearLayout
-            android:id="@+id/camera_devices_layout"
-            android:layout_width="fill_parent"
-            android:layout_height="200dp"
-            android:layout_below="@id/cameras_connection_textView"
-            android:baselineAligned="false"
-            android:focusableInTouchMode="false"
-            android:orientation="horizontal" >
-
-            <LinearLayout
-                android:id="@+id/cameras_paired_devices_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/nested_list_margin"
-                android:layout_weight="1"
-                android:background="@android:color/background_light"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/cameras_paired_devices_textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/route_66"
-                    android:gravity="center_horizontal"
-                    android:padding="@dimen/subtitle_padding"
-                    android:text="@string/paired_devices"
-                    android:textColor="@color/steady_grey" />
-
-                <ListView
-                    android:id="@+id/camera_paired_devices_listView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:choiceMode="multipleChoice"
-                    tools:listitem="@android:layout/simple_list_item_1" >
-                </ListView>
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/cameras_new_devices_layout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/nested_list_margin"
-                android:layout_weight="1"
-                android:orientation="vertical" >
-
-                <TextView
-                    android:id="@+id/cameras_new_devices_textView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/route_66"
-                    android:gravity="center_horizontal"
-                    android:padding="@dimen/subtitle_padding"
-                    android:text="@string/new_devices"
-                    android:textColor="@color/steady_grey" />
-
-                <ListView
-                    android:id="@+id/cameras_new_devices_listView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:choiceMode="multipleChoice"
-                    tools:listitem="@android:layout/simple_list_item_1" >
-                </ListView>
-            </LinearLayout>
-        </LinearLayout>
-    </RelativeLayout>
-
     <ProgressBar
         android:id="@+id/discovery_progressBar"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/connection_listViews_layout"
+        android:layout_below="@id/buttons_layout"
         android:layout_margin="8dp"
         android:indeterminate="true"
-        android:visibility="gone" />
+        android:visibility="visible" />
+
+    <TextView
+        android:id="@+id/nxt_connection_textView"
+        style="@style/Controller.OrangeTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/discovery_progressBar"
+        android:labelFor="@+id/nxt_devices_layout"
+        android:text="@string/nxt" />
+
+    <LinearLayout
+        android:id="@+id/nxt_devices_layout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/nxt_connection_textView"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/nxt_paired_devices_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/nested_list_margin"
+            android:layout_weight="1"
+            android:background="@android:color/background_light"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/nxt_paired_devices_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/route_66"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/list_item_padding"
+                android:text="@string/paired_devices"
+                android:textColor="@color/steady_grey" />
+
+            <ListView
+                android:id="@+id/nxt_paired_devices_listView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@android:layout/simple_list_item_1" >
+            </ListView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nxt_new_devices_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/nested_list_margin"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/nxt_new_devices_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/route_66"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/list_item_padding"
+                android:text="@string/new_devices"
+                android:textColor="@color/steady_grey" />
+
+            <ListView
+                android:id="@+id/nxt_new_devices_listView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:listitem="@android:layout/simple_list_item_1" >
+            </ListView>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/cameras_connection_textView"
+        style="@style/Controller.GreyTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/nxt_devices_layout"
+        android:labelFor="@+id/camera_devices_layout"
+        android:text="@string/cameras" />
+
+    <LinearLayout
+        android:id="@+id/camera_devices_layout"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/cameras_connection_textView"
+        android:baselineAligned="false"
+        android:focusableInTouchMode="false"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:id="@+id/cameras_paired_devices_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/nested_list_margin"
+            android:layout_weight="1"
+            android:background="@android:color/background_light"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/cameras_paired_devices_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/route_66"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/subtitle_padding"
+                android:text="@string/paired_devices"
+                android:textColor="@color/steady_grey" />
+
+            <ListView
+                android:id="@+id/camera_paired_devices_listView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:choiceMode="multipleChoice"
+                tools:listitem="@android:layout/simple_list_item_1" >
+            </ListView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/cameras_new_devices_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/nested_list_margin"
+            android:layout_weight="1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/cameras_new_devices_textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/route_66"
+                android:gravity="center_horizontal"
+                android:padding="@dimen/subtitle_padding"
+                android:text="@string/new_devices"
+                android:textColor="@color/steady_grey" />
+
+            <ListView
+                android:id="@+id/cameras_new_devices_listView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:choiceMode="multipleChoice"
+                tools:listitem="@android:layout/simple_list_item_1" >
+            </ListView>
+        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>
