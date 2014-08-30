@@ -137,21 +137,21 @@ public class ConnectionFragment extends BaseFragment {
         
         
         
-//        HiddenMidgetConnector connectCamera1 = new HiddenMidgetConnector(camera1, camera1WeakReference);
-//        connectCamera1.execute();
-//        Log.d(TAG, "Iniciando conexion con Camara1: " + camera1.getName());
-//        
-//        HiddenMidgetConnector connectCamera2 = new HiddenMidgetConnector(camera2, camera2WeakReference);
-//        connectCamera2.execute();
-//        Log.d(TAG, "Iniciando conexion con Camara2: " + camera2.getName()); 
-        
-        HiddenMidgetAttackAsyncTask taskCamera1 = new HiddenMidgetAttackAsyncTask(camera1, "right");
-        taskCamera1.execute();
+        HiddenMidgetConnector connectCamera1 = new HiddenMidgetConnector(camera1, camera1WeakReference, MADN3SController.readCamera1);
+        connectCamera1.execute();
         Log.d(TAG, "Iniciando conexion con Camara1: " + camera1.getName());
         
-        HiddenMidgetAttackAsyncTask taskCamera2 = new HiddenMidgetAttackAsyncTask(camera2, "left");
-        taskCamera2.execute();
-        Log.d(TAG, "Iniciando conexion con Camara2: " + camera2.getName());        
+        HiddenMidgetConnector connectCamera2 = new HiddenMidgetConnector(camera2, camera2WeakReference, MADN3SController.readCamera2);
+        connectCamera2.execute();
+        Log.d(TAG, "Iniciando conexion con Camara2: " + camera2.getName()); 
+        
+//        HiddenMidgetAttackAsyncTask taskCamera1 = new HiddenMidgetAttackAsyncTask(camera1, "right");
+//        taskCamera1.execute();
+//        Log.d(TAG, "Iniciando conexion con Camara1: " + camera1.getName());
+//        
+//        HiddenMidgetAttackAsyncTask taskCamera2 = new HiddenMidgetAttackAsyncTask(camera2, "left");
+//        taskCamera2.execute();
+//        Log.d(TAG, "Iniciando conexion con Camara2: " + camera2.getName());        
 
         camera1NameTextView = (TextView) view.findViewById(R.id.camera1_name_connection_textView);
         camera1NameTextView.setText(camera1.getName());

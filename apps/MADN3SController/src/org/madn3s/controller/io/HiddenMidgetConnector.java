@@ -2,6 +2,7 @@ package org.madn3s.controller.io;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.madn3s.controller.MADN3SController;
 
@@ -16,6 +17,7 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
 	private WeakReference<BluetoothSocket> mSocketWeakReference;
     private BluetoothSocket mSocket;
     private Exception e;
+    private AtomicBoolean read;
     
     public HiddenMidgetConnector(BluetoothDevice mBluetoothDevice, WeakReference<BluetoothSocket> mSocketWeakReference){
     	this.mSocketWeakReference = mSocketWeakReference;
@@ -24,6 +26,17 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    	this.read = new AtomicBoolean(false);
+    }
+    
+    public HiddenMidgetConnector(BluetoothDevice mBluetoothDevice, WeakReference<BluetoothSocket> mSocketWeakReference, AtomicBoolean read){
+    	this.mSocketWeakReference = mSocketWeakReference;
+    	try {
+            mSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(MADN3SController.APP_UUID);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    	this.read = read;
     }
 
 	@Override
@@ -69,7 +82,11 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
             default:
                 Log.d(tag, "Default - " + mSocket.getRemoteDevice().getName());
         }
-        mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
+//        mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
+        WeakReference<BluetoothSocket> mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
+        HiddenMidgetReader readerHandlerThread = new HiddenMidgetReader("readerTask-" + mSocket.getRemoteDevice().getName(), mSocketWeakReference, read);
+        Log.d(tag, "Ejecutando a HiddenMidgetReader");
+        readerHandlerThread.start();
     }
 
     @Override

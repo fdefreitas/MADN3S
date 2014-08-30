@@ -32,6 +32,9 @@ public class MADN3SController extends Application {
     public static AtomicBoolean isPictureTaken; 
     public static AtomicBoolean isRunning; 
     
+    public static AtomicBoolean readCamera1;
+    public static AtomicBoolean readCamera2;
+    
     public static enum Mode {
     	SCANNER("SCANNER",0),
     	CONTROLLER("CONTROLLER",1);

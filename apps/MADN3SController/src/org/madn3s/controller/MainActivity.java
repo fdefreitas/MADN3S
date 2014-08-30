@@ -3,12 +3,16 @@ package org.madn3s.controller;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.madn3s.camera.io.BraveheartMidgetService;
 import org.madn3s.controller.MADN3SController.Mode;
+import org.madn3s.controller.components.BraveHeartMidgetService;
 import org.madn3s.controller.fragments.BaseFragment;
 import org.madn3s.controller.fragments.ConnectionFragment;
 import org.madn3s.controller.fragments.ControlsFragment;
 import org.madn3s.controller.fragments.DiscoveryFragment;
 import org.madn3s.controller.fragments.NavigationDrawerFragment;
+import org.madn3s.controller.io.HiddenMidgetReader;
+import org.madn3s.controller.io.UniversalComms;
 
 import android.app.Activity;
 import android.app.ActionBar;
@@ -16,6 +20,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothDevice;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,6 +57,20 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         
         MADN3SController.isPictureTaken = new AtomicBoolean(true);
         MADN3SController.isRunning = new AtomicBoolean(true);
+        MADN3SController.readCamera1 = new AtomicBoolean(false);
+        MADN3SController.readCamera2 = new AtomicBoolean(false);
+        
+        HiddenMidgetReader.bridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
+				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG, (String)msg);
+				startService(williamWallaceIntent);
+			}
+		};
+		
+		Intent williamWallaceIntent = new Intent(this, BraveHeartMidgetService.class);
+		startService(williamWallaceIntent);
         
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
