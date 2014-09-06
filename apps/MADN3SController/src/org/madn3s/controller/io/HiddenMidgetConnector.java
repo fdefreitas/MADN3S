@@ -42,7 +42,7 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
 	@Override
 	protected Void doInBackground(Void... params) {
 		 try {
-            Log.d(tag, ""+mSocket.isConnected());
+            Log.d(tag, ""+mSocket.isConnected() + " - " + mSocket.getRemoteDevice().getName());
             mSocket.connect();
         } catch (Exception e) {
             this.e = e;
@@ -60,9 +60,9 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
         if (e!= null) e.printStackTrace();
         Log.d(tag, mSocket.getRemoteDevice().getName() + " " + mSocket.toString());
         if(mSocket.isConnected()){
-            Log.d(tag, "Conexion levantada");
+            Log.d(tag, "Conexion levantada " + mSocket.getRemoteDevice().getName());
         }else{
-            Log.d(tag, "Conexion fallida");
+            Log.d(tag, "Conexion fallida " + mSocket.getRemoteDevice().getName());
 		}
 
         if (mSocket.getRemoteDevice()!= null){
@@ -86,6 +86,7 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
         WeakReference<BluetoothSocket> mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
         if(MADN3SController.isCamera1(mSocket.getRemoteDevice().getAddress())){
         	MADN3SController.camera1WeakReference = mSocketWeakReference;
+        	
         } else if(MADN3SController.isCamera2(mSocket.getRemoteDevice().getAddress())){
         	MADN3SController.camera2WeakReference = mSocketWeakReference;
         } else {

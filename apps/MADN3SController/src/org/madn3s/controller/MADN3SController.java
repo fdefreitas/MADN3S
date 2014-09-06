@@ -1,5 +1,6 @@
 package org.madn3s.controller;
 
+import android.R.integer;
 import android.app.Application;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothSocket;
@@ -54,6 +55,75 @@ public class MADN3SController extends Application {
 		@Override
 		public String toString() {
 			return this.strVal;
+		}
+    }
+    
+    public static enum Device {
+    	NXT("NXT",0),
+    	CAMERA1("CAMERA1",1),
+    	CAMERA2("CAMERA2",2);
+    	
+    	private String strVal;
+    	private int intVal;
+    	
+    	Device(String strVal, int intVal){
+    		this.strVal = strVal;
+    		this.intVal = intVal;
+    	}
+    	
+    	public int getValue() {
+            return intVal;
+    	}
+    	
+    	@Override
+		public String toString() {
+			return this.strVal;
+		}
+    	
+    	
+    	public static Device setDevice(int device){
+			switch (device){
+		        case 0:
+		        	return NXT;
+		        case 1:
+		        	return CAMERA1;
+		        default:
+		        case 2:
+		        	return CAMERA2;
+		    }
+		}
+    }
+    
+    public static enum State {
+    	CONNECTED(0),
+    	CONNECTING(1),
+    	FAILED(2);
+    	
+    	private int state;
+    	
+    	State(int state){
+    		this.state = state;
+    	}
+    	
+    	public int getState() {
+            return state;
+    	}
+    	
+		@Override
+		public String toString() {
+			return "state: " + this.state;
+		}
+		
+		public static State setState(int state){
+			switch (state){
+		        case 0:
+		        	return CONNECTED;
+		        case 1:
+		        	return CONNECTING;
+		        default:
+		        case 2:
+		        	return FAILED;
+		    }
 		}
     }
 

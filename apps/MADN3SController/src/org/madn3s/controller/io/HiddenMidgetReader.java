@@ -7,8 +7,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
+import org.madn3s.controller.MADN3SController.Device;
+import org.madn3s.controller.fragments.ConnectionFragment;
 
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Message;
@@ -17,6 +21,7 @@ import android.util.Log;
 
 public class HiddenMidgetReader extends HandlerThread implements Callback {
 	public static UniversalComms bridge;
+	public static UniversalComms connectionFragmentBridge;
 	private final static String tag = "HiddenMidgetReader";
 	public final static String EXTRA_CALLBACK_MSG = "message";
 	private Handler handler, callback;
@@ -59,6 +64,42 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 					break;
 				}
 	        }
+			
+			int bondState = mSocket.getRemoteDevice().getBondState();
+			boolean isConnected = mSocket.isConnected();
+			int state, device;
+			Bundle bundle = new Bundle();
+			
+			if(isConnected){
+				switch (bondState){
+		            case BluetoothDevice.BOND_BONDED:
+		            	state = org.madn3s.controller.MADN3SController.State.CONNECTED.getState();
+		                break;
+		            case BluetoothDevice.BOND_BONDING:
+		            	state = org.madn3s.controller.MADN3SController.State.CONNECTING.getState();
+		                break;
+		            default:
+		            case BluetoothDevice.BOND_NONE:
+		            	state = org.madn3s.controller.MADN3SController.State.FAILED.getState();
+		                break;
+		        }
+			} else {
+				state = org.madn3s.controller.MADN3SController.State.FAILED.getState();
+			}
+			
+			if(MADN3SController.isCamera1(mSocket.getRemoteDevice().getAddress())){
+	        	device = Device.CAMERA1.getValue();
+	        } else if(MADN3SController.isCamera2(mSocket.getRemoteDevice().getAddress())){
+	        	device = Device.CAMERA2.getValue();
+	        } else {
+	        	device = Device.NXT.getValue();
+	        }
+
+			bundle.putInt("state", state);
+			bundle.putInt("device", device);
+			
+			connectionFragmentBridge.callback(bundle);
+			
 			while(MADN3SController.isRunning.get()){
 				if(read.get()){
 					Log.d(tag, "Esperando mensaje de " + mSocket.getRemoteDevice().getName());

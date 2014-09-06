@@ -8,12 +8,18 @@ import static org.madn3s.controller.MADN3SController.camera2WeakReference;
 import java.util.ArrayList;
 
 import org.madn3s.controller.MADN3SController;
+import org.madn3s.controller.MADN3SController.Device;
+import org.madn3s.controller.MADN3SController.State;
 import org.madn3s.controller.R;
+import org.madn3s.controller.components.BraveHeartMidgetService;
 import org.madn3s.controller.components.NXTTalker;
 import org.madn3s.controller.io.HiddenMidgetAttackAsyncTask;
 import org.madn3s.controller.io.HiddenMidgetConnector;
+import org.madn3s.controller.io.HiddenMidgetReader;
+import org.madn3s.controller.io.UniversalComms;
 import org.madn3s.controller.models.DevicesAdapter;
 
+import android.R.integer;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
@@ -36,6 +42,7 @@ import android.widget.Toast;
  * Created by inaki on 26/01/14.
  */
 public class ConnectionFragment extends BaseFragment {
+	
 
     public static final int MESSAGE_STATE_CHANGE = 2;
     public static final int MESSAGE_TOAST = 1;
@@ -69,6 +76,7 @@ public class ConnectionFragment extends BaseFragment {
     private ProgressBar camera2ConnectingProgressBar;
     private ImageView camera2ConnectedImageView;
     private ImageView camera2NotConnectedImageView;
+    private ConnectionFragment mConnectionFragment;
 
     
     public ConnectionFragment(){
@@ -78,9 +86,28 @@ public class ConnectionFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mConnectionFragment = this;
+        
+        HiddenMidgetReader.connectionFragmentBridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Bundle bundle = (Bundle)msg;
+				final Device device = Device.setDevice(bundle.getInt("device"));
+				final State state = State.setState(bundle.getInt("state"));
+				mConnectionFragment.getView().post(
+					new Runnable() { 
+						public void run() { 
+							setMarkers(state, device);
+						} 
+					}
+				); 
+			}
+		};
     }
 
-    @Override
+    
+
+	@Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_connection, container, false);
     }
@@ -168,6 +195,7 @@ public class ConnectionFragment extends BaseFragment {
         mReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
+            	
 //                BTConnection conn = BTConnection.getInstance();
 //                BluetoothSocket mSocket1 = conn.getCam1Socket();
 //                BluetoothSocket mSocket2 = conn.getCam2Socket();
@@ -175,12 +203,13 @@ public class ConnectionFragment extends BaseFragment {
                 BluetoothSocket mSocket2 = camera2WeakReference.get();
                 String action = intent.getAction();
                 BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                Log.d(TAG, action);
                 if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)){
                     String addressCamera1 = camera1.getAddress();
                     String addressCamera2 = camera2.getAddress();
 
                     //Camera 1
-                    if(device != null && device.getAddress().equals(addressCamera1) && mSocket1 != null){
+                    if(MADN3SController.isCamera1(device.getAddress()) && mSocket1.getRemoteDevice().getBondState() == BluetoothDevice.BOND_BONDED){
                         //if (device.getBondState() == BluetoothDevice.BOND_BONDED){
                         if (mSocket1.isConnected()){
                             camera1ConnectedImageView.setVisibility(View.VISIBLE);
@@ -193,7 +222,7 @@ public class ConnectionFragment extends BaseFragment {
                     }
 
                     //Camera 2
-                    if(device != null && device.getAddress().equals(addressCamera2) && mSocket2 != null){
+                    if(MADN3SController.isCamera2(device.getAddress()) && mSocket2.getRemoteDevice().getBondState() == BluetoothDevice.BOND_BONDED){
                     //    if (device.getBondState() == BluetoothDevice.BOND_BONDED){
                         if (mSocket2.isConnected()){
                             camera2ConnectedImageView.setVisibility(View.VISIBLE);
@@ -229,5 +258,48 @@ public class ConnectionFragment extends BaseFragment {
             }
         };
     }
+    
+    protected void setMarkers(State state, Device device) {
+    	ImageView connected, failed;
+    	ProgressBar connecting;
+    	switch (device){
+	        case CAMERA1:
+	        	connected = camera1ConnectedImageView;
+	        	failed = camera1NotConnectedImageView;
+	        	connecting = camera1ConnectingProgressBar;
+	        	break;
+	        case CAMERA2:
+	        	connected = camera2ConnectedImageView;
+	        	failed = camera2NotConnectedImageView;
+	        	connecting = camera2ConnectingProgressBar;
+	            break;
+	        default:
+	        case NXT:
+	        	connected = nxtConnectedImageView;
+	        	failed = nxtNotConnectedImageView;
+	        	connecting = nxtConnectingProgressBar;
+	            break;
+	    }
+    	
+    	switch (state){
+	        case CONNECTED:
+	        	connected.setVisibility(View.VISIBLE);
+	        	failed.setVisibility(View.GONE);
+	        	connecting.setVisibility(View.GONE);
+	            break;
+	        case CONNECTING:
+	        	connected.setVisibility(View.GONE);
+	        	failed.setVisibility(View.GONE);
+	        	connecting.setVisibility(View.VISIBLE);
+	            break;
+	        default:
+	        case FAILED:
+	        	connected.setVisibility(View.GONE);
+	        	failed.setVisibility(View.VISIBLE);
+	        	connecting.setVisibility(View.GONE);
+	            break;
+	    }
+		
+	}
 
 }
