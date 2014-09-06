@@ -1,24 +1,18 @@
 package org.madn3s.controller.fragments;
 
 import static org.madn3s.controller.MADN3SController.camera1;
-import static org.madn3s.controller.MADN3SController.camera2;
-import static org.madn3s.controller.MADN3SController.nxt;
 import static org.madn3s.controller.MADN3SController.camera1WeakReference;
+import static org.madn3s.controller.MADN3SController.camera2;
 import static org.madn3s.controller.MADN3SController.camera2WeakReference;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.R;
 import org.madn3s.controller.components.NXTTalker;
-import org.madn3s.controller.io.BTConnection;
 import org.madn3s.controller.io.HiddenMidgetAttackAsyncTask;
-import org.madn3s.controller.io.HiddenMidgetConnector;
 import org.madn3s.controller.models.DevicesAdapter;
 
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
