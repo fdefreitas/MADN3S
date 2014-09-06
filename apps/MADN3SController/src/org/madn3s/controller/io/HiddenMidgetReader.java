@@ -99,23 +99,24 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 			bundle.putInt("device", device);
 			
 			connectionFragmentBridge.callback(bundle);
-			
-			while(MADN3SController.isRunning.get()){
-				if(read.get()){
-					Log.d(tag, "Esperando mensaje de " + mSocket.getRemoteDevice().getName());
-					message = getMessage();
-					if(message != null && !message.isEmpty()){
-						Log.d(tag, "Llego " + message + " de " + mSocket.getRemoteDevice().getName());
-						JSONObject msg = new JSONObject(message);
-						if(msg.has("action")){
-							String action = msg.getString("action");
-							 if(action.equalsIgnoreCase("exit_app")){
-								break;
-							}
-						}	
-//							bridge.callback(message);
-//							Log.d(tag, "Iniciando wait().");
-//							MADN3SController.isPictureTaken.set(false);
+			if(state == org.madn3s.controller.MADN3SController.State.CONNECTED.getState()){
+				while(MADN3SController.isRunning.get()){
+					if(read.get()){
+						Log.d(tag, "Esperando mensaje de " + mSocket.getRemoteDevice().getName());
+						message = getMessage();
+						if(message != null && !message.isEmpty()){
+							Log.d(tag, "Llego " + message + " de " + mSocket.getRemoteDevice().getName());
+							JSONObject msg = new JSONObject(message);
+							if(msg.has("action")){
+								String action = msg.getString("action");
+								 if(action.equalsIgnoreCase("exit_app")){
+									break;
+								}
+							}	
+	//							bridge.callback(message);
+	//							Log.d(tag, "Iniciando wait().");
+	//							MADN3SController.isPictureTaken.set(false);
+						}
 					}
 				}
 			}
