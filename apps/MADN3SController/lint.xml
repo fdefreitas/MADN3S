@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <lint>
     <issue id="ButtonStyle">
+        <ignore path="res/layout/fragment_connection.xml" />
         <ignore path="res/layout/fragment_discovery.xml" />
     </issue>
 </lint>

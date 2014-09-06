@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.MADN3SController.Device;
+import org.madn3s.controller.MADN3SController.Mode;
 import org.madn3s.controller.MADN3SController.State;
 import org.madn3s.controller.R;
 import org.madn3s.controller.components.BraveHeartMidgetService;
@@ -32,6 +33,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -47,7 +49,6 @@ public class ConnectionFragment extends BaseFragment {
     public static final int MESSAGE_STATE_CHANGE = 2;
     public static final int MESSAGE_TOAST = 1;
     public static final String TOAST = "toast";
-    
     private static final String TAG = "ConnectionFragment";
     
     private ArrayList<BluetoothDevice> devices;
@@ -55,6 +56,7 @@ public class ConnectionFragment extends BaseFragment {
     private int mState;
     private BroadcastReceiver mReceiver;
     private Handler mHandler;
+    private ConnectionFragment mFragment;
 
     private ListView devicesListView;
     private DevicesAdapter devicesAdapter;
@@ -76,8 +78,10 @@ public class ConnectionFragment extends BaseFragment {
     private ProgressBar camera2ConnectingProgressBar;
     private ImageView camera2ConnectedImageView;
     private ImageView camera2NotConnectedImageView;
-    private ConnectionFragment mConnectionFragment;
 
+    private Button scannerButton;
+    private Button remoteControlButton;
+    private Button modelGalleryButton;
     
     public ConnectionFragment(){
         
@@ -86,7 +90,7 @@ public class ConnectionFragment extends BaseFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mConnectionFragment = this;
+        mFragment = this;
         
         HiddenMidgetReader.connectionFragmentBridge = new UniversalComms() {
 			@Override
@@ -94,7 +98,7 @@ public class ConnectionFragment extends BaseFragment {
 				Bundle bundle = (Bundle)msg;
 				final Device device = Device.setDevice(bundle.getInt("device"));
 				final State state = State.setState(bundle.getInt("state"));
-				mConnectionFragment.getView().post(
+				mFragment.getView().post(
 					new Runnable() { 
 						public void run() { 
 							setMarkers(state, device);
@@ -192,71 +196,15 @@ public class ConnectionFragment extends BaseFragment {
         camera2ConnectedImageView = (ImageView) view.findViewById(R.id.camera2_connected_imageView);
         camera2NotConnectedImageView = (ImageView) view.findViewById(R.id.camera2_not_connected_imageView);
 
-        mReceiver = new BroadcastReceiver() {
-            @Override
-            public void onReceive(Context context, Intent intent) {
-            	
-//                BTConnection conn = BTConnection.getInstance();
-//                BluetoothSocket mSocket1 = conn.getCam1Socket();
-//                BluetoothSocket mSocket2 = conn.getCam2Socket();
-                BluetoothSocket mSocket1 = camera1WeakReference.get();
-                BluetoothSocket mSocket2 = camera2WeakReference.get();
-                String action = intent.getAction();
-                BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                Log.d(TAG, action);
-                if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)){
-                    String addressCamera1 = camera1.getAddress();
-                    String addressCamera2 = camera2.getAddress();
-
-                    //Camera 1
-                    if(MADN3SController.isCamera1(device.getAddress()) && mSocket1.getRemoteDevice().getBondState() == BluetoothDevice.BOND_BONDED){
-                        //if (device.getBondState() == BluetoothDevice.BOND_BONDED){
-                        if (mSocket1.isConnected()){
-                            camera1ConnectedImageView.setVisibility(View.VISIBLE);
-                            camera1ConnectingProgressBar.setVisibility(View.GONE);
-                        //}else if (device.getBondState() == BluetoothDevice.BOND_NONE){
-                        }else if (!mSocket1.isConnected()){
-                            camera1NotConnectedImageView.setVisibility(View.VISIBLE);
-                            camera1ConnectingProgressBar.setVisibility(View.GONE);
-                        }
-                    }
-
-                    //Camera 2
-                    if(MADN3SController.isCamera2(device.getAddress()) && mSocket2.getRemoteDevice().getBondState() == BluetoothDevice.BOND_BONDED){
-                    //    if (device.getBondState() == BluetoothDevice.BOND_BONDED){
-                        if (mSocket2.isConnected()){
-                            camera2ConnectedImageView.setVisibility(View.VISIBLE);
-                            camera2ConnectingProgressBar.setVisibility(View.GONE);
-                        ///}else if (device.getBondState() == BluetoothDevice.BOND_NONE){
-                        }else if (!mSocket2.isConnected()){
-                            camera2NotConnectedImageView.setVisibility(View.VISIBLE);
-                            camera2ConnectingProgressBar.setVisibility(View.GONE);
-                        }
-                    }
-
-
-                }
-                if(mSocket1 == null){
-                    Log.d(TAG, "mSocket1 es null");
-                } else {
-                    if (mSocket1.isConnected()){
-                        Log.d(TAG, "mSocket1 conectado");
-                    } else {
-                        Log.d(TAG, "mSocket1 NO conectado");
-                    }
-                }
-
-                if(mSocket2 == null){
-                    Log.d(TAG, "mSocket2 es null");
-                } else {
-                    if (mSocket2.isConnected()){
-                        Log.d(TAG, "mSocket2 conectado");
-                    } else {
-                        Log.d(TAG, "mSocket2 NO conectado");
-                    }
-                }
-            }
-        };
+        scannerButton = (Button) view.findViewById(R.id.scanner_button);
+        remoteControlButton = (Button) view.findViewById(R.id.remote_control_button);
+        remoteControlButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				listener.onObjectSelected(Mode.CONTROLLER, mFragment);
+			}
+		});
+        modelGalleryButton = (Button) view.findViewById(R.id.model_gallery_button);
     }
     
     protected void setMarkers(State state, Device device) {

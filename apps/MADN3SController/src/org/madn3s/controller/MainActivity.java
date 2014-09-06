@@ -159,7 +159,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(String.valueOf(controls.getClass()))
                 .commit();
-        fm.executePendingTransactions();
+//        fm.executePendingTransactions();
     }
 
     public void launchConnectionFragment(){

@@ -30,4 +30,8 @@
     <string name="error_connect_failed">Connection Failed</string>
     <string name="error_connect_lost">Connection Lost</string>
     
+    <string name="scanner">Scanner</string>
+    <string name="remote_control">R/C</string>
+    <string name="model_gallery">Model Gallery</string>
+    
 </resources>

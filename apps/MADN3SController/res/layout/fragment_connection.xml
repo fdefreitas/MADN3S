@@ -1,168 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
+    android:orientation="vertical" >
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="@string/selected_devices"
-            android:id="@+id/textView" android:layout_margin="@dimen/container_margin"/>
-
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="@string/nxt"
-            android:id="@+id/nxt_device_textView"
-            android:background="#FF9900"
-            android:padding="@dimen/subtitle_padding" android:textColor="@color/steady_grey"
-            android:layout_margin="@dimen/container_margin"/>
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:layout_margin="@dimen/container_margin">
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" android:layout_weight="3">
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="@string/device_name"
-                    android:id="@+id/nxt_name_connection_textView"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/device_address"
-                    android:id="@+id/nxt_address_connection_textView"
-                    android:layout_marginLeft="@dimen/container_margin"/>
-        </LinearLayout>
-
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/nxt_not_connected_imageView" 
-                android:background="@drawable/indicator_not_connected"
-                android:contentDescription="@string/hint_indicator_device_not_connected"
-            android:visibility="gone" />
-        <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/nxt_connecting_progressBar"/>
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/nxt_connected_imageView" 
-                android:contentDescription="@string/hint_indicator_device_connected"
-                android:background="@drawable/indicator_connected"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
-            android:text="@string/cameras"
-            android:labelFor="@+id/camera_devices_layout"
-            android:id="@+id/cameras_connection_textView"
-            android:padding="@dimen/subtitle_padding"
-            android:textColor="@color/route_66"
-            android:background="@color/BC" android:layout_margin="@dimen/container_margin"/>
-
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:layout_margin="@dimen/container_margin">
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" android:layout_weight="3">
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="@string/device_name"
-                    android:id="@+id/camera1_name_connection_textView"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/device_address"
-                    android:id="@+id/camera1_address_connection_textView"
-                    android:layout_marginLeft="@dimen/container_margin"/>
-        </LinearLayout>
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/camera1_not_connected_imageView" 
-                android:background="@drawable/indicator_not_connected"
-                android:contentDescription="@string/hint_indicator_device_not_connected"
-            	android:visibility="gone" />
-        <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/camera1_connecting_progressBar"/>
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/camera1_connected_imageView" 
-                android:contentDescription="@string/hint_indicator_device_connected"
-                android:background="@drawable/indicator_connected"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content" android:layout_margin="@dimen/container_margin">
-        <LinearLayout
-                android:orientation="vertical"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content" android:layout_weight="3">
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:text="@string/device_name"
-                    android:id="@+id/camera2_name_connection_textView"/>
-            <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    android:text="@string/device_address"
-                    android:id="@+id/camera2_address_connection_textView"
-                    android:layout_marginLeft="@dimen/container_margin"/>
-        </LinearLayout>
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/camera2_not_connected_imageView" android:background="@drawable/indicator_not_connected"
-                android:contentDescription="@string/hint_indicator_device_not_connected"
-            android:visibility="gone" />
-        <ProgressBar
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/camera2_connecting_progressBar"/>
-        <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/camera2_connected_imageView" 
-                android:contentDescription="@string/hint_indicator_device_connected"
-                android:adjustViewBounds="false"
-                android:background="@drawable/indicator_connected"
-            android:visibility="gone" />
-    </LinearLayout>
-
-    <Button
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/next"
-        android:id="@+id/scan_button" 
-        android:layout_gravity="center_horizontal"/>
+        android:layout_margin="@dimen/container_margin"
+        android:text="@string/selected_devices"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/nxt_device_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/container_margin"
+        android:background="#FF9900"
+        android:padding="@dimen/subtitle_padding"
+        android:text="@string/nxt"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/steady_grey" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/container_margin"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/nxt_name_connection_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/device_name"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/nxt_address_connection_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/container_margin"
+                android:text="@string/device_address"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/nxt_not_connected_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/indicator_not_connected"
+            android:contentDescription="@string/hint_indicator_device_not_connected"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/nxt_connecting_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/nxt_connected_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/indicator_connected"
+            android:contentDescription="@string/hint_indicator_device_connected"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/cameras_connection_textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/container_margin"
+        android:background="@color/BC"
+        android:labelFor="@+id/camera_devices_layout"
+        android:padding="@dimen/subtitle_padding"
+        android:text="@string/cameras"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Large"
+        android:textColor="@color/route_66"
+        tools:ignore="UnusedAttribute" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/container_margin"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/camera1_name_connection_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/device_name"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/camera1_address_connection_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/container_margin"
+                android:text="@string/device_address"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/camera1_not_connected_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/indicator_not_connected"
+            android:contentDescription="@string/hint_indicator_device_not_connected"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/camera1_connecting_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/camera1_connected_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/indicator_connected"
+            android:contentDescription="@string/hint_indicator_device_connected"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/container_margin"
+        android:orientation="horizontal" >
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/camera2_name_connection_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/device_name"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <TextView
+                android:id="@+id/camera2_address_connection_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/container_margin"
+                android:text="@string/device_address"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/camera2_not_connected_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/indicator_not_connected"
+            android:contentDescription="@string/hint_indicator_device_not_connected"
+            android:visibility="gone" />
+
+        <ProgressBar
+            android:id="@+id/camera2_connecting_progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/camera2_connected_imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="false"
+            android:background="@drawable/indicator_connected"
+            android:contentDescription="@string/hint_indicator_device_connected"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp" >
+
+        <Button
+            android:id="@+id/scanner_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/scanner" />
+
+        <Button
+            android:id="@+id/remote_control_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/remote_control" />
+
+        <Button
+            android:id="@+id/model_gallery_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:text="@string/model_gallery" />
+
+    </LinearLayout>
 
 </LinearLayout>
