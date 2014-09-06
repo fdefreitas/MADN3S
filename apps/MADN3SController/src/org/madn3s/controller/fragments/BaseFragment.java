@@ -13,7 +13,7 @@ public class BaseFragment extends Fragment {
     private static final String TAG = "BaseFragment";
 
     public interface OnItemSelectedListener {
-        public void onObjectSelected(Object selected);
+        public void onObjectSelected(Object selected, BaseFragment fragment);
     }
 
     @Override

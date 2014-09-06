@@ -55,8 +55,6 @@ public class MADN3SController extends Application {
 		public String toString() {
 			return this.strVal;
 		}
-    	
-    	
     }
 
     
@@ -80,6 +78,20 @@ public class MADN3SController extends Application {
 
 	public static boolean isCameraDevice(BluetoothDevice device){
 		return device.getBluetoothClass()!= null && (device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.PHONE_SMART || device.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.Major.MISC);
+	}
+	
+	public static boolean isCamera1(String macAddress){
+		if(macAddress != null  && camera1 != null && camera1.getAddress() != null){
+			return macAddress.equalsIgnoreCase(camera1.getAddress());
+		}
+		return false;
+	}
+	
+	public static boolean isCamera2(String macAddress){
+		if(macAddress != null  && camera2 != null && camera2.getAddress() != null){
+			return macAddress.equalsIgnoreCase(camera2.getAddress());
+		}
+		return false;
 	}
 	
 	public Handler getBluetoothHandler() {

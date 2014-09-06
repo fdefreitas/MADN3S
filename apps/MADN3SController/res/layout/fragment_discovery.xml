@@ -27,7 +27,6 @@
             android:id="@+id/connect_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/connect_button"
             android:layout_weight="1"
             android:text="@string/connect" />
     </LinearLayout>
@@ -47,7 +46,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/discovery_progressBar"
-        android:labelFor="@+id/nxt_devices_layout"
         android:text="@string/nxt" />
 
     <LinearLayout
@@ -118,7 +116,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/nxt_devices_layout"
-        android:labelFor="@+id/camera_devices_layout"
         android:text="@string/cameras" />
 
     <LinearLayout

@@ -3,7 +3,7 @@ package org.madn3s.controller;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.madn3s.camera.io.BraveheartMidgetService;
+import org.madn3s.controller.io.BraveheartMidgetService;
 import org.madn3s.controller.MADN3SController.Mode;
 import org.madn3s.controller.components.BraveHeartMidgetService;
 import org.madn3s.controller.fragments.BaseFragment;
@@ -18,6 +18,7 @@ import android.app.Activity;
 import android.app.ActionBar;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentManager.BackStackEntry;
 import android.app.FragmentTransaction;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
@@ -135,8 +136,10 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
     }
     
     @Override
-    public void onObjectSelected(Object selected) {
+    public void onObjectSelected(Object selected, BaseFragment fragment) {
     	Mode mode = (Mode) selected;
+    	FragmentManager fm = getFragmentManager();
+    	fm.beginTransaction().remove((Fragment) fragment).commit();
         switch (mode){
         	case CONTROLLER:
         		launchControlsFragment();
@@ -161,13 +164,15 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 
     public void launchConnectionFragment(){
         Log.d(tag, "launchConectionFragment");
-        ConnectionFragment conections = new ConnectionFragment();
+        ConnectionFragment connections = new ConnectionFragment();
         FragmentManager fm = getFragmentManager();
-        fm.beginTransaction().replace(R.id.container, conections)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .addToBackStack(String.valueOf(conections.getClass()))
+        fm.beginTransaction()
+        		.replace(R.id.container, connections)
+//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//                .addToBackStack(String.valueOf(conections.getClass()))
+                .addToBackStack(null)
                 .commit();
-        fm.executePendingTransactions();
+//        fm.executePendingTransactions();
     }
 
 }

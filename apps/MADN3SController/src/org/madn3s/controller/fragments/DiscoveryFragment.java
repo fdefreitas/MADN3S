@@ -32,6 +32,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 /**
@@ -44,6 +45,7 @@ public class DiscoveryFragment extends BaseFragment{
 	private ListView nxtNewDevicesListView, nxtPairedDevicesListView;
 	private ListView cameraNewDevicesListView, cameraPairedDevicesListView;
 	private LinearLayout nxtDevicesLayout, cameraDevicesLayout;
+	private TextView cameraConnectionTextView, nxtConnectionTextView;
 	private ProgressBar discoveryProgress;
 	private Button connectButton;
 	private Button scanButton;
@@ -51,10 +53,12 @@ public class DiscoveryFragment extends BaseFragment{
 	private PairedDevicesAdapter nxtPairedDevicesAdapter, cameraPairedDevicesAdapter;
 	private boolean isNxtSelected;
 	private int cams;
+	private DiscoveryFragment mFragment;
 	
 	public DiscoveryFragment() {
 		isNxtSelected =  false;
 		cams = 0;
+		mFragment = this;
 	}
 
 	@Override
@@ -66,13 +70,23 @@ public class DiscoveryFragment extends BaseFragment{
 	public void onViewCreated (View view, Bundle savedInstanceState){
 		super.onViewCreated(view, savedInstanceState);
 		
-		nxtDevicesLayout = (LinearLayout) getView().findViewById(R.id.nxt_devices_layout);
-		cameraDevicesLayout = (LinearLayout) getView().findViewById(R.id.camera_devices_layout);
+		Log.d(tag, "entrando a onViewCreated");
 		
+		discoveryProgress = (ProgressBar) getView().findViewById(R.id.discovery_progressBar);
+		discoveryProgress.setVisibility(View.GONE);
+		
+		nxtConnectionTextView = (TextView) getView().findViewById(R.id.nxt_connection_textView);
+		nxtConnectionTextView.setVisibility(View.GONE);
+		
+		nxtDevicesLayout = (LinearLayout) getView().findViewById(R.id.nxt_devices_layout);
+		nxtDevicesLayout.setVisibility(View.GONE);
 		nxtPairedDevicesListView = (ListView) getView().findViewById(R.id.nxt_paired_devices_listView);
 		nxtNewDevicesListView = (ListView) getView().findViewById(R.id.nxt_new_devices_listView);
-		discoveryProgress = (ProgressBar) getView().findViewById(R.id.discovery_progressBar);
 
+		cameraConnectionTextView = (TextView) getView().findViewById(R.id.cameras_connection_textView);
+		cameraConnectionTextView.setVisibility(View.GONE);
+		cameraDevicesLayout = (LinearLayout) getView().findViewById(R.id.camera_devices_layout);
+		cameraDevicesLayout.setVisibility(View.GONE);
 		cameraPairedDevicesListView = (ListView) getView().findViewById(R.id.camera_paired_devices_listView);
 		cameraNewDevicesListView = (ListView) getView().findViewById(R.id.cameras_new_devices_listView);
 
@@ -82,7 +96,9 @@ public class DiscoveryFragment extends BaseFragment{
 			public void onClick(View v) {
 				
 				discoveryProgress.setVisibility(View.VISIBLE);
+				nxtConnectionTextView.setVisibility(View.GONE);
 				nxtDevicesLayout.setVisibility(View.GONE);
+				cameraConnectionTextView.setVisibility(View.GONE);
 				cameraDevicesLayout.setVisibility(View.GONE);
 				
 				Log.d(tag, "Starting Discovery");
@@ -144,10 +160,8 @@ public class DiscoveryFragment extends BaseFragment{
 					
 					if(true /*isNxtSelected && cams == 2*/){
 						Log.d(tag, "Mode: SCANNER");
-						listener.onObjectSelected(Mode.SCANNER);
-						
+						listener.onObjectSelected(Mode.SCANNER, mFragment);
 					} else if (isNxtSelected){
-						
 						Log.d(tag, "Mode: CONTROLLER");
 						AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
 							alertDialogBuilder.setTitle("Iniciar Modo Control Remoto");
@@ -156,7 +170,7 @@ public class DiscoveryFragment extends BaseFragment{
 								.setCancelable(true)
 								.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,int id) {
-										listener.onObjectSelected(Mode.CONTROLLER);
+										listener.onObjectSelected(Mode.CONTROLLER, mFragment);
 									}
 								  })
 								.setNegativeButton("No",new DialogInterface.OnClickListener() {
@@ -236,8 +250,10 @@ public class DiscoveryFragment extends BaseFragment{
 			} else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
 				Log.d(tag, "Busqueda Terminada");
 				
-				discoveryProgress.setVisibility(View.INVISIBLE);
+				discoveryProgress.setVisibility(View.GONE);
+				nxtConnectionTextView.setVisibility(View.VISIBLE);
 				nxtDevicesLayout.setVisibility(View.VISIBLE);
+				cameraConnectionTextView.setVisibility(View.VISIBLE);
 				cameraDevicesLayout.setVisibility(View.VISIBLE);
 				connectButton.setEnabled(true);
 			}

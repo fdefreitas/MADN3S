@@ -84,6 +84,13 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
         }
 //        mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
         WeakReference<BluetoothSocket> mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
+        if(MADN3SController.isCamera1(mSocket.getRemoteDevice().getAddress())){
+        	MADN3SController.camera1WeakReference = mSocketWeakReference;
+        } else if(MADN3SController.isCamera2(mSocket.getRemoteDevice().getAddress())){
+        	MADN3SController.camera2WeakReference = mSocketWeakReference;
+        } else {
+        	Log.d(tag, "WHUT?!");
+        }
         HiddenMidgetReader readerHandlerThread = new HiddenMidgetReader("readerTask-" + mSocket.getRemoteDevice().getName(), mSocketWeakReference, read);
         Log.d(tag, "Ejecutando a HiddenMidgetReader");
         readerHandlerThread.start();

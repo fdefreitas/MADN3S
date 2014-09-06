@@ -7,9 +7,11 @@ import static org.madn3s.controller.MADN3SController.camera2WeakReference;
 
 import java.util.ArrayList;
 
+import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.R;
 import org.madn3s.controller.components.NXTTalker;
 import org.madn3s.controller.io.HiddenMidgetAttackAsyncTask;
+import org.madn3s.controller.io.HiddenMidgetConnector;
 import org.madn3s.controller.models.DevicesAdapter;
 
 import android.bluetooth.BluetoothDevice;
@@ -127,7 +129,7 @@ public class ConnectionFragment extends BaseFragment {
 
      //   talker = new NXTTalker(mHandler);
      //   talker.connect(nxt);
-//        Log.d(TAG, "Iniciando Conexi��n con NXT: " + nxt.getName());
+//        Log.d(TAG, "Iniciando Conexion con NXT: " + nxt.getName());
         
         
         
