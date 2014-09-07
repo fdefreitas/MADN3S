@@ -18,6 +18,7 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
     private BluetoothSocket mSocket;
     private Exception e;
     private AtomicBoolean read;
+    private String side;
     
     public HiddenMidgetConnector(BluetoothDevice mBluetoothDevice, WeakReference<BluetoothSocket> mSocketWeakReference){
     	this.mSocketWeakReference = mSocketWeakReference;
@@ -27,9 +28,10 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
         }
     	this.read = new AtomicBoolean(false);
+    	this.side = "DEFAULT";
     }
     
-    public HiddenMidgetConnector(BluetoothDevice mBluetoothDevice, WeakReference<BluetoothSocket> mSocketWeakReference, AtomicBoolean read){
+    public HiddenMidgetConnector(BluetoothDevice mBluetoothDevice, WeakReference<BluetoothSocket> mSocketWeakReference, AtomicBoolean read, String side){
     	this.mSocketWeakReference = mSocketWeakReference;
     	try {
             mSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(MADN3SController.APP_UUID);
@@ -37,6 +39,7 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
             e.printStackTrace();
         }
     	this.read = read;
+    	this.side = side;
     }
 
 	@Override
@@ -82,17 +85,15 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
             default:
                 Log.d(tag, "Default - " + mSocket.getRemoteDevice().getName());
         }
-//        mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
         WeakReference<BluetoothSocket> mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
         if(MADN3SController.isCamera1(mSocket.getRemoteDevice().getAddress())){
         	MADN3SController.camera1WeakReference = mSocketWeakReference;
-        	
         } else if(MADN3SController.isCamera2(mSocket.getRemoteDevice().getAddress())){
         	MADN3SController.camera2WeakReference = mSocketWeakReference;
         } else {
         	Log.d(tag, "WHUT?!");
         }
-        HiddenMidgetReader readerHandlerThread = new HiddenMidgetReader("readerTask-" + mSocket.getRemoteDevice().getName(), mSocketWeakReference, read);
+        HiddenMidgetReader readerHandlerThread = new HiddenMidgetReader("readerTask-" + side + "-" + mSocket.getRemoteDevice().getName(), mSocketWeakReference, read, side);
         Log.d(tag, "Ejecutando a HiddenMidgetReader");
         readerHandlerThread.start();
     }

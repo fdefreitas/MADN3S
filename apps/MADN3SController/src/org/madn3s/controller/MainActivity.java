@@ -64,6 +64,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         HiddenMidgetReader.bridge = new UniversalComms() {
 			@Override
 			public void callback(Object msg) {
+//				Log.d("UniversalComms", "Callback. msg: " + (String)msg + ".-");
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
 				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG, (String)msg);
 				startService(williamWallaceIntent);

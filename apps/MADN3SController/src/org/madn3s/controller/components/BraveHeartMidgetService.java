@@ -3,32 +3,56 @@ package org.madn3s.controller.components;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 
-
-
-
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.io.HiddenMidgetReader;
 
 import android.app.IntentService;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothServerSocket;
 import android.content.Intent;
+import android.os.Binder;
+import android.os.Handler;
+import android.os.IBinder;
 import android.util.Log;
 
 public class BraveHeartMidgetService extends IntentService {
 	
 	private final String tag = "BraveHeartMidgetService";
+	private static Handler mHandler = null;
+	private final IBinder mBinder = new LocalBinder();
+	private boolean left, right;
+	private JSONObject rightJson, leftJson;
+	
+	public class LocalBinder extends Binder {
+		 BraveHeartMidgetService getService() {
+            return BraveHeartMidgetService.this;
+        }
+    }
 
 	public BraveHeartMidgetService(String name) {
 		super(name);
-		// TODO Auto-generated constructor stub
+		rightJson = leftJson = null;
+	}
+	
+	@Override
+    public IBinder onBind(Intent intent) {
+        mHandler = ((MADN3SController) getApplication()).getBluetoothHandler();
+        Log.d(tag, "mHandler "+ mHandler == null ? "NULL" : mHandler.toString());
+        Log.d(tag, "mBinder "+ mBinder == null ? "NULL" : mBinder.toString());
+        return mBinder;
+    }
+	
+	public BraveHeartMidgetService() {
+		super("fuck");
+		rightJson = leftJson = null;
 	}
 	
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG) || intent.hasExtra("result")){
-    		Log.d(tag, "Onstart Command. Llamando a onHandleIntent.");
     		return super.onStartCommand(intent,flags,startId);
     	} else {
-	        Log.d(tag, "Onstart Command");
 	        String stopservice = intent.getStringExtra("stopservice");
 	        if (stopservice != null && stopservice.length() > 0) {
 	            stopSelf();
@@ -39,7 +63,48 @@ public class BraveHeartMidgetService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		// TODO Auto-generated method stub
+		String jsonString = "{}";
+		JSONObject msg;
+		if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG)){
+			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG);
+//			Log.d(tag, jsonString);
+			
+			try {
+				msg = new JSONObject(jsonString);
+				if(msg.has("error") && !msg.getBoolean("error")){
+					if(msg.has("side")){
+						String side = msg.getString("side");
+						Log.d(tag, "Llego " + side + " right " + (rightJson!=null) + " left " + (leftJson!=null));
+						if(side.equalsIgnoreCase("right")){
+							rightJson = msg;
+							rightJson.remove("side");
+							rightJson.remove("time");
+							rightJson.remove("error");
+							rightJson.remove("camera");
+							Log.d(tag, "right " + rightJson.toString());
+						} else if(side.equalsIgnoreCase("left")){
+							leftJson = msg;
+							leftJson.remove("side");
+							leftJson.remove("time");
+							leftJson.remove("error");
+							leftJson.remove("camera");
+							Log.d(tag, "left " + leftJson.toString());
+						}
+						if(leftJson != null && rightJson != null){
+							JSONObject frame = new JSONObject();
+							frame.put("right", rightJson);
+							frame.put("left", leftJson);
+							Log.d(tag, "tengo ambas " + frame.toString());
+							rightJson = leftJson = null;
+						}
+					}
+				}
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
 		
 	}
 

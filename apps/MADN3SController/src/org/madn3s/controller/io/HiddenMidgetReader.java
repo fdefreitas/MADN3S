@@ -28,16 +28,19 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 	private WeakReference<BluetoothSocket> mBluetoothSocketWeakReference;
     private BluetoothSocket mSocket;
     private AtomicBoolean read;
+    private String side;
 
 	public HiddenMidgetReader(String name, WeakReference<BluetoothSocket> mBluetoothSocketWeakReference) {
 		super(name);
 		this.mBluetoothSocketWeakReference = mBluetoothSocketWeakReference;
+		this.side = "DEFAULT";
 	}
 	
-	public HiddenMidgetReader(String name, WeakReference<BluetoothSocket> mBluetoothSocketWeakReference, AtomicBoolean read) {
+	public HiddenMidgetReader(String name, WeakReference<BluetoothSocket> mBluetoothSocketWeakReference, AtomicBoolean read, String side) {
 		super(name);
 		this.mBluetoothSocketWeakReference = mBluetoothSocketWeakReference;
 		this.read = read;
+		this.side = side;
 	}
 	
 	public HiddenMidgetReader(String name, int priority) {
@@ -97,25 +100,31 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 
 			bundle.putInt("state", state);
 			bundle.putInt("device", device);
-			
+			long start = 0;
 			connectionFragmentBridge.callback(bundle);
 			if(state == org.madn3s.controller.MADN3SController.State.CONNECTED.getState()){
 				while(MADN3SController.isRunning.get()){
 					if(read.get()){
-						Log.d(tag, "Esperando mensaje de " + mSocket.getRemoteDevice().getName());
+						if(start == 0){
+							start = System.currentTimeMillis();
+						}
 						message = getMessage();
 						if(message != null && !message.isEmpty()){
-							Log.d(tag, "Llego " + message + " de " + mSocket.getRemoteDevice().getName());
+//							Log.d(tag, "Llego " + message + " de " + mSocket.getRemoteDevice().getName() + " en " + (System.currentTimeMillis() - start));
 							JSONObject msg = new JSONObject(message);
 							if(msg.has("action")){
 								String action = msg.getString("action");
 								 if(action.equalsIgnoreCase("exit_app")){
 									break;
 								}
-							}	
-	//							bridge.callback(message);
-	//							Log.d(tag, "Iniciando wait().");
-	//							MADN3SController.isPictureTaken.set(false);
+							}
+							msg.put("camera", mSocket.getRemoteDevice().getName());
+							msg.put("side", side);
+							msg.put("time", System.currentTimeMillis() - start);
+							bridge.callback(msg.toString());
+							start = 0;
+							Log.d(tag, "Iniciando wait().");
+							read.set(false);
 						}
 					}
 				}

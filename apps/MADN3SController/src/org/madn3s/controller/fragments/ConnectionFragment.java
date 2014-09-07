@@ -5,8 +5,12 @@ import static org.madn3s.controller.MADN3SController.camera1WeakReference;
 import static org.madn3s.controller.MADN3SController.camera2;
 import static org.madn3s.controller.MADN3SController.camera2WeakReference;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.MADN3SController.Device;
 import org.madn3s.controller.MADN3SController.Mode;
@@ -17,6 +21,7 @@ import org.madn3s.controller.components.NXTTalker;
 import org.madn3s.controller.io.HiddenMidgetAttackAsyncTask;
 import org.madn3s.controller.io.HiddenMidgetConnector;
 import org.madn3s.controller.io.HiddenMidgetReader;
+import org.madn3s.controller.io.HiddenMidgetWriter;
 import org.madn3s.controller.io.UniversalComms;
 import org.madn3s.controller.models.DevicesAdapter;
 
@@ -164,11 +169,11 @@ public class ConnectionFragment extends BaseFragment {
         
         
         
-        HiddenMidgetConnector connectCamera1 = new HiddenMidgetConnector(camera1, camera1WeakReference, MADN3SController.readCamera1);
+        HiddenMidgetConnector connectCamera1 = new HiddenMidgetConnector(camera1, camera1WeakReference, MADN3SController.readCamera1, "right");
         connectCamera1.execute();
         Log.d(TAG, "Iniciando conexion con Camara1: " + camera1.getName());
         
-        HiddenMidgetConnector connectCamera2 = new HiddenMidgetConnector(camera2, camera2WeakReference, MADN3SController.readCamera2);
+        HiddenMidgetConnector connectCamera2 = new HiddenMidgetConnector(camera2, camera2WeakReference, MADN3SController.readCamera2, "left");
         connectCamera2.execute();
         Log.d(TAG, "Iniciando conexion con Camara2: " + camera2.getName()); 
         
@@ -197,6 +202,46 @@ public class ConnectionFragment extends BaseFragment {
         camera2NotConnectedImageView = (ImageView) view.findViewById(R.id.camera2_not_connected_imageView);
 
         scannerButton = (Button) view.findViewById(R.id.scanner_button);
+        scannerButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				
+				try{
+		        	String timeStamp = new SimpleDateFormat("yyyyMMdd_HH").format(new Date());
+			        JSONObject json = new JSONObject();
+			        json.put("action", "photo");
+			        json.put("project_name", "HereIAm-" + timeStamp);
+					
+			        if(camera1WeakReference != null){
+						json.put("side", "left");
+						json.put("camera_name", camera1.getName());
+						HiddenMidgetWriter sendCamera1 = new HiddenMidgetWriter(camera1WeakReference, json.toString());
+						sendCamera1.execute();
+				        Log.d(TAG, "Enviando a Camara1: " + camera1.getName());
+				        MADN3SController.readCamera1.set(true);
+					} else {
+						Log.d(TAG, "camera1WeakReference null");
+					}
+					
+					if(camera2WeakReference != null){
+						json.put("side", "right");
+						json.put("camera_name", camera2.getName());
+						HiddenMidgetWriter sendCamera2 = new HiddenMidgetWriter(camera2WeakReference, json.toString());
+						sendCamera2.execute();
+				        Log.d(TAG, "Enviando a Camara2: " + camera2.getName());
+				        MADN3SController.readCamera2.set(true);
+					} else {
+						Log.d(TAG, "camera2WeakReference null");
+					}
+					
+					
+		        } catch (JSONException e){
+		            Log.d("Awesome AsyncTask", "Error armando el JSON");
+		        } catch (Exception e){
+		            Log.d("Awesome AsyncTask", "Error generico enviando");
+		        }
+			}
+		});
         remoteControlButton = (Button) view.findViewById(R.id.remote_control_button);
         remoteControlButton.setOnClickListener(new View.OnClickListener() {
 			@Override
