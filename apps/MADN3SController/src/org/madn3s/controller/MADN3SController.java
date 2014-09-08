@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Handler;
+import android.util.Log;
 
 import java.lang.ref.WeakReference;
 import java.util.UUID;
@@ -198,6 +199,7 @@ public class MADN3SController extends Application {
 	}
 	
 	public static void sharedPrefsPutInt(String key, int value){
+		Log.d("APP", "sharedPreferencesEditor = " + (sharedPreferencesEditor==null));
 		sharedPreferencesEditor.putInt(key, value).apply();
 	}
 	

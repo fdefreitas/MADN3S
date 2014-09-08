@@ -68,6 +68,14 @@ public class BraveHeartMidgetService extends IntentService {
 			try {
 				msg = new JSONObject(jsonString);
 				if(msg.has("error") && !msg.getBoolean("error")){
+					try{
+						MADN3SController.sharedPrefsPutInt("iter", 0);
+						int iter = MADN3SController.sharedPrefsGetInt("iter");
+						JSONObject fr = MADN3SController.sharedPrefsGetJSONObject("frame-"+iter);
+						Log.d(tag, "SP iter" + iter + " fr " + (fr!=null));
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
 					if(msg.has("side")){
 						String side = msg.getString("side");
 						if(side.equalsIgnoreCase("right")){
