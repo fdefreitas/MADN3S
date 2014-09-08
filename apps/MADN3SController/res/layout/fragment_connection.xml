@@ -196,18 +196,18 @@
         android:layout_marginTop="16dp" >
 
         <Button
-            android:id="@+id/scanner_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/scanner" />
-
-        <Button
             android:id="@+id/remote_control_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/remote_control" />
+
+        <Button
+            android:id="@+id/scanner_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/scanner" />
 
         <Button
             android:id="@+id/model_gallery_button"

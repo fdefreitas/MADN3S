@@ -15,5 +15,13 @@
     <dimen name="subtitle_padding">8dp</dimen>
     <dimen name="list_item_padding">8dp</dimen>
     <dimen name="nested_list_margin">4dp</dimen>
+    
+    <dimen name="button_vertical_padding">4dp</dimen>
+    <dimen name="button_horizontal_padding">8dp</dimen>
+    <dimen name="element_padding">8dp</dimen>
+    <dimen name="element_vertical_margin">4dp</dimen>
+    <dimen name="element_horizontal_margin">8dp</dimen>
+    
+    <dimen name="scanner_step_height">48dp</dimen>
 
 </resources>
