@@ -2,6 +2,7 @@ package org.madn3s.controller.components;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,8 +23,8 @@ public class BraveHeartMidgetService extends IntentService {
 	private final String tag = "BraveHeartMidgetService";
 	private static Handler mHandler = null;
 	private final IBinder mBinder = new LocalBinder();
-	private boolean left, right;
-	private JSONObject rightJson, leftJson;
+	private static JSONObject rightJson, leftJson;
+	private static ArrayList<JSONObject> frames;
 	
 	public class LocalBinder extends Binder {
 		 BraveHeartMidgetService getService() {
@@ -34,6 +35,7 @@ public class BraveHeartMidgetService extends IntentService {
 	public BraveHeartMidgetService(String name) {
 		super(name);
 		rightJson = leftJson = null;
+		frames = new ArrayList<JSONObject>();
 	}
 	
 	@Override
@@ -47,6 +49,7 @@ public class BraveHeartMidgetService extends IntentService {
 	public BraveHeartMidgetService() {
 		super("fuck");
 		rightJson = leftJson = null;
+		frames = new ArrayList<JSONObject>();
 	}
 	
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -74,7 +77,6 @@ public class BraveHeartMidgetService extends IntentService {
 				if(msg.has("error") && !msg.getBoolean("error")){
 					if(msg.has("side")){
 						String side = msg.getString("side");
-						Log.d(tag, "Llego " + side + " right " + (rightJson!=null) + " left " + (leftJson!=null));
 						if(side.equalsIgnoreCase("right")){
 							rightJson = msg;
 							rightJson.remove("side");
@@ -95,8 +97,10 @@ public class BraveHeartMidgetService extends IntentService {
 							frame.put("right", rightJson);
 							frame.put("left", leftJson);
 							Log.d(tag, "tengo ambas " + frame.toString());
+							frames.add(frame);
 							rightJson = leftJson = null;
 						}
+						Log.d(tag, "Llego " + side + " right " + (rightJson!=null) + " left " + (leftJson!=null) + " nFrames = " + frames.size());
 					}
 				}
 			} catch (JSONException e) {
