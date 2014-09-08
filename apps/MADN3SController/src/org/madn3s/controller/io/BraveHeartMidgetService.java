@@ -1,17 +1,12 @@
-package org.madn3s.controller.components;
+package org.madn3s.controller.io;
 
-import java.io.IOException;
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
-import org.madn3s.controller.io.HiddenMidgetReader;
 
 import android.app.IntentService;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothServerSocket;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Handler;
@@ -20,7 +15,7 @@ import android.util.Log;
 
 public class BraveHeartMidgetService extends IntentService {
 	
-	private final String tag = "BraveHeartMidgetService";
+	private static final String tag = "BraveHeartMidgetService";
 	private static Handler mHandler = null;
 	private final IBinder mBinder = new LocalBinder();
 	private static JSONObject rightJson, leftJson;
@@ -47,7 +42,7 @@ public class BraveHeartMidgetService extends IntentService {
     }
 	
 	public BraveHeartMidgetService() {
-		super("fuck");
+		super(tag);
 		rightJson = leftJson = null;
 		frames = new ArrayList<JSONObject>();
 	}
@@ -66,12 +61,10 @@ public class BraveHeartMidgetService extends IntentService {
 
 	@Override
 	protected void onHandleIntent(Intent intent) {
-		String jsonString = "{}";
+		String jsonString;
 		JSONObject msg;
 		if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG)){
 			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG);
-//			Log.d(tag, jsonString);
-			
 			try {
 				msg = new JSONObject(jsonString);
 				if(msg.has("error") && !msg.getBoolean("error")){
@@ -104,12 +97,9 @@ public class BraveHeartMidgetService extends IntentService {
 					}
 				}
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
-		
 	}
 
 }

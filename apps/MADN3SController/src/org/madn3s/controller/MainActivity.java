@@ -1,42 +1,33 @@
 package org.madn3s.controller;
 
-import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.madn3s.controller.io.BraveheartMidgetService;
 import org.madn3s.controller.MADN3SController.Mode;
-import org.madn3s.controller.components.BraveHeartMidgetService;
 import org.madn3s.controller.fragments.BaseFragment;
 import org.madn3s.controller.fragments.ConnectionFragment;
 import org.madn3s.controller.fragments.ControlsFragment;
 import org.madn3s.controller.fragments.DiscoveryFragment;
 import org.madn3s.controller.fragments.NavigationDrawerFragment;
+import org.madn3s.controller.io.BraveHeartMidgetService;
 import org.madn3s.controller.io.HiddenMidgetReader;
 import org.madn3s.controller.io.UniversalComms;
 
-import android.app.Activity;
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.app.FragmentManager.BackStackEntry;
 import android.app.FragmentTransaction;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
-import android.widget.TextView;
 
 public class MainActivity extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks
         , BaseFragment.OnItemSelectedListener {
 
 	private static final String tag = "MainActivity";
-	
     private NavigationDrawerFragment mNavigationDrawerFragment;
 
     /**
@@ -47,8 +38,8 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
+        setContentView(R.layout.activity_main); 
+        
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -79,9 +70,9 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
                     .add(R.id.container, new DiscoveryFragment())
                     .commit();
         }
-    }
+    }    
 
-    @Override
+	@Override
     public void onNavigationDrawerItemSelected(int position) {
         FragmentManager fragmentManager = getFragmentManager();
         fragmentManager.beginTransaction()
