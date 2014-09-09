@@ -7,15 +7,19 @@ import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.R;
 import org.madn3s.controller.MADN3SController.Device;
+import org.madn3s.controller.MADN3SController.Mode;
 import org.madn3s.controller.MADN3SController.State;
 import org.madn3s.controller.io.BraveHeartMidgetService;
 import org.madn3s.controller.io.HiddenMidgetReader;
 import org.madn3s.controller.io.UniversalComms;
 
+import android.R.integer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 public class ScannerFragment extends BaseFragment {
 
@@ -23,6 +27,7 @@ public class ScannerFragment extends BaseFragment {
 	public static UniversalComms bridge;
 	
 	private ScannerFragment mFragment;
+	private Button generateModelButton;
 	
 	public ScannerFragment() {
 		mFragment = this;
@@ -32,13 +37,15 @@ public class ScannerFragment extends BaseFragment {
 				Bundle bundle = (Bundle)msg;
 				final Device device = Device.setDevice(bundle.getInt("device"));
 				final State state = State.setState(bundle.getInt("state"));
-				mFragment.getView().post(
-					new Runnable() { 
-						public void run() { 
-							//update UI
-						} 
-					}
-				); 
+				int iter = bundle.containsKey("iter")?bundle.getInt("iter"):-1;
+				Log.d(tag, device + " " + state + " " + iter);
+//				mFragment.getView().post(
+//					new Runnable() { 
+//						public void run() { 
+//							//update UI
+//						} 
+//					}
+//				); 
 			}
 		};
 	}
@@ -51,6 +58,13 @@ public class ScannerFragment extends BaseFragment {
 	@Override
 	public void onViewCreated (View view, Bundle savedInstanceState){
 		super.onViewCreated(view, savedInstanceState);
+		generateModelButton = (Button) view.findViewById(R.id.model_generation_button);
+		generateModelButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				scan();
+			}
+		});
 	}
 
 	@Override
@@ -62,12 +76,8 @@ public class ScannerFragment extends BaseFragment {
 		try{
 			String timeStamp = new SimpleDateFormat("yyyyMMdd_HH").format(new Date());
 			String projectName = "HereIAm-" + timeStamp;
-			try{
-				MADN3SController.sharedPrefsPutString("project_name", projectName);
-				MADN3SController.sharedPrefsPutInt("points", 6);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			MADN3SController.sharedPrefsPutString("project_name", projectName);
+			MADN3SController.sharedPrefsPutInt("points", 6);
 			JSONObject json = new JSONObject();
 	        json.put("action", "photo");
 	        json.put("project_name", projectName);

@@ -206,40 +206,40 @@ public class ConnectionFragment extends BaseFragment {
 			@Override
 			public void onClick(View v) {
 				
-				try{
-		        	String timeStamp = new SimpleDateFormat("yyyyMMdd_HH").format(new Date());
-			        JSONObject json = new JSONObject();
-			        json.put("action", "photo");
-			        json.put("project_name", "HereIAm-" + timeStamp);
-					
-			        if(camera1WeakReference != null){
-						json.put("side", "left");
-						json.put("camera_name", camera1.getName());
-						HiddenMidgetWriter sendCamera1 = new HiddenMidgetWriter(camera1WeakReference, json.toString());
-						sendCamera1.execute();
-				        Log.d(TAG, "Enviando a Camara1: " + camera1.getName());
-				        MADN3SController.readCamera1.set(true);
-					} else {
-						Log.d(TAG, "camera1WeakReference null");
-					}
-					
-					if(camera2WeakReference != null){
-						json.put("side", "right");
-						json.put("camera_name", camera2.getName());
-						HiddenMidgetWriter sendCamera2 = new HiddenMidgetWriter(camera2WeakReference, json.toString());
-						sendCamera2.execute();
-				        Log.d(TAG, "Enviando a Camara2: " + camera2.getName());
-				        MADN3SController.readCamera2.set(true);
-					} else {
-						Log.d(TAG, "camera2WeakReference null");
-					}
-					
-					
-		        } catch (JSONException e){
-		            Log.d("Awesome AsyncTask", "Error armando el JSON");
-		        } catch (Exception e){
-		            Log.d("Awesome AsyncTask", "Error generico enviando");
-		        }
+//				try{
+//		        	String timeStamp = new SimpleDateFormat("yyyyMMdd_HH").format(new Date());
+//			        JSONObject json = new JSONObject();
+//			        json.put("action", "photo");
+//			        json.put("project_name", "HereIAm-" + timeStamp);
+//					
+//			        if(camera1WeakReference != null){
+//						json.put("side", "left");
+//						json.put("camera_name", camera1.getName());
+//						HiddenMidgetWriter sendCamera1 = new HiddenMidgetWriter(camera1WeakReference, json.toString());
+//						sendCamera1.execute();
+//				        Log.d(TAG, "Enviando a Camara1: " + camera1.getName());
+//				        MADN3SController.readCamera1.set(true);
+//					} else {
+//						Log.d(TAG, "camera1WeakReference null");
+//					}
+//					
+//					if(camera2WeakReference != null){
+//						json.put("side", "right");
+//						json.put("camera_name", camera2.getName());
+//						HiddenMidgetWriter sendCamera2 = new HiddenMidgetWriter(camera2WeakReference, json.toString());
+//						sendCamera2.execute();
+//				        Log.d(TAG, "Enviando a Camara2: " + camera2.getName());
+//				        MADN3SController.readCamera2.set(true);
+//					} else {
+//						Log.d(TAG, "camera2WeakReference null");
+//					}
+//					
+//					
+//		        } catch (JSONException e){
+//		            Log.d("Awesome AsyncTask", "Error armando el JSON");
+//		        } catch (Exception e){
+//		            Log.d("Awesome AsyncTask", "Error generico enviando");
+//		        }
 				listener.onObjectSelected(Mode.SCAN, mFragment);
 			}
 		});

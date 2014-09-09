@@ -70,30 +70,29 @@ public class BraveHeartMidgetService extends IntentService {
 		String jsonString;
 		JSONObject msg;
 		if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG)){
+			Log.d(tag, HiddenMidgetReader.EXTRA_CALLBACK_MSG);
 			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG);
 			processAnswer(jsonString);
 		} else if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND)){
+			Log.d(tag, HiddenMidgetReader.EXTRA_CALLBACK_SEND);
 			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_SEND);
 			sendMessageToCameras(jsonString);
 		} else if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE)){
+			Log.d(tag, HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE);
 			Bundle bundle = new Bundle();
 			bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
 			bundle.putInt("device", Device.NXT.getValue());
 			scannerBridge.callback(bundle);
 			sendMessageToCameras();
+		} else {
+			Log.d(tag, "NONE");
 		}
 		
 	}
 	
 	public void sendMessageToCameras(){
 		try{
-			String timeStamp = new SimpleDateFormat("yyyyMMdd_HH").format(new Date());
-			String projectName = "HereIAm-" + timeStamp;
-			try{
-				projectName = MADN3SController.sharedPrefsGetString("project_name");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			String projectName = MADN3SController.sharedPrefsGetString("project_name");
 			JSONObject json = new JSONObject();
 	        json.put("action", "photo");
 	        json.put("project_name", projectName);
@@ -148,12 +147,8 @@ public class BraveHeartMidgetService extends IntentService {
 			if(msg.has("error") && !msg.getBoolean("error")){
 				int iter = 0;
 				JSONObject fr = null;
-				try{
-					iter = MADN3SController.sharedPrefsGetInt("iter");
-					fr = MADN3SController.sharedPrefsGetJSONObject("frame-"+iter);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				iter = MADN3SController.sharedPrefsGetInt("iter");
+				fr = MADN3SController.sharedPrefsGetJSONObject("frame-"+iter);
 				if(msg.has("side")){
 					int device = 1;
 					String side = msg.getString("side");
@@ -177,21 +172,14 @@ public class BraveHeartMidgetService extends IntentService {
 					Bundle bundle = new Bundle();
 					bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
 					bundle.putInt("device", device);
+					bundle.putInt("iter", iter);
 					scannerBridge.callback(bundle);
-					try{
-						MADN3SController.sharedPrefsPutJSONObject("frame-"+iter, fr);
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+					MADN3SController.sharedPrefsPutJSONObject("frame-"+iter, fr);
 					if(fr.has("right") && fr.has("left")){
 						iter++;
 						int points = 6;
-						try{
-							MADN3SController.sharedPrefsPutInt("iter", iter);
-							points = MADN3SController.sharedPrefsGetInt("points");
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
+						MADN3SController.sharedPrefsPutInt("iter", iter);
+						points = MADN3SController.sharedPrefsGetInt("points");
 						if(iter != points){
 							sendMessageToNXT();
 						} else {
