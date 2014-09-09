@@ -24,6 +24,8 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 	public static UniversalComms connectionFragmentBridge;
 	private final static String tag = "HiddenMidgetReader";
 	public final static String EXTRA_CALLBACK_MSG = "message";
+	public final static String EXTRA_CALLBACK_SEND = "send";
+	public final static String EXTRA_CALLBACK_NXT_MESSAGE = "nxt_message";
 	private Handler handler, callback;
 	private WeakReference<BluetoothSocket> mBluetoothSocketWeakReference;
     private BluetoothSocket mSocket;

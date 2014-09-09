@@ -8,6 +8,7 @@ import org.madn3s.controller.fragments.ConnectionFragment;
 import org.madn3s.controller.fragments.ControlsFragment;
 import org.madn3s.controller.fragments.DiscoveryFragment;
 import org.madn3s.controller.fragments.NavigationDrawerFragment;
+import org.madn3s.controller.fragments.ScannerFragment;
 import org.madn3s.controller.io.BraveHeartMidgetService;
 import org.madn3s.controller.io.HiddenMidgetReader;
 import org.madn3s.controller.io.UniversalComms;
@@ -38,6 +39,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getApplication();
         setContentView(R.layout.activity_main); 
         
         mNavigationDrawerFragment = (NavigationDrawerFragment)
@@ -58,6 +60,17 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 //				Log.d("UniversalComms", "Callback. msg: " + (String)msg + ".-");
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
 				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG, (String)msg);
+				startService(williamWallaceIntent);
+			}
+		};
+		
+		
+		ScannerFragment.bridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+//				Log.d("UniversalComms", "Callback. msg: " + (String)msg + ".-");
+				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
+				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND, (String)msg);
 				startService(williamWallaceIntent);
 			}
 		};
@@ -139,7 +152,11 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         	case SCANNER:
         		launchConnectionFragment();
         		break;
+        	case SCAN:
+        		launchScannerFragment();
+        		break;
     		default:
+    			
         }
     }
 
@@ -160,6 +177,19 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         FragmentManager fm = getFragmentManager();
         fm.beginTransaction()
         		.replace(R.id.container, connections)
+//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//                .addToBackStack(String.valueOf(conections.getClass()))
+                .addToBackStack(null)
+                .commit();
+//        fm.executePendingTransactions();
+    }
+    
+    public void launchScannerFragment(){
+        Log.d(tag, "launchScannerFragment");
+        ScannerFragment scanner = new ScannerFragment();
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction()
+        		.replace(R.id.container, scanner)
 //                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
 //                .addToBackStack(String.valueOf(conections.getClass()))
                 .addToBackStack(null)

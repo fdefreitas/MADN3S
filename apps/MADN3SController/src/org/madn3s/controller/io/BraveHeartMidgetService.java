@@ -1,14 +1,25 @@
 package org.madn3s.controller.io;
 
+import static org.madn3s.controller.MADN3SController.camera1;
+import static org.madn3s.controller.MADN3SController.camera1WeakReference;
+import static org.madn3s.controller.MADN3SController.camera2;
+import static org.madn3s.controller.MADN3SController.camera2WeakReference;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
+import org.madn3s.controller.MADN3SController.Device;
 
+import android.R.integer;
 import android.app.IntentService;
+import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
@@ -18,8 +29,7 @@ public class BraveHeartMidgetService extends IntentService {
 	private static final String tag = "BraveHeartMidgetService";
 	private static Handler mHandler = null;
 	private final IBinder mBinder = new LocalBinder();
-	private static JSONObject rightJson, leftJson;
-	private static ArrayList<JSONObject> frames;
+	public static UniversalComms scannerBridge;
 	
 	public class LocalBinder extends Binder {
 		 BraveHeartMidgetService getService() {
@@ -29,8 +39,6 @@ public class BraveHeartMidgetService extends IntentService {
 
 	public BraveHeartMidgetService(String name) {
 		super(name);
-		rightJson = leftJson = null;
-		frames = new ArrayList<JSONObject>();
 	}
 	
 	@Override
@@ -43,8 +51,6 @@ public class BraveHeartMidgetService extends IntentService {
 	
 	public BraveHeartMidgetService() {
 		super(tag);
-		rightJson = leftJson = null;
-		frames = new ArrayList<JSONObject>();
 	}
 	
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -65,49 +71,156 @@ public class BraveHeartMidgetService extends IntentService {
 		JSONObject msg;
 		if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG)){
 			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG);
-			try {
-				msg = new JSONObject(jsonString);
-				if(msg.has("error") && !msg.getBoolean("error")){
+			processAnswer(jsonString);
+		} else if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND)){
+			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_SEND);
+			sendMessageToCameras(jsonString);
+		} else if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE)){
+			Bundle bundle = new Bundle();
+			bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
+			bundle.putInt("device", Device.NXT.getValue());
+			scannerBridge.callback(bundle);
+			sendMessageToCameras();
+		}
+		
+	}
+	
+	public void sendMessageToCameras(){
+		try{
+			String timeStamp = new SimpleDateFormat("yyyyMMdd_HH").format(new Date());
+			String projectName = "HereIAm-" + timeStamp;
+			try{
+				projectName = MADN3SController.sharedPrefsGetString("project_name");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			JSONObject json = new JSONObject();
+	        json.put("action", "photo");
+	        json.put("project_name", projectName);
+			sendMessageToCameras(json.toString());
+		} catch (JSONException e){
+            Log.d(tag, "Error armando el JSON");
+        } catch (Exception e){
+            Log.d(tag, "Error generico enviando");
+        }
+	}
+	public void sendMessageToCameras(String msgString){
+		try{
+			JSONObject msg = new JSONObject(msgString);
+        	if(camera1WeakReference != null){
+	        	msg.put("side", "left");
+	        	msg.put("camera_name", camera1.getName());
+				HiddenMidgetWriter sendCamera1 = new HiddenMidgetWriter(camera1WeakReference, msg.toString());
+				sendCamera1.execute();
+		        Log.d(tag, "Enviando a Camara1: " + camera1.getName());
+		        MADN3SController.readCamera1.set(true);
+			} else {
+				Log.d(tag, "camera1WeakReference null");
+			}
+			
+			if(camera2WeakReference != null){
+				msg.put("side", "right");
+				msg.put("camera_name", camera2.getName());
+				HiddenMidgetWriter sendCamera2 = new HiddenMidgetWriter(camera2WeakReference, msg.toString());
+				sendCamera2.execute();
+		        Log.d(tag, "Enviando a Camara2: " + camera2.getName());
+		        MADN3SController.readCamera2.set(true);
+			} else {
+				Log.d(tag, "camera2WeakReference null");
+			}
+			
+			Bundle bundle = new Bundle();
+			bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTING.getState());
+			bundle.putInt("device",  Device.CAMERA1.getValue());
+			scannerBridge.callback(bundle);
+			bundle.putInt("device",  Device.CAMERA2.getValue());
+			scannerBridge.callback(bundle);
+		} catch (JSONException e){
+            Log.d(tag, "Error armando el JSON");
+        } catch (Exception e){
+            Log.d(tag, "Error generico enviando");
+        }
+	}
+	
+	public void processAnswer(String msgString){
+		try {
+			JSONObject msg = new JSONObject(msgString);
+			if(msg.has("error") && !msg.getBoolean("error")){
+				int iter = 0;
+				JSONObject fr = null;
+				try{
+					iter = MADN3SController.sharedPrefsGetInt("iter");
+					fr = MADN3SController.sharedPrefsGetJSONObject("frame-"+iter);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				if(msg.has("side")){
+					int device = 1;
+					String side = msg.getString("side");
+					if(side.equalsIgnoreCase("right")){
+						JSONObject rightJson = msg;
+						rightJson.remove("side");
+						rightJson.remove("time");
+						rightJson.remove("error");
+						rightJson.remove("camera");
+						fr.put("right", rightJson);
+						device = Device.CAMERA1.getValue();
+					} else if(side.equalsIgnoreCase("left")){
+						JSONObject leftJson = msg;
+						leftJson.remove("side");
+						leftJson.remove("time");
+						leftJson.remove("error");
+						leftJson.remove("camera");
+						fr.put("left", leftJson);
+						device = Device.CAMERA2.getValue();
+					}
+					Bundle bundle = new Bundle();
+					bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
+					bundle.putInt("device", device);
+					scannerBridge.callback(bundle);
 					try{
-						MADN3SController.sharedPrefsPutInt("iter", 0);
-						int iter = MADN3SController.sharedPrefsGetInt("iter");
-						JSONObject fr = MADN3SController.sharedPrefsGetJSONObject("frame-"+iter);
-						Log.d(tag, "SP iter" + iter + " fr " + (fr!=null));
+						MADN3SController.sharedPrefsPutJSONObject("frame-"+iter, fr);
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
-					if(msg.has("side")){
-						String side = msg.getString("side");
-						if(side.equalsIgnoreCase("right")){
-							rightJson = msg;
-							rightJson.remove("side");
-							rightJson.remove("time");
-							rightJson.remove("error");
-							rightJson.remove("camera");
-							Log.d(tag, "right " + rightJson.toString());
-						} else if(side.equalsIgnoreCase("left")){
-							leftJson = msg;
-							leftJson.remove("side");
-							leftJson.remove("time");
-							leftJson.remove("error");
-							leftJson.remove("camera");
-							Log.d(tag, "left " + leftJson.toString());
+					if(fr.has("right") && fr.has("left")){
+						iter++;
+						int points = 6;
+						try{
+							MADN3SController.sharedPrefsPutInt("iter", iter);
+							points = MADN3SController.sharedPrefsGetInt("points");
+						} catch (Exception e) {
+							e.printStackTrace();
 						}
-						if(leftJson != null && rightJson != null){
-							JSONObject frame = new JSONObject();
-							frame.put("right", rightJson);
-							frame.put("left", leftJson);
-							Log.d(tag, "tengo ambas " + frame.toString());
-							frames.add(frame);
-							rightJson = leftJson = null;
+						if(iter != points){
+							sendMessageToNXT();
+						} else {
+							notifyScanFinished();
 						}
-						Log.d(tag, "Llego " + side + " right " + (rightJson!=null) + " left " + (leftJson!=null) + " nFrames = " + frames.size());
 					}
 				}
-			} catch (JSONException e) {
-				e.printStackTrace();
 			}
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
+	}
+
+	private void notifyScanFinished() {
+		Bundle bundle = new Bundle();
+		bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
+		bundle.putInt("device", Device.NXT.getValue());
+		scannerBridge.callback(bundle);
+		bundle.putInt("device",  Device.CAMERA1.getValue());
+		scannerBridge.callback(bundle);
+		bundle.putInt("device",  Device.CAMERA2.getValue());
+		scannerBridge.callback(bundle);
+	}
+
+	private void sendMessageToNXT() {
+		Bundle bundle = new Bundle();
+		bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTING.getState());
+		bundle.putInt("device", Device.NXT.getValue());
+		scannerBridge.callback(bundle);
 	}
 
 }

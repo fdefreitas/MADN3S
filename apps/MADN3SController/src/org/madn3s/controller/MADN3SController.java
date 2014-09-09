@@ -44,9 +44,10 @@ public class MADN3SController extends Application {
 
 	public static AtomicBoolean readCamera1;
 	public static AtomicBoolean readCamera2;
+	private static final String TAG = "MADN3SController";
 
 	public static enum Mode {
-		SCANNER("SCANNER", 0), CONTROLLER("CONTROLLER", 1);
+		SCANNER("SCANNER", 0), CONTROLLER("CONTROLLER", 1), SCAN("SCAN", 2);
 
 		private String strVal;
 		private int intVal;
@@ -133,7 +134,7 @@ public class MADN3SController extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-
+		Log.d(TAG, "sharedPreferencesEditor = " + (sharedPreferencesEditor==null));
 		setSharedPreferences();
 
 		mBluetoothHandler = new Handler() {
@@ -152,6 +153,7 @@ public class MADN3SController extends Application {
 		sharedPreferences = getSharedPreferences(getString(R.string.app_name),
 				MODE_PRIVATE);
 		sharedPreferencesEditor = MADN3SController.sharedPreferences.edit();
+		Log.d(TAG, "sharedPreferencesEditor = " + (sharedPreferencesEditor==null));
 	}
 	
 	public static void sharedPrefsPutJSONArray(String key, JSONArray value){
@@ -199,7 +201,7 @@ public class MADN3SController extends Application {
 	}
 	
 	public static void sharedPrefsPutInt(String key, int value){
-		Log.d("APP", "sharedPreferencesEditor = " + (sharedPreferencesEditor==null));
+		Log.d(TAG, "sharedPreferencesEditor = " + (sharedPreferencesEditor==null));
 		sharedPreferencesEditor.putInt(key, value).apply();
 	}
 	

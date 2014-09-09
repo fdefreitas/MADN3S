@@ -240,6 +240,7 @@ public class ConnectionFragment extends BaseFragment {
 		        } catch (Exception e){
 		            Log.d("Awesome AsyncTask", "Error generico enviando");
 		        }
+				listener.onObjectSelected(Mode.SCAN, mFragment);
 			}
 		});
         remoteControlButton = (Button) view.findViewById(R.id.remote_control_button);
