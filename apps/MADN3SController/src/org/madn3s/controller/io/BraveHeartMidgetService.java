@@ -65,7 +65,6 @@ public class BraveHeartMidgetService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		String jsonString;
-		JSONObject msg;
 		if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG)){
 			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG);
 			processAnswer(jsonString);
@@ -136,10 +135,8 @@ public class BraveHeartMidgetService extends IntentService {
 		try {
 			JSONObject msg = new JSONObject(msgString);
 			if(msg.has("error") && !msg.getBoolean("error")){
-				int iter = 0;
-				JSONObject fr = null;
-				iter = MADN3SController.sharedPrefsGetInt("iter");
-				fr = MADN3SController.sharedPrefsGetJSONObject("frame-"+iter);
+				int iter = MADN3SController.sharedPrefsGetInt("iter");
+				JSONObject frame = MADN3SController.sharedPrefsGetJSONObject("frame-"+iter);
 				if(msg.has("side")){
 					int device = 1;
 					String side = msg.getString("side");
@@ -149,7 +146,7 @@ public class BraveHeartMidgetService extends IntentService {
 						rightJson.remove("time");
 						rightJson.remove("error");
 						rightJson.remove("camera");
-						fr.put("right", rightJson);
+						frame.put("right", rightJson);
 						device = Device.CAMERA1.getValue();
 					} else if(side.equalsIgnoreCase("left")){
 						JSONObject leftJson = msg;
@@ -157,15 +154,15 @@ public class BraveHeartMidgetService extends IntentService {
 						leftJson.remove("time");
 						leftJson.remove("error");
 						leftJson.remove("camera");
-						fr.put("left", leftJson);
+						frame.put("left", leftJson);
 						device = Device.CAMERA2.getValue();
 					}
 					Bundle bundle = new Bundle();
 					bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
 					bundle.putInt("device", device);
 					scannerBridge.callback(bundle);
-					MADN3SController.sharedPrefsPutJSONObject("frame-"+iter, fr);
-					if(fr.has("right") && fr.has("left")){
+					MADN3SController.sharedPrefsPutJSONObject("frame-"+iter, frame);
+					if(frame.has("right") && frame.has("left")){
 						iter++;
 						int points = MADN3SController.sharedPrefsGetInt("points");
 						MADN3SController.sharedPrefsPutInt("iter", iter);
@@ -199,6 +196,7 @@ public class BraveHeartMidgetService extends IntentService {
 		bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTING.getState());
 		bundle.putInt("device", Device.NXT.getValue());
 		scannerBridge.callback(bundle);
+		
 	}
 
 }
