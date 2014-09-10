@@ -11,7 +11,7 @@
     <dimen name="navigation_drawer_width">240dp</dimen>
 
     <dimen name="container_margin">16dp</dimen>
-    <dimen name="arrow_side">100dp</dimen>
+    <dimen name="arrow_side">48dp</dimen>
     <dimen name="subtitle_padding">8dp</dimen>
     <dimen name="list_item_padding">8dp</dimen>
     <dimen name="nested_list_margin">4dp</dimen>

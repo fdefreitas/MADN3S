@@ -129,42 +129,49 @@ public class ScannerFragment extends BaseFragment {
 				getView().findViewById(R.id.calibration_working_progressBar), 
 				getView().findViewById(R.id.calibration_textView)
 			);
+		calibrationViewHolder.hide();
 		nxtActionViewHolder = new ScanStepViewHolder(
 				getView().findViewById(R.id.nxt_action_failure_imageView), 
 				getView().findViewById(R.id.nxt_action_success_imageView), 
 				getView().findViewById(R.id.nxt_action_working_progressBar), 
 				getView().findViewById(R.id.nxt_action_textView)
 			);
+		nxtActionViewHolder.hide();
 		camera1ActionViewHolder = new ScanStepViewHolder(
 				getView().findViewById(R.id.camera1_action_failure_imageView), 
 				getView().findViewById(R.id.camera1_action_success_imageView), 
 				getView().findViewById(R.id.camera1_action_working_progressBar), 
 				getView().findViewById(R.id.camera1_action_textView)
 			);
+		camera1ActionViewHolder.hide();
 		camera2ActionViewHolder = new ScanStepViewHolder(
 				getView().findViewById(R.id.camera2_action_failure_imageView), 
 				getView().findViewById(R.id.camera2_action_success_imageView), 
 				getView().findViewById(R.id.camera2_action_working_progressBar), 
 				getView().findViewById(R.id.camera2_action_textView)
 			); 
+		camera2ActionViewHolder.hide();
 		step1ViewHolder = new ScanStepViewHolder(
 				getView().findViewById(R.id.step1_generation_failure_imageView), 
 				getView().findViewById(R.id.step1_generation_success_imageView), 
 				getView().findViewById(R.id.step1_generation_working_progressBar), 
 				getView().findViewById(R.id.step1_generation_textView)
 			);
+		step1ViewHolder.hide();
 		step2ViewHolder = new ScanStepViewHolder(
 				getView().findViewById(R.id.step2_generation_failure_imageView), 
 				getView().findViewById(R.id.step2_generation_success_imageView), 
 				getView().findViewById(R.id.step2_generation_working_progressBar), 
 				getView().findViewById(R.id.step2_generation_textView)
 			);
+		step2ViewHolder.hide();
 		step3ViewHolder = new ScanStepViewHolder(
 				getView().findViewById(R.id.step3_generation_failure_imageView), 
 				getView().findViewById(R.id.step3_generation_success_imageView), 
 				getView().findViewById(R.id.step3_generation_working_progressBar), 
 				getView().findViewById(R.id.step3_generation_textView)
 			);
+		step3ViewHolder.hide();
 		
 		generateModelProgressBar = (ProgressBar) getView().findViewById(R.id.model_generation_progressBar);
 		generateModelButton = (Button) view.findViewById(R.id.model_generation_button);
