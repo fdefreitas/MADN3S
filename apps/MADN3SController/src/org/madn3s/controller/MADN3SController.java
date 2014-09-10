@@ -134,7 +134,6 @@ public class MADN3SController extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.d(TAG, "sharedPreferencesEditor = " + (sharedPreferencesEditor==null));
 		setSharedPreferences();
 
 		mBluetoothHandler = new Handler() {
@@ -153,7 +152,6 @@ public class MADN3SController extends Application {
 		sharedPreferences = getSharedPreferences(getString(R.string.app_name),
 				MODE_PRIVATE);
 		sharedPreferencesEditor = MADN3SController.sharedPreferences.edit();
-		Log.d(TAG, "sharedPreferencesEditor = " + (sharedPreferencesEditor==null));
 	}
 	
 	public static void sharedPrefsPutJSONArray(String key, JSONArray value){
@@ -201,7 +199,6 @@ public class MADN3SController extends Application {
 	}
 	
 	public static void sharedPrefsPutInt(String key, int value){
-		Log.d(TAG, "sharedPreferencesEditor = " + (sharedPreferencesEditor==null));
 		sharedPreferencesEditor.putInt(key, value).apply();
 	}
 	
