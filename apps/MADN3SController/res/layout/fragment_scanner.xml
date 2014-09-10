@@ -224,6 +224,7 @@
         style="@style/Controller.Button.Primary"
         android:layout_below="@id/model_generation_progressBar"
         android:layout_centerHorizontal="true"
+        android:enabled="false"
         android:text="@string/generate" />
     
     <RelativeLayout
@@ -356,6 +357,7 @@
         android:layout_below="@id/step3_generation_relativeLayout"
         android:layout_centerHorizontal="true"
         android:layout_margin="8dp"
+        android:enabled="false"
         style="@style/Controller.Button.Primary"
         android:text="@string/view" />
 

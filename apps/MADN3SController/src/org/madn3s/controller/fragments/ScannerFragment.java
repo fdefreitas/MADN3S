@@ -11,6 +11,7 @@ import org.madn3s.controller.R;
 import org.madn3s.controller.io.BraveHeartMidgetService;
 import org.madn3s.controller.io.UniversalComms;
 import org.madn3s.controller.models.ScanStepViewHolder;
+import org.madn3s.controller.models.StatusViewHolder;
 
 import android.annotation.SuppressLint;
 import android.os.Bundle;
@@ -48,21 +49,53 @@ public class ScannerFragment extends BaseFragment {
 		BraveHeartMidgetService.scannerBridge = new UniversalComms() {
 			@Override
 			public void callback(Object msg) {
-				Bundle bundle = (Bundle)msg;
+				Bundle bundle = (Bundle) msg;
 				final Device device = Device.setDevice(bundle.getInt("device"));
 				final State state = State.setState(bundle.getInt("state"));
 				int iter = MADN3SController.sharedPrefsGetInt("iter");
 				Log.d(tag, device + " " + state + " " + iter);
-//				mFragment.getView().post(
-//					new Runnable() { 
-//						public void run() { 
-//							//update UI
-							//TODO
-//						} 
-//					}
-//				); 
+				mFragment.getView().post(
+					new Runnable() { 
+						public void run() {
+							//update UI
+							setDeviceActionState(device, state);
+						} 
+					}
+				); 
 			}
 		};
+	}
+	
+	private void setDeviceActionState(Device device, State state){
+		StatusViewHolder deviceActionViewHolder;
+		switch (device) {
+		case NXT:
+			deviceActionViewHolder = nxtActionViewHolder;
+			break;
+		case CAMERA1:
+			deviceActionViewHolder = camera1ActionViewHolder;		
+			break;
+		default:
+			Log.d(tag, "Device switch unhandled default case");
+		case CAMERA2:
+			deviceActionViewHolder = camera2ActionViewHolder;
+			break;
+		}
+		
+		switch (state) {
+		case CONNECTING:
+			deviceActionViewHolder.working();
+			break;
+		case CONNECTED:
+			deviceActionViewHolder.success();		
+			break;
+		case FAILED:
+			deviceActionViewHolder.failure();
+			break;
+		default:
+			Log.d(tag, "State switch unhandled default case");
+			break;
+		}
 	}
 	
 	@Override
