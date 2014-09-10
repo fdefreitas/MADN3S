@@ -154,6 +154,14 @@ public class MADN3SController extends Application {
 		sharedPreferencesEditor = MADN3SController.sharedPreferences.edit();
 	}
 	
+	private void clearSharedPreferences() {
+		sharedPreferencesEditor.clear().apply();
+	}
+	
+	private void removeKeyFromSharedPreferences(String key) {
+		sharedPreferencesEditor.remove(key).apply();
+	}
+	
 	public static void sharedPrefsPutJSONArray(String key, JSONArray value){
 		sharedPreferencesEditor.putString(key, value.toString()).apply();
 	}
