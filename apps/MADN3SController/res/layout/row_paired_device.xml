@@ -11,7 +11,7 @@
         android:id="@+id/device_name_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="sdfasdfasdf"
+        android:text="@string/device_name"
         android:textStyle="bold"
         android:textColor="@color/steady_grey" />
 
@@ -20,7 +20,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/container_margin"
-        android:text="asdfasdfa"
+        android:text="@string/device_address"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@color/route_66" />
 

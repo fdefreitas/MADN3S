@@ -42,6 +42,8 @@ public class DiscoveryFragment extends BaseFragment{
 	public static final String tag = "MainFragment";
 	public static final String EXTRA_DEVICE_ADDRESS = "device_address";
 
+	private BluetoothAdapter btAdapter;
+	
 	private ListView nxtNewDevicesListView, nxtPairedDevicesListView;
 	private ListView cameraNewDevicesListView, cameraPairedDevicesListView;
 	private LinearLayout nxtDevicesLayout, cameraDevicesLayout;
@@ -56,9 +58,11 @@ public class DiscoveryFragment extends BaseFragment{
 	private DiscoveryFragment mFragment;
 	
 	public DiscoveryFragment() {
+		mFragment = this;
 		isNxtSelected =  false;
 		cams = 0;
-		mFragment = this;
+		btAdapter = BluetoothAdapter.getDefaultAdapter();
+		btAdapter.startDiscovery();
 	}
 
 	@Override
@@ -102,13 +106,15 @@ public class DiscoveryFragment extends BaseFragment{
 				cameraDevicesLayout.setVisibility(View.GONE);
 				
 				Log.d(tag, "Starting Discovery");
-				BTConnection btc = BTConnection.getInstance();
-				btc.doDiscovery();
+				doDiscovery();
+				// TODO sacar cosas utiles de BTConn para eliminarlo
+//				BTConnection btc = BTConnection.getInstance();
+//				btc.doDiscovery();
 
-//				byte b = "hallo!".getBytes()[0];
 				try {
 					ArrayList<BluetoothDevice> temporaryPairedDevices = new ArrayList<BluetoothDevice>();
-					for(BluetoothDevice device:  BTConnection.pairedDevices){
+//					for(BluetoothDevice device:  BTConnection.pairedDevices){
+					for(BluetoothDevice device:  btAdapter.getBondedDevices()){
 						if (isToyDevice(device)){
 							temporaryPairedDevices.add(device);
 							Log.d(tag, "For de Toy filter: "+device.getName());
@@ -124,7 +130,8 @@ public class DiscoveryFragment extends BaseFragment{
 					nxtNewDevicesListView.setOnItemClickListener(onDeviceAdapterClickListener);
 
 					temporaryPairedDevices = new ArrayList<BluetoothDevice>();
-					for(BluetoothDevice device:  BTConnection.pairedDevices){
+//					for(BluetoothDevice device:  BTConnection.pairedDevices){
+					for(BluetoothDevice device:  btAdapter.getBondedDevices()){
 						temporaryPairedDevices.add(device);
 						Log.d(tag, "for camera filter: "+device.getName());
 					}
@@ -259,4 +266,20 @@ public class DiscoveryFragment extends BaseFragment{
 			}
 		}
 	};
+	
+	private void enableBT(){
+        if(!btAdapter.isEnabled()){
+        	btAdapter.enable();
+        }
+    }
+
+    private void doDiscovery() {
+        enableBT();
+        if (btAdapter.isDiscovering()) btAdapter.cancelDiscovery();
+        btAdapter.startDiscovery();
+    }
+
+	private void cancelDiscovery(){
+    	btAdapter.cancelDiscovery();
+    }
 }

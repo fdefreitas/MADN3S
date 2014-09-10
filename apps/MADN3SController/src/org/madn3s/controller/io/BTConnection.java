@@ -19,16 +19,15 @@ public class BTConnection {
 
 private static final String tag = "BTConnection";
 
-//    public final static String NXT_MAC_ADDRESS = "00:16:53:02:0E:EC";
-//    public final static String NXT_MAC_ADDRESS = "5C:B5:24:C9:A2:33";
     public final static String NXT_MAC_ADDRESS = "30:39:26:63:6F:36";
 
-    static BTConnection instance;
-    BluetoothAdapter localAdapter;
-//    BluetoothServerSocket nxtSocket;
-    public static Set<BluetoothDevice> pairedDevices;
-    public static Set<BluetoothDevice> newDevices;
-    BluetoothSocket nxtSocket, cam1Socket, cam2Socket;
+    private static BTConnection instance;
+    private BluetoothAdapter localAdapter;
+    private static Set<BluetoothDevice> pairedDevices;
+    private static Set<BluetoothDevice> newDevices;
+    private BluetoothSocket nxtSocket;
+    private BluetoothSocket cam1Socket;
+    private BluetoothSocket cam2Socket;
     boolean success=false;
 
     private BTConnection(){
@@ -51,7 +50,6 @@ private static final String tag = "BTConnection";
         BTConnection.newDevices = newDevices;
     }
 
-    //Enables Bluetooth if not enabled
     private void enableBT(){
         if(!localAdapter.isEnabled()){
             localAdapter.enable();

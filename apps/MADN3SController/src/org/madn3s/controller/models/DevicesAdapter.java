@@ -11,8 +11,6 @@ import android.widget.TextView;
 import org.madn3s.controller.R;
 
 import java.util.ArrayList;
-import java.util.Set;
-import java.util.zip.Inflater;
 
 /**
  * Created by inaki on 1/11/14.
@@ -27,7 +25,8 @@ public class DevicesAdapter extends BaseAdapter {
         devices = new ArrayList<BluetoothDevice>();
     }
 
-    public DevicesAdapter(ArrayList<BluetoothDevice> devices, Context mContext) {
+    @SuppressWarnings("unchecked")
+	public DevicesAdapter(ArrayList<BluetoothDevice> devices, Context mContext) {
         this(mContext);
         this.devices = (ArrayList<BluetoothDevice>) devices.clone();
     }
@@ -53,7 +52,7 @@ public class DevicesAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null) convertView = ((LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.row_device, null);
+        if(convertView == null) convertView = ((LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.row_device, parent, false);
 
         assert convertView != null;
         TextView name = (TextView) convertView.findViewById(R.id.device_name_textView);

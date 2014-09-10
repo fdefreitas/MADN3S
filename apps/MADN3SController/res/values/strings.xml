@@ -30,19 +30,19 @@
     <string name="error_connect_failed">Connection Failed</string>
     <string name="error_connect_lost">Connection Lost</string>
     
-    <string name="calibration">Calibración</string>
-    <string name="nxt_action">Enviando señal a NXT</string>
-    <string name="camera1_action">Enviando señal a Camera1</string>
-    <string name="camera2_action">Enviando señal a Camera2</string>
+    <string name="calibration">Calibration</string>
+    <string name="nxt_action">Sending Signal to NXT</string>
+    <string name="camera1_action">Sending Signal to Camera1</string>
+    <string name="camera2_action">Sending Signal to Camera2</string>
     
-    <string name="step1">Paso 1</string>
-    <string name="step2">Paso 2</string>
-    <string name="step3">Paso 3</string>
+    <string name="step1">Step 1</string>
+    <string name="step2">Step 2</string>
+    <string name="step3">Step 3</string>
     
-    <string name="project_name">Nombre de Proyecto</string>
-    <string name="save">Guardar</string>
-    <string name="generate">Generar Modelo</string>
-    <string name="view">Ver Modelo</string>
+    <string name="project_name">Project Name</string>
+    <string name="save">Save</string>
+    <string name="generate">Generate Model</string>
+    <string name="view">View Model</string>
     
     <string name="scanner">Scanner</string>
     <string name="remote_control">R/C</string>

@@ -16,19 +16,19 @@
     <string name="description_arrow_right">Flecha Derecha</string>
     <string name="new_devices">Dispositivos Nuevos</string>
     <string name="paired_devices">Dispositivos Apareados</string>
-    <string name="cameras">Cameras</string>
+    <string name="cameras">Cámaras</string>
     <string name="nxt">NXT</string>
-    <string name="connect">Connect</string>
-    <string name="scan">Scan</string>
-    <string name="hint_indicator_device_not_connected">Device Not Connected Indicator</string>
-    <string name="hint_indicator_device_connected">Device Connected Indicator</string>
+    <string name="connect">Conectar</string>
+    <string name="scan">Scanear</string>
+    <string name="hint_indicator_device_not_connected">Indicador de Dispositivo No Conectado</string>
+    <string name="hint_indicator_device_connected">Indicador de Dispositivo Conectado</string>
 
-    <string name="selected_devices">Selected Devices</string>
-    <string name="device_name">Device Name</string>
-    <string name="device_address">Device Address</string>
-    <string name="next">Next</string>
-    <string name="error_connect_failed">Connection Failed</string>
-    <string name="error_connect_lost">Connection Lost</string>
+    <string name="selected_devices">Dispositivos Seleccionados</string>
+    <string name="device_name">Nombre de Dispositivo</string>
+    <string name="device_address">Dirección de Dispositivo</string>
+    <string name="next">Siguiente</string>
+    <string name="error_connect_failed">Conexión Fallida</string>
+    <string name="error_connect_lost">Conexión Perdida</string>
     
     <string name="calibration">Calibración</string>
     <string name="nxt_action">Enviando señal a NXT</string>
@@ -46,6 +46,6 @@
     
     <string name="scanner">Scanner</string>
     <string name="remote_control">R/C</string>
-    <string name="model_gallery">Gallery</string>
+    <string name="model_gallery">Galería</string>
     
 </resources>

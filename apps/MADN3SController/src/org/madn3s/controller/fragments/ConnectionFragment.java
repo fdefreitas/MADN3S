@@ -5,32 +5,23 @@ import static org.madn3s.controller.MADN3SController.camera1WeakReference;
 import static org.madn3s.controller.MADN3SController.camera2;
 import static org.madn3s.controller.MADN3SController.camera2WeakReference;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.MADN3SController.Device;
 import org.madn3s.controller.MADN3SController.Mode;
 import org.madn3s.controller.MADN3SController.State;
 import org.madn3s.controller.R;
 import org.madn3s.controller.components.NXTTalker;
-import org.madn3s.controller.io.BraveHeartMidgetService;
-import org.madn3s.controller.io.HiddenMidgetAttackAsyncTask;
 import org.madn3s.controller.io.HiddenMidgetConnector;
 import org.madn3s.controller.io.HiddenMidgetReader;
-import org.madn3s.controller.io.HiddenMidgetWriter;
 import org.madn3s.controller.io.UniversalComms;
 import org.madn3s.controller.models.DevicesAdapter;
+import org.madn3s.controller.models.StatusViewHolder;
 
-import android.R.integer;
+import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -39,9 +30,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -63,26 +52,17 @@ public class ConnectionFragment extends BaseFragment {
     private Handler mHandler;
     private ConnectionFragment mFragment;
 
-    private ListView devicesListView;
-    private DevicesAdapter devicesAdapter;
     private TextView nxtNameTextView;
     private TextView nxtAddressTextView;
-    private ProgressBar nxtConnectingProgressBar;
-    private ImageView nxtConnectedImageView;
-    private ImageView nxtNotConnectedImageView;
+    private StatusViewHolder nxtStatusViewHolder;
 
     private TextView camera1NameTextView;
     private TextView camera1AddressTextView;
-    private ProgressBar camera1ConnectingProgressBar;
-    private ImageView camera1ConnectedImageView;
-    private ImageView camera1NotConnectedImageView;
-
+    private StatusViewHolder camera1StatusViewHolder;
 
     private TextView camera2NameTextView;
     private TextView camera2AddressTextView;
-    private ProgressBar camera2ConnectingProgressBar;
-    private ImageView camera2ConnectedImageView;
-    private ImageView camera2NotConnectedImageView;
+    private StatusViewHolder camera2StatusViewHolder;
 
     private Button scannerButton;
     private Button remoteControlButton;
@@ -121,17 +101,24 @@ public class ConnectionFragment extends BaseFragment {
         return inflater.inflate(R.layout.fragment_connection, container, false);
     }
 
-    @Override
+    @SuppressLint("HandlerLeak")
+	@Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-//        nxtNameTextView = (TextView) view.findViewById(R.id.nxt_name_connection_textView);
-//        nxtNameTextView.setText(MADN3SController.nxt.getName());
-//        nxtAddressTextView = (TextView) view.findViewById(R.id.nxt_address_connection_textView);
-//        nxtAddressTextView.setText(MADN3SController.nxt.getAddress());
-        nxtConnectingProgressBar = (ProgressBar) view.findViewById(R.id.nxt_connecting_progressBar);
-        nxtConnectedImageView = (ImageView) view.findViewById(R.id.nxt_connected_imageView);
-        nxtNotConnectedImageView = (ImageView) view.findViewById(R.id.nxt_not_connected_imageView);
+        nxtNameTextView = (TextView) view.findViewById(R.id.nxt_name_connection_textView);
+        nxtAddressTextView = (TextView) view.findViewById(R.id.nxt_address_connection_textView);
+        
+        if(MADN3SController.nxt != null){
+	        nxtNameTextView.setText(MADN3SController.nxt.getName());
+	        nxtAddressTextView.setText(MADN3SController.nxt.getAddress());
+        }
+        
+        nxtStatusViewHolder = new StatusViewHolder(
+        		view.findViewById(R.id.nxt_not_connected_imageView), 
+        		view.findViewById(R.id.nxt_connected_imageView), 
+        		view.findViewById(R.id.nxt_connecting_progressBar)
+    		);
 
         mHandler = new Handler() {
             @Override
@@ -144,18 +131,13 @@ public class ConnectionFragment extends BaseFragment {
                         mState = msg.arg1;
                         switch(mState){
                             case NXTTalker.STATE_CONNECTED:
-                                nxtConnectingProgressBar.setVisibility(View.GONE);
-                                nxtConnectedImageView.setVisibility(View.VISIBLE);
+                                nxtStatusViewHolder.success();
                                 break;
                             case NXTTalker.STATE_NONE:
-                                nxtConnectingProgressBar.setVisibility(View.GONE);
-                                nxtNotConnectedImageView.setVisibility(View.VISIBLE);
-                                nxtConnectedImageView.setVisibility(View.GONE);
+                                nxtStatusViewHolder.failure();
                                 break;
                             case NXTTalker.STATE_CONNECTING:
-                                nxtConnectingProgressBar.setVisibility(View.VISIBLE);
-                                nxtNotConnectedImageView.setVisibility(View.GONE);
-                                nxtConnectedImageView.setVisibility(View.GONE);
+                                nxtStatusViewHolder.working();
                                 break;
                         }
                         break;
@@ -186,20 +168,32 @@ public class ConnectionFragment extends BaseFragment {
 //        Log.d(TAG, "Iniciando conexion con Camara2: " + camera2.getName());        
 
         camera1NameTextView = (TextView) view.findViewById(R.id.camera1_name_connection_textView);
-        camera1NameTextView.setText(camera1.getName());
         camera1AddressTextView = (TextView) view.findViewById(R.id.camera1_address_connection_textView);
-        camera1AddressTextView.setText(camera1.getAddress());
-        camera1ConnectingProgressBar = (ProgressBar) view.findViewById(R.id.camera1_connecting_progressBar);
-        camera1ConnectedImageView = (ImageView) view.findViewById(R.id.camera1_connected_imageView);
-        camera1NotConnectedImageView = (ImageView) view.findViewById(R.id.camera1_not_connected_imageView);
+        
+        if(camera1 != null){
+        	camera1NameTextView.setText(camera1.getName());
+        	camera1AddressTextView.setText(camera1.getAddress());
+        }
+        
+        camera1StatusViewHolder = new StatusViewHolder(
+        		view.findViewById(R.id.camera1_not_connected_imageView), 
+        		view.findViewById(R.id.camera1_connected_imageView), 
+        		view.findViewById(R.id.camera1_connecting_progressBar)
+    		);
 
         camera2NameTextView = (TextView) view.findViewById(R.id.camera2_name_connection_textView);
-        camera2NameTextView.setText(camera2.getName());
         camera2AddressTextView = (TextView) view.findViewById(R.id.camera2_address_connection_textView);
-        camera2AddressTextView.setText(camera2.getAddress());
-        camera2ConnectingProgressBar = (ProgressBar) view.findViewById(R.id.camera2_connecting_progressBar);
-        camera2ConnectedImageView = (ImageView) view.findViewById(R.id.camera2_connected_imageView);
-        camera2NotConnectedImageView = (ImageView) view.findViewById(R.id.camera2_not_connected_imageView);
+        
+        if(camera2 != null){
+	        camera2NameTextView.setText(camera2.getName());
+	        camera2AddressTextView.setText(camera2.getAddress());
+        }
+        
+        camera2StatusViewHolder = new StatusViewHolder(
+        		view.findViewById(R.id.camera2_not_connected_imageView), 
+        		view.findViewById(R.id.camera2_connected_imageView), 
+        		view.findViewById(R.id.camera2_connecting_progressBar)
+    		);
 
         scannerButton = (Button) view.findViewById(R.id.scanner_button);
         scannerButton.setOnClickListener(new View.OnClickListener() {
@@ -251,46 +245,39 @@ public class ConnectionFragment extends BaseFragment {
 			}
 		});
         modelGalleryButton = (Button) view.findViewById(R.id.model_gallery_button);
+        modelGalleryButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				// TODO Mostrar Galeria
+			}
+		});
     }
     
     protected void setMarkers(State state, Device device) {
-    	ImageView connected, failed;
-    	ProgressBar connecting;
+    	StatusViewHolder statusHolder;
     	switch (device){
 	        case CAMERA1:
-	        	connected = camera1ConnectedImageView;
-	        	failed = camera1NotConnectedImageView;
-	        	connecting = camera1ConnectingProgressBar;
+	        	statusHolder = camera1StatusViewHolder;
 	        	break;
 	        case CAMERA2:
-	        	connected = camera2ConnectedImageView;
-	        	failed = camera2NotConnectedImageView;
-	        	connecting = camera2ConnectingProgressBar;
+	        	statusHolder = camera2StatusViewHolder;
 	            break;
 	        default:
 	        case NXT:
-	        	connected = nxtConnectedImageView;
-	        	failed = nxtNotConnectedImageView;
-	        	connecting = nxtConnectingProgressBar;
+	        	statusHolder = nxtStatusViewHolder;
 	            break;
 	    }
     	
     	switch (state){
 	        case CONNECTED:
-	        	connected.setVisibility(View.VISIBLE);
-	        	failed.setVisibility(View.GONE);
-	        	connecting.setVisibility(View.GONE);
+        		statusHolder.success();
 	            break;
 	        case CONNECTING:
-	        	connected.setVisibility(View.GONE);
-	        	failed.setVisibility(View.GONE);
-	        	connecting.setVisibility(View.VISIBLE);
+	        	statusHolder.working();
 	            break;
 	        default:
 	        case FAILED:
-	        	connected.setVisibility(View.GONE);
-	        	failed.setVisibility(View.VISIBLE);
-	        	connecting.setVisibility(View.GONE);
+	        	statusHolder.failure();
 	            break;
 	    }
 		

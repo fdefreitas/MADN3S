@@ -10,9 +10,10 @@
         android:id="@+id/address_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/action_example"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:layout_margin="40dp" android:layout_weight="4" android:layout_alignParentLeft="true"
-        android:layout_marginLeft="384dp" android:layout_alignParentTop="true" android:layout_marginTop="80dp"/>
+        android:layout_margin="40dp" 
+        android:layout_alignParentTop="true" />
 
     <RelativeLayout
             android:layout_width="wrap_content"

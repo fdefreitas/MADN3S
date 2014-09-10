@@ -2,15 +2,15 @@ package org.madn3s.controller.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.bluetooth.BluetoothDevice;
 
 /**
  * Created by inaki on 1/11/14.
  */
+@SuppressWarnings("unused")
 public class BaseFragment extends Fragment {
 
     public OnItemSelectedListener listener;
-    private static final String TAG = "BaseFragment";
+	private static final String tag = "BaseFragment";
 
     public interface OnItemSelectedListener {
         public void onObjectSelected(Object selected, BaseFragment fragment);

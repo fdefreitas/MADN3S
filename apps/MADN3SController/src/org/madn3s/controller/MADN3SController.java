@@ -1,14 +1,5 @@
 package org.madn3s.controller;
 
-import android.app.Application;
-import android.bluetooth.BluetoothClass;
-import android.bluetooth.BluetoothSocket;
-import android.bluetooth.BluetoothDevice;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.os.Handler;
-import android.util.Log;
-
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,10 +7,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.app.Application;
+import android.bluetooth.BluetoothClass;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Handler;
+
 /**
  * Created by inaki on 1/11/14.
  */
 public class MADN3SController extends Application {
+	@SuppressWarnings("unused")
+	private static final String tag = "MADN3SController";
+	
 	public static final String SERVICE_NAME = "MADN3S";
 	public static final UUID APP_UUID = UUID
 			.fromString("65da7fe0-8b80-11e3-baa8-0800200c9a66");
@@ -44,7 +46,6 @@ public class MADN3SController extends Application {
 
 	public static AtomicBoolean readCamera1;
 	public static AtomicBoolean readCamera2;
-	private static final String TAG = "MADN3SController";
 
 	public static enum Mode {
 		SCANNER("SCANNER", 0), CONTROLLER("CONTROLLER", 1), SCAN("SCAN", 2);

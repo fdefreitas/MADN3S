@@ -4,4 +4,7 @@
         <ignore path="res/layout/fragment_connection.xml" />
         <ignore path="res/layout/fragment_discovery.xml" />
     </issue>
+    <issue id="HandlerLeak">
+        <ignore path="src/org/madn3s/controller/MADN3SController.java" />
+    </issue>
 </lint>

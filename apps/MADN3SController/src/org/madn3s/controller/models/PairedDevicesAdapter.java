@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+
 import org.madn3s.controller.R;
 
 import java.util.ArrayList;
@@ -24,7 +25,8 @@ public class PairedDevicesAdapter extends BaseAdapter {
         devices = new ArrayList<BluetoothDevice>();
     }
 
-    public PairedDevicesAdapter(ArrayList<BluetoothDevice> devices, Context mContext) {
+    @SuppressWarnings("unchecked")
+	public PairedDevicesAdapter(ArrayList<BluetoothDevice> devices, Context mContext) {
         this(mContext);
         this.devices = (ArrayList<BluetoothDevice>) devices.clone();
     }
@@ -50,7 +52,7 @@ public class PairedDevicesAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null) convertView = ((LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.row_paired_device, null);
+        if(convertView == null) convertView = ((LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.row_paired_device, parent, false);
 
         assert convertView != null;
         TextView name = (TextView) convertView.findViewById(R.id.device_name_textView);
