@@ -74,14 +74,10 @@ public class ControlsFragment extends BaseFragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-//        super.onViewCreated(view, savedInstanceState);
-        assert getActivity() !=null;
-        Log.d(TAG, "Device: "+device.getName());
-        TextView tv = (TextView)getActivity().findViewById(R.id.address_textView);
-        tv.setText("Name: "+device.getName()+" Address: "+device.getAddress());
+        super.onViewCreated(view, savedInstanceState);
 
-        frontImageView = (ImageView) view.findViewById(R.id.front_arrow_imageView);
-        backImageView = (ImageView) view.findViewById(R.id.back_arrow_imageView);
+        frontImageView = (ImageView) view.findViewById(R.id.top_arrow_imageView);
+        backImageView = (ImageView) view.findViewById(R.id.bottom_arrow_imageView);
         leftImageView = (ImageView) view.findViewById(R.id.left_arrow_imageView);
         rightImageView = (ImageView) view.findViewById(R.id.right_arrow_imageView);
         frontImageView.setOnTouchListener(new DirectionButtonOnTouchListener(1,1));
