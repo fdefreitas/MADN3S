@@ -37,7 +37,7 @@ public class ScannerFragment extends BaseFragment {
 				Bundle bundle = (Bundle)msg;
 				final Device device = Device.setDevice(bundle.getInt("device"));
 				final State state = State.setState(bundle.getInt("state"));
-				int iter = bundle.containsKey("iter")?bundle.getInt("iter"):-1;
+				int iter = MADN3SController.sharedPrefsGetInt("iter");
 				Log.d(tag, device + " " + state + " " + iter);
 //				mFragment.getView().post(
 //					new Runnable() { 
@@ -77,7 +77,12 @@ public class ScannerFragment extends BaseFragment {
 			String timeStamp = new SimpleDateFormat("yyyyMMdd_HH").format(new Date());
 			String projectName = "HereIAm-" + timeStamp;
 			MADN3SController.sharedPrefsPutString("project_name", projectName);
+			MADN3SController.sharedPrefsPutInt("iter", 0);
 			MADN3SController.sharedPrefsPutInt("points", 6);
+			int points = MADN3SController.sharedPrefsGetInt("points");
+			for(int i = 0; i < points; ++i){
+				MADN3SController.removeKeyFromSharedPreferences("frame-"+i);
+			}
 			JSONObject json = new JSONObject();
 	        json.put("action", "photo");
 	        json.put("project_name", projectName);

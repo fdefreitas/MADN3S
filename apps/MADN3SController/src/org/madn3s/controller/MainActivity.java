@@ -39,6 +39,8 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        MADN3SController.sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
+        MADN3SController.sharedPreferencesEditor = MADN3SController.sharedPreferences.edit();
         getApplication();
         setContentView(R.layout.activity_main); 
         

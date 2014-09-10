@@ -44,7 +44,7 @@ public class HiddenMidgetWriter extends AsyncTask<Void, Void, Void> {
         if(e != null){
         	Log.d(tag, "envie " + msg + " a " + mSocket.getRemoteDevice().getName());
         } else {
-        	Log.d(tag, "Ocurrio un error enviando " + msg + " a " + mSocket.getRemoteDevice().getName());
+//        	Log.d(tag, "Ocurrio un error enviando " + msg + " a " + mSocket.getRemoteDevice().getName());
         }
     }
 }

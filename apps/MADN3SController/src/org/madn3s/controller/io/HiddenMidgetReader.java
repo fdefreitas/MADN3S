@@ -125,7 +125,6 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 							msg.put("time", System.currentTimeMillis() - start);
 							bridge.callback(msg.toString());
 							start = 0;
-							Log.d(tag, "Iniciando wait().");
 							read.set(false);
 						}
 					}
