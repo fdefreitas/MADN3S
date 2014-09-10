@@ -6,7 +6,6 @@ import static org.madn3s.controller.MADN3SController.camera2;
 import static org.madn3s.controller.MADN3SController.camera2WeakReference;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import org.json.JSONException;
@@ -14,9 +13,7 @@ import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.MADN3SController.Device;
 
-import android.R.integer;
 import android.app.IntentService;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.Bundle;
