@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 @SuppressWarnings("unused")
 public class ScannerFragment extends BaseFragment {
@@ -56,6 +57,7 @@ public class ScannerFragment extends BaseFragment {
 //					new Runnable() { 
 //						public void run() { 
 //							//update UI
+							//TODO
 //						} 
 //					}
 //				); 
@@ -77,8 +79,15 @@ public class ScannerFragment extends BaseFragment {
 		scanButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				projectNameEditText.setEnabled(false);
-				//TODO Scan
+				String projectName = projectNameEditText.getText().toString();
+				if(projectName != null && !projectName.isEmpty()){
+					projectNameEditText.setEnabled(false);
+					MADN3SController.sharedPrefsPutString("project_name", projectName);
+					scan(projectName);
+				} else {
+					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "Falta el nombre del proyecto", Toast.LENGTH_LONG);
+					missingName.show();
+				}
 			}
 		});
 		calibrationViewHolder = new ScanStepViewHolder(
@@ -129,7 +138,7 @@ public class ScannerFragment extends BaseFragment {
 		generateModelButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				scan();
+				
 			}
 		});
 	}
@@ -140,11 +149,8 @@ public class ScannerFragment extends BaseFragment {
 	}
 	
 	@SuppressLint("SimpleDateFormat")
-	public void scan(){
+	public void scan(String projectName){
 		try{
-			String timeStamp = new SimpleDateFormat("yyyyMMdd_HH").format(new Date());
-			String projectName = "HereIAm-" + timeStamp;
-			MADN3SController.sharedPrefsPutString("project_name", projectName);
 			MADN3SController.sharedPrefsPutInt("iter", 0);
 			MADN3SController.sharedPrefsPutInt("points", 6);
 			int points = MADN3SController.sharedPrefsGetInt("points");

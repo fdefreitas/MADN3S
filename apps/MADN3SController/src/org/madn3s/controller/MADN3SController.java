@@ -14,6 +14,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Handler;
+import android.util.Log;
 
 /**
  * Created by inaki on 1/11/14.
@@ -136,7 +137,7 @@ public class MADN3SController extends Application {
 	public void onCreate() {
 		super.onCreate();
 		setSharedPreferences();
-		Log.d(TAG, "si ves esto puedes avanzar...");
+		Log.d(tag, "si ves esto puedes avanzar...");
 		mBluetoothHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {
 				if (mBluetoothHandlerCallback != null) {
