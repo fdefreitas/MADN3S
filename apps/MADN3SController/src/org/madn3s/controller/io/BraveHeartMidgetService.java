@@ -51,7 +51,7 @@ public class BraveHeartMidgetService extends IntentService {
 	}
 	
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG) || intent.hasExtra("result")){
+		if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG) || intent.hasExtra("result") || intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND) || intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE)){
     		return super.onStartCommand(intent,flags,startId);
     	} else {
 	        String stopservice = intent.getStringExtra("stopservice");
@@ -67,24 +67,18 @@ public class BraveHeartMidgetService extends IntentService {
 		String jsonString;
 		JSONObject msg;
 		if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG)){
-			Log.d(tag, HiddenMidgetReader.EXTRA_CALLBACK_MSG);
 			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG);
 			processAnswer(jsonString);
 		} else if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND)){
-			Log.d(tag, HiddenMidgetReader.EXTRA_CALLBACK_SEND);
 			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_SEND);
 			sendMessageToCameras(jsonString);
 		} else if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE)){
-			Log.d(tag, HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE);
 			Bundle bundle = new Bundle();
 			bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
 			bundle.putInt("device", Device.NXT.getValue());
 			scannerBridge.callback(bundle);
 			sendMessageToCameras();
-		} else {
-			Log.d(tag, "NONE");
-		}
-		
+		} 
 	}
 	
 	public void sendMessageToCameras(){
@@ -169,19 +163,18 @@ public class BraveHeartMidgetService extends IntentService {
 					Bundle bundle = new Bundle();
 					bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
 					bundle.putInt("device", device);
-					bundle.putInt("iter", iter);
 					scannerBridge.callback(bundle);
 					MADN3SController.sharedPrefsPutJSONObject("frame-"+iter, fr);
 					if(fr.has("right") && fr.has("left")){
 						iter++;
-						int points = 6;
+						int points = MADN3SController.sharedPrefsGetInt("points");
 						MADN3SController.sharedPrefsPutInt("iter", iter);
-						points = MADN3SController.sharedPrefsGetInt("points");
 						if(iter != points){
 							sendMessageToNXT();
 						} else {
 							notifyScanFinished();
 						}
+						Log.d(tag, "iter = " + iter);
 					}
 				}
 			}

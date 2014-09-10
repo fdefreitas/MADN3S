@@ -29,8 +29,8 @@ public class MADN3SController extends Application {
 	public static final String defaultJSONObjectString = "{}";
 	public static final String defaultJSONArrayString = "[]";
 
-	private static SharedPreferences sharedPreferences;
-	private static Editor sharedPreferencesEditor;
+	public static SharedPreferences sharedPreferences;
+	public static Editor sharedPreferencesEditor;
 	public static BluetoothDevice nxt;
 	public static BluetoothDevice camera1;
 	public static BluetoothDevice camera2;
@@ -136,7 +136,7 @@ public class MADN3SController extends Application {
 	public void onCreate() {
 		super.onCreate();
 		setSharedPreferences();
-
+		Log.d(TAG, "si ves esto puedes avanzar...");
 		mBluetoothHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {
 				if (mBluetoothHandlerCallback != null) {
@@ -145,21 +145,21 @@ public class MADN3SController extends Application {
 			};
 		};
 	}
-
+	
+	
 	/**
 	 * Sets SharedPreferences and SharedPreferences Editor for later use with methods defined further
 	 */
 	private void setSharedPreferences() {
-		sharedPreferences = getSharedPreferences(getString(R.string.app_name),
-				MODE_PRIVATE);
+		sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
 		sharedPreferencesEditor = MADN3SController.sharedPreferences.edit();
 	}
 	
-	public void clearSharedPreferences() {
+	public static void clearSharedPreferences() {
 		sharedPreferencesEditor.clear().apply();
 	}
 	
-	public void removeKeyFromSharedPreferences(String key) {
+	public static void removeKeyFromSharedPreferences(String key) {
 		sharedPreferencesEditor.remove(key).apply();
 	}
 	
