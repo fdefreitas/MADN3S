@@ -8,15 +8,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.MADN3SController.Device;
-import org.madn3s.controller.fragments.ConnectionFragment;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Handler.Callback;
 import android.os.HandlerThread;
 import android.os.Message;
-import android.os.Handler.Callback;
 import android.util.Log;
 
 public class HiddenMidgetReader extends HandlerThread implements Callback {
@@ -112,7 +111,6 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 						}
 						message = getMessage();
 						if(message != null && !message.isEmpty()){
-//							Log.d(tag, "Llego " + message + " de " + mSocket.getRemoteDevice().getName() + " en " + (System.currentTimeMillis() - start));
 							JSONObject msg = new JSONObject(message);
 							if(msg.has("action")){
 								String action = msg.getString("action");
