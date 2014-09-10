@@ -189,6 +189,15 @@ public class BraveHeartMidgetService extends IntentService {
 		scannerBridge.callback(bundle);
 		bundle.putInt("device",  Device.CAMERA2.getValue());
 		scannerBridge.callback(bundle);
+		try{
+			JSONObject json = new JSONObject();
+			json.put("action", "end_project");
+	        json.put("project_name", MADN3SController.sharedPrefsGetString("project_name"));
+	        json.put("clean", MADN3SController.sharedPrefsGetBoolean("clean"));
+	        sendMessageToCameras(json.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 	}
 
 	private void sendMessageToNXT() {
