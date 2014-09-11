@@ -68,8 +68,12 @@ public class ConnectionFragment extends BaseFragment {
     private Button remoteControlButton;
     private Button modelGalleryButton;
     
+    private boolean camera1Status;
+    private boolean camera2Status;
+    private boolean nxtStatus;
+    
     public ConnectionFragment(){
-        
+    	camera1Status = camera2Status = nxtStatus = false;
     }
 
     @Override
@@ -199,49 +203,24 @@ public class ConnectionFragment extends BaseFragment {
         scannerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
-//				try{
-//		        	String timeStamp = new SimpleDateFormat("yyyyMMdd_HH").format(new Date());
-//			        JSONObject json = new JSONObject();
-//			        json.put("action", "photo");
-//			        json.put("project_name", "HereIAm-" + timeStamp);
-//					
-//			        if(camera1WeakReference != null){
-//						json.put("side", "left");
-//						json.put("camera_name", camera1.getName());
-//						HiddenMidgetWriter sendCamera1 = new HiddenMidgetWriter(camera1WeakReference, json.toString());
-//						sendCamera1.execute();
-//				        Log.d(TAG, "Enviando a Camara1: " + camera1.getName());
-//				        MADN3SController.readCamera1.set(true);
-//					} else {
-//						Log.d(TAG, "camera1WeakReference null");
-//					}
-//					
-//					if(camera2WeakReference != null){
-//						json.put("side", "right");
-//						json.put("camera_name", camera2.getName());
-//						HiddenMidgetWriter sendCamera2 = new HiddenMidgetWriter(camera2WeakReference, json.toString());
-//						sendCamera2.execute();
-//				        Log.d(TAG, "Enviando a Camara2: " + camera2.getName());
-//				        MADN3SController.readCamera2.set(true);
-//					} else {
-//						Log.d(TAG, "camera2WeakReference null");
-//					}
-//					
-//					
-//		        } catch (JSONException e){
-//		            Log.d("Awesome AsyncTask", "Error armando el JSON");
-//		        } catch (Exception e){
-//		            Log.d("Awesome AsyncTask", "Error generico enviando");
-//		        }
-				listener.onObjectSelected(Mode.SCAN, mFragment);
+				if(camera1Status && camera2Status ){//&& nxtStatus){
+					listener.onObjectSelected(Mode.SCAN, mFragment);
+				} else {
+					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "Faltan dispositivos por conectar", Toast.LENGTH_LONG);
+					missingName.show();
+				}
 			}
 		});
         remoteControlButton = (Button) view.findViewById(R.id.remote_control_button);
         remoteControlButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				listener.onObjectSelected(Mode.CONTROLLER, mFragment);
+				if(nxtStatus){
+					listener.onObjectSelected(Mode.CONTROLLER, mFragment);
+				} else {
+					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "Falta el NXT por conectar", Toast.LENGTH_LONG);
+					missingName.show();
+				}
 			}
 		});
         modelGalleryButton = (Button) view.findViewById(R.id.model_gallery_button);
@@ -261,16 +240,23 @@ public class ConnectionFragment extends BaseFragment {
 	        	break;
 	        case CAMERA2:
 	        	statusHolder = camera2StatusViewHolder;
-	            break;
+	        	break;
 	        default:
 	        case NXT:
 	        	statusHolder = nxtStatusViewHolder;
-	            break;
+	        	break;
 	    }
     	
     	switch (state){
 	        case CONNECTED:
         		statusHolder.success();
+        		if(device == Device.CAMERA1){
+        			camera1Status = true;
+        		} else if(device == Device.CAMERA2){
+        			camera2Status = true;
+        		} else if(device == Device.NXT){
+        			nxtStatus = true;
+        		}
 	            break;
 	        case CONNECTING:
 	        	statusHolder.working();

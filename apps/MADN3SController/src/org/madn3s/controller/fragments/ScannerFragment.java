@@ -53,12 +53,16 @@ public class ScannerFragment extends BaseFragment {
 				final Device device = Device.setDevice(bundle.getInt("device"));
 				final State state = State.setState(bundle.getInt("state"));
 				int iter = MADN3SController.sharedPrefsGetInt("iter");
+				final boolean scan_finished = bundle.containsKey("scan_finished");
 				Log.d(tag, device + " " + state + " " + iter);
 				mFragment.getView().post(
 					new Runnable() { 
 						public void run() {
 							//update UI
 							setDeviceActionState(device, state);
+							if(scan_finished){
+								generateModelButton.setEnabled(true);
+							}
 						} 
 					}
 				); 
@@ -69,32 +73,32 @@ public class ScannerFragment extends BaseFragment {
 	private void setDeviceActionState(Device device, State state){
 		StatusViewHolder deviceActionViewHolder;
 		switch (device) {
-		case NXT:
-			deviceActionViewHolder = nxtActionViewHolder;
-			break;
-		case CAMERA1:
-			deviceActionViewHolder = camera1ActionViewHolder;		
-			break;
-		default:
-			Log.d(tag, "Device switch unhandled default case");
-		case CAMERA2:
-			deviceActionViewHolder = camera2ActionViewHolder;
-			break;
+			case NXT:
+				deviceActionViewHolder = nxtActionViewHolder;
+				break;
+			case CAMERA1:
+				deviceActionViewHolder = camera1ActionViewHolder;		
+				break;
+			default:
+				Log.d(tag, "Device switch unhandled default case");
+			case CAMERA2:
+				deviceActionViewHolder = camera2ActionViewHolder;
+				break;
 		}
 		
 		switch (state) {
-		case CONNECTING:
-			deviceActionViewHolder.working();
-			break;
-		case CONNECTED:
-			deviceActionViewHolder.success();		
-			break;
-		case FAILED:
-			deviceActionViewHolder.failure();
-			break;
-		default:
-			Log.d(tag, "State switch unhandled default case");
-			break;
+			case CONNECTING:
+				deviceActionViewHolder.working();
+				break;
+			case CONNECTED:
+				deviceActionViewHolder.success();		
+				break;
+			case FAILED:
+				deviceActionViewHolder.failure();
+				break;
+			default:
+				Log.d(tag, "State switch unhandled default case");
+				break;
 		}
 	}
 	

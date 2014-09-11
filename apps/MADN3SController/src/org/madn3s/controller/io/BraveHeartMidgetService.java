@@ -182,6 +182,7 @@ public class BraveHeartMidgetService extends IntentService {
 
 	private void notifyScanFinished() {
 		Bundle bundle = new Bundle();
+		bundle.putBoolean("scan_finished", true);
 		bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
 		bundle.putInt("device", Device.NXT.getValue());
 		scannerBridge.callback(bundle);

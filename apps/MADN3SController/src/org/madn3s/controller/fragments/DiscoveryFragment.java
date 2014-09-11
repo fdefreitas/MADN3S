@@ -165,7 +165,7 @@ public class DiscoveryFragment extends BaseFragment{
 			public void onClick(View v) {
 				try {
 					
-					if(true /*isNxtSelected && cams == 2*/){
+					if(/*isNxtSelected &&*/ cams == 2){
 						Log.d(tag, "Mode: SCANNER");
 						listener.onObjectSelected(Mode.SCANNER, mFragment);
 					} else if (isNxtSelected){
@@ -201,7 +201,12 @@ public class DiscoveryFragment extends BaseFragment{
 	public void onDestroy(){
 		super.onDestroy();
 		if(getActivity()!=null){
-			getActivity().unregisterReceiver(mReceiver);
+			try {
+				getActivity().unregisterReceiver(mReceiver);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 		}
 	}
 
