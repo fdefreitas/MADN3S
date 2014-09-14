@@ -21,7 +21,7 @@ import android.util.Log;
  */
 public class MADN3SController extends Application {
 	private static final String tag = "MADN3SController";
-	
+	public static final String MODEL_MESSAGE = "MODEL";
 	public static final String SERVICE_NAME = "MADN3S";
 	public static final UUID APP_UUID = UUID
 			.fromString("65da7fe0-8b80-11e3-baa8-0800200c9a66");

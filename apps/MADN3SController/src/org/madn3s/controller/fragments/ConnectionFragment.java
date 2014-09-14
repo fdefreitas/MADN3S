@@ -18,10 +18,12 @@ import org.madn3s.controller.io.HiddenMidgetReader;
 import org.madn3s.controller.io.UniversalComms;
 import org.madn3s.controller.models.DevicesAdapter;
 import org.madn3s.controller.models.StatusViewHolder;
+import org.madn3s.controller.viewer.models.files.ModelPickerActivity;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -39,7 +41,7 @@ import android.widget.Toast;
  */
 public class ConnectionFragment extends BaseFragment {
 	
-
+	public static final int REQUEST_PICK_FILE = 1;
     public static final int MESSAGE_STATE_CHANGE = 2;
     public static final int MESSAGE_TOAST = 1;
     public static final String TOAST = "toast";
@@ -203,12 +205,12 @@ public class ConnectionFragment extends BaseFragment {
         scannerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(camera1Status && camera2Status ){//&& nxtStatus){
+//				if(camera1Status && camera2Status ){//&& nxtStatus){
 					listener.onObjectSelected(Mode.SCAN, mFragment);
-				} else {
-					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "Faltan dispositivos por conectar", Toast.LENGTH_LONG);
-					missingName.show();
-				}
+//				} else {
+//					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "Faltan dispositivos por conectar", Toast.LENGTH_LONG);
+//					missingName.show();
+//				}
 			}
 		});
         remoteControlButton = (Button) view.findViewById(R.id.remote_control_button);
@@ -224,13 +226,20 @@ public class ConnectionFragment extends BaseFragment {
 			}
 		});
         modelGalleryButton = (Button) view.findViewById(R.id.model_gallery_button);
+        modelGalleryButton.setEnabled(true);
         modelGalleryButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				// TODO Mostrar Galeria
+				Intent intent = new Intent(getActivity().getBaseContext(), ModelPickerActivity.class);
+				ArrayList<String> extensions = new ArrayList<String>();
+				extensions.add(".off");
+				intent.putExtra(ModelPickerActivity.EXTRA_ACCEPTED_FILE_EXTENSIONS, extensions);
+				startActivityForResult(intent, REQUEST_PICK_FILE);
 			}
 		});
     }
+    
+    
     
     protected void setMarkers(State state, Device device) {
     	StatusViewHolder statusHolder;

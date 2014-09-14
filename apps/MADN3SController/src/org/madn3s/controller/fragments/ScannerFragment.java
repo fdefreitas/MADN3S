@@ -1,5 +1,6 @@
 package org.madn3s.controller.fragments;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -12,9 +13,13 @@ import org.madn3s.controller.io.BraveHeartMidgetService;
 import org.madn3s.controller.io.UniversalComms;
 import org.madn3s.controller.models.ScanStepViewHolder;
 import org.madn3s.controller.models.StatusViewHolder;
+import org.madn3s.controller.viewer.models.files.FileComparator;
+import org.madn3s.controller.viewer.opengl.ModelDisplayActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +48,7 @@ public class ScannerFragment extends BaseFragment {
 	private EditText projectNameEditText;
 	private Button scanButton;
 	private Button generateModelButton;
+	private Button viewModelButton;
 	
 	public ScannerFragment() {
 		mFragment = this;
@@ -179,10 +185,30 @@ public class ScannerFragment extends BaseFragment {
 		
 		generateModelProgressBar = (ProgressBar) getView().findViewById(R.id.model_generation_progressBar);
 		generateModelButton = (Button) view.findViewById(R.id.model_generation_button);
+		generateModelButton.setEnabled(true);
 		generateModelButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				
+				
+			}
+		});
+		
+		viewModelButton = (Button) view.findViewById(R.id.view_model_button);
+		viewModelButton.setEnabled(true);
+		viewModelButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				String fileName = Environment.getExternalStorageDirectory().getPath() + "/MADN3S/models/" + projectNameEditText.getText().toString() + ".off";
+				File file = new File(fileName);
+				if(file.exists()){
+					Intent intent = new Intent(getActivity().getBaseContext(), ModelDisplayActivity.class);
+					intent.putExtra(MADN3SController.MODEL_MESSAGE, fileName);
+					startActivity(intent);
+				} else {
+					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "El archivo " + fileName + " no existe", Toast.LENGTH_LONG);
+					missingName.show();
+				}
 			}
 		});
 	}

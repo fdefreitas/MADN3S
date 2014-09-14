@@ -49,4 +49,9 @@
     <string name="remote_control">R/C</string>
     <string name="model_gallery">Gallery</string>
     
+    <string name="text_selected_file">Selected file</string>
+    <string name="text_no_file_selected">No file has been selected</string>
+    <string name="text_file_name">filename</string>
+    <string name="text_no_files">No files or directories</string>
+    
 </resources>
