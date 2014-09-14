@@ -136,6 +136,7 @@ public class ConnectionFragment extends BaseFragment {
                         switch(mState){
                             case NXTTalker.STATE_CONNECTED:
                                 nxtStatusViewHolder.success();
+                                nxtStatus = true;
                                 break;
                             case NXTTalker.STATE_NONE:
                                 nxtStatusViewHolder.failure();
@@ -149,9 +150,9 @@ public class ConnectionFragment extends BaseFragment {
             }
         };
 
-     //   talker = new NXTTalker(mHandler);
-     //   talker.connect(nxt);
-//        Log.d(TAG, "Iniciando Conexion con NXT: " + nxt.getName());
+        MADN3SController.talker = new NXTTalker(mHandler);
+        MADN3SController.talker.connect(MADN3SController.nxt);
+        Log.d(TAG, "Iniciando Conexion con NXT: " + MADN3SController.nxt.getName());
         
         
         
@@ -163,14 +164,6 @@ public class ConnectionFragment extends BaseFragment {
         connectCamera2.execute();
         Log.d(TAG, "Iniciando conexion con Camara2: " + camera2.getName()); 
         
-//        HiddenMidgetAttackAsyncTask taskCamera1 = new HiddenMidgetAttackAsyncTask(camera1, "right");
-//        taskCamera1.execute();
-//        Log.d(TAG, "Iniciando conexion con Camara1: " + camera1.getName());
-//        
-//        HiddenMidgetAttackAsyncTask taskCamera2 = new HiddenMidgetAttackAsyncTask(camera2, "left");
-//        taskCamera2.execute();
-//        Log.d(TAG, "Iniciando conexion con Camara2: " + camera2.getName());        
-
         camera1NameTextView = (TextView) view.findViewById(R.id.camera1_name_connection_textView);
         camera1AddressTextView = (TextView) view.findViewById(R.id.camera1_address_connection_textView);
         
@@ -203,12 +196,12 @@ public class ConnectionFragment extends BaseFragment {
         scannerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-//				if(camera1Status && camera2Status ){//&& nxtStatus){
+				if(camera1Status && camera2Status && nxtStatus){
 					listener.onObjectSelected(Mode.SCAN, mFragment);
-//				} else {
-//					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "Faltan dispositivos por conectar", Toast.LENGTH_LONG);
-//					missingName.show();
-//				}
+				} else {
+					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "Faltan dispositivos por conectar", Toast.LENGTH_LONG);
+					missingName.show();
+				}
 			}
 		});
         remoteControlButton = (Button) view.findViewById(R.id.remote_control_button);

@@ -72,6 +72,9 @@ public class BraveHeartMidgetService extends IntentService {
 			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_SEND);
 			sendMessageToCameras(jsonString);
 		} else if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE)){
+			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE);
+			jsonString = jsonString.substring(0, jsonString.lastIndexOf("}")+1);
+			Log.d(tag, jsonString.trim());
 			Bundle bundle = new Bundle();
 			bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
 			bundle.putInt("device", Device.NXT.getValue());
@@ -166,12 +169,12 @@ public class BraveHeartMidgetService extends IntentService {
 						iter++;
 						int points = MADN3SController.sharedPrefsGetInt("points");
 						MADN3SController.sharedPrefsPutInt("iter", iter);
-						if(iter != points){
-							sendMessageToNXT();
+						if(iter < points){
+							sendMessageToNXT("MOVE");
 						} else {
 							notifyScanFinished();
 						}
-						Log.d(tag, "iter = " + iter);
+						Log.d(tag, "iter = " + iter + " points = " + points);
 					}
 				}
 			}
@@ -181,6 +184,7 @@ public class BraveHeartMidgetService extends IntentService {
 	}
 
 	private void notifyScanFinished() {
+		Log.d(tag, "terminando scaneo");
 		Bundle bundle = new Bundle();
 		bundle.putBoolean("scan_finished", true);
 		bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
@@ -196,17 +200,19 @@ public class BraveHeartMidgetService extends IntentService {
 	        json.put("project_name", MADN3SController.sharedPrefsGetString("project_name"));
 	        json.put("clean", MADN3SController.sharedPrefsGetBoolean("clean"));
 	        sendMessageToCameras(json.toString());
+	        sendMessageToNXT("FINISH");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void sendMessageToNXT() {
+	private void sendMessageToNXT(String msg) {
+		Log.d(tag, "MANDANDO MENSAJE AL NXT");
 		Bundle bundle = new Bundle();
 		bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTING.getState());
 		bundle.putInt("device", Device.NXT.getValue());
 		scannerBridge.callback(bundle);
-		
+		MADN3SController.talker.write(msg.getBytes());
 	}
 
 }

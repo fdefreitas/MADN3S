@@ -3,12 +3,14 @@ package org.madn3s.controller;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.madn3s.controller.MADN3SController.Mode;
+import org.madn3s.controller.components.NXTTalker;
 import org.madn3s.controller.fragments.BaseFragment;
 import org.madn3s.controller.fragments.ConnectionFragment;
 import org.madn3s.controller.fragments.ControlsFragment;
 import org.madn3s.controller.fragments.DiscoveryFragment;
 import org.madn3s.controller.fragments.NavigationDrawerFragment;
 import org.madn3s.controller.fragments.ScannerFragment;
+import org.madn3s.controller.fragments.SettingsFragment;
 import org.madn3s.controller.io.BraveHeartMidgetService;
 import org.madn3s.controller.io.HiddenMidgetReader;
 import org.madn3s.controller.io.UniversalComms;
@@ -44,6 +46,8 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         getApplication();
         setContentView(R.layout.activity_main); 
         
+       
+        
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getFragmentManager().findFragmentById(R.id.navigation_drawer);
         mTitle = getTitle();
@@ -71,6 +75,15 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 			public void callback(Object msg) {
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
 				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND, (String)msg);
+				startService(williamWallaceIntent);
+			}
+		};
+		
+		NXTTalker.bridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
+				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE, (String)msg);
 				startService(williamWallaceIntent);
 			}
 		};
@@ -135,6 +148,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
+        	launchSettingsFragment();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -195,6 +209,16 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
                 .addToBackStack(null)
                 .commit();
 //        fm.executePendingTransactions();
+    }
+    
+    public void launchSettingsFragment(){
+        SettingsFragment settings = new SettingsFragment();
+        FragmentManager fm = getFragmentManager();
+        fm.beginTransaction()
+        		.replace(R.id.container, settings)
+        		.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .addToBackStack(null)
+                .commit();
     }
 
 	@Override

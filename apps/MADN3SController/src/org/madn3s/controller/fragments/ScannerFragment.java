@@ -189,8 +189,11 @@ public class ScannerFragment extends BaseFragment {
 		generateModelButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
-				
+				int points = MADN3SController.sharedPrefsGetInt("points");
+				for(int i = 0; i < points; i++){
+					JSONObject frame = MADN3SController.sharedPrefsGetJSONObject("frame-"+i);
+					Log.d(tag, "frame-"+i + " = " + frame.toString());
+				}
 			}
 		});
 		

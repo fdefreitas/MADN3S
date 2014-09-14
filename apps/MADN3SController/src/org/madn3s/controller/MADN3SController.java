@@ -6,6 +6,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.madn3s.controller.components.NXTTalker;
 
 import android.app.Application;
 import android.bluetooth.BluetoothClass;
@@ -46,6 +47,8 @@ public class MADN3SController extends Application {
 
 	public static AtomicBoolean readCamera1;
 	public static AtomicBoolean readCamera2;
+	
+	public static NXTTalker talker;
 
 	public static enum Mode {
 		SCANNER("SCANNER", 0), CONTROLLER("CONTROLLER", 1), SCAN("SCAN", 2);

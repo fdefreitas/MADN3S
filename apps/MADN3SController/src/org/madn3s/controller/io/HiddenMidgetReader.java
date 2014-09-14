@@ -105,7 +105,6 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 			connectionFragmentBridge.callback(bundle);
 			if(state == org.madn3s.controller.MADN3SController.State.CONNECTED.getState()){
 				while(MADN3SController.isRunning.get()){
-					Log.d(tag, "running...");
 					if(read.get()){
 						if(start == 0){
 							start = System.currentTimeMillis();
@@ -128,7 +127,6 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 						}
 					}
 				}
-				Log.d(tag, "bye...");
 			}
 		 } catch (Exception e) {
 			 e.printStackTrace();

@@ -54,4 +54,30 @@
     <string name="text_file_name">filename</string>
     <string name="text_no_files">No files or directories</string>
     
+    
+    <string name="settings_points">Points</string>
+    <string name="settings_save">Save</string>
+    <string name="settings_iterations">Iterations</string>
+    <string name="settings_grabcut">Grab Cut</string>
+    <string name="settings_grabcut_rectangle">Rectangle</string>
+    <string name="settings_grabcut_rectangle_p1_x">P1 X</string>
+    <string name="settings_grabcut_rectangle_p1_y">P1 Y</string>
+    <string name="settings_grabcut_rectangle_p2_x">P2 X</string>
+    <string name="settings_grabcut_rectangle_p2_y">P2 Y</string>
+    <string name="settings_good_features">Good Features</string>
+    <string name="settings_good_features_max_corners">Max Corners</string>
+    <string name="settings_good_features_quality_level">Quality Level</string>
+    <string name="settings_good_features_min_distance">Min Distance</string>
+    <string name="settings_edge_detection">Edge Detection</string>
+    <string name="settings_edge_detection_algorithm">Algorithm</string>
+    <string name="settings_edge_detection_canny">Canny</string>
+    <string name="settings_edge_detection_canny_lower_threshold">Lower Threshold</string>
+    <string name="settings_edge_detection_canny_upper_threshold">Upper Threshold</string>
+    <string name="settings_edge_detection_sobel">Sobel</string>
+    <string name="settings_edge_detection_sobel_d_depth">D Depth</string>
+    <string name="settings_edge_detection_sobel_d_x">D X</string>
+    <string name="settings_edge_detection_sobel_d_y">D Y</string>
+    
+    
+    
 </resources>

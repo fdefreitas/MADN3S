@@ -165,27 +165,27 @@ public class DiscoveryFragment extends BaseFragment{
 			public void onClick(View v) {
 				try {
 					
-					if(/*isNxtSelected &&*/ cams == 2){
+					if(isNxtSelected && cams == 2){
 						Log.d(tag, "Mode: SCANNER");
 						listener.onObjectSelected(Mode.SCANNER, mFragment);
-					} else if (isNxtSelected){
-						Log.d(tag, "Mode: CONTROLLER");
-						AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-							alertDialogBuilder.setTitle("Iniciar Modo Control Remoto");
-							alertDialogBuilder
-								.setMessage("No ha seleccionado Cámaras. Está seguro que desea iniciar el modo 'Control Remoto' del NXT?")
-								.setCancelable(true)
-								.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,int id) {
-										listener.onObjectSelected(Mode.CONTROLLER, mFragment);
-									}
-								  })
-								.setNegativeButton("No",new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,int id) {
-										dialog.cancel();
-									}
-								});				 
-						alertDialogBuilder.create().show();
+//					} else if (isNxtSelected){
+//						Log.d(tag, "Mode: CONTROLLER");
+//						AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+//							alertDialogBuilder.setTitle("Iniciar Modo Control Remoto");
+//							alertDialogBuilder
+//								.setMessage("No ha seleccionado Cámaras. Está seguro que desea iniciar el modo 'Control Remoto' del NXT?")
+//								.setCancelable(true)
+//								.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
+//									public void onClick(DialogInterface dialog,int id) {
+//										listener.onObjectSelected(Mode.CONTROLLER, mFragment);
+//									}
+//								  })
+//								.setNegativeButton("No",new DialogInterface.OnClickListener() {
+//									public void onClick(DialogInterface dialog,int id) {
+//										dialog.cancel();
+//									}
+//								});				 
+//						alertDialogBuilder.create().show();
 						
 					} else {
 						Toast.makeText(getActivity(), "Debe seleccionar al menos un dispositivo NXT", Toast.LENGTH_LONG).show();

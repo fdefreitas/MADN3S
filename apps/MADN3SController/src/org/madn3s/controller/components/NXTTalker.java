@@ -24,6 +24,7 @@
 
 package org.madn3s.controller.components;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -38,9 +39,10 @@ import android.os.Handler;
 import android.os.Message;
 
 import org.madn3s.controller.fragments.ControlsFragment;
+import org.madn3s.controller.io.UniversalComms;
 
 public class NXTTalker {
-
+	public static UniversalComms bridge;
     public static final int STATE_NONE = 0;
     public static final int STATE_CONNECTING = 1;
     public static final int STATE_CONNECTED = 2;
@@ -209,7 +211,7 @@ public class NXTTalker {
         write(data);
     }
     
-    private void write(byte[] out) {
+    public void write(byte[] out) {
         ConnectedThread r;
         synchronized (this) {
             if (mState != STATE_CONNECTED) {
@@ -301,7 +303,8 @@ public class NXTTalker {
             while (true) {
                 try {
                     bytes = mmInStream.read(buffer);
-                    //toast(Integer.toString(bytes) + " bytes read from device");
+                    String str = new String(buffer, "UTF-8");
+                    bridge.callback(str);
                 } catch (IOException e) {
                     e.printStackTrace();
                     connectionLost();

@@ -45,6 +45,7 @@
         </activity>
         
         
+        
         <service android:name="org.madn3s.controller.io.BraveHeartMidgetService" />
     </application>
 
