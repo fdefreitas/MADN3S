@@ -123,6 +123,10 @@ public class ConnectionFragment extends BaseFragment {
         		view.findViewById(R.id.nxt_connected_imageView), 
         		view.findViewById(R.id.nxt_connecting_progressBar)
     		);
+        if(nxtStatus){
+        	nxtStatusViewHolder.success();
+        }
+        
 
         mHandler = new Handler() {
             @Override
@@ -150,19 +154,27 @@ public class ConnectionFragment extends BaseFragment {
             }
         };
 
-        MADN3SController.talker = new NXTTalker(mHandler);
-        MADN3SController.talker.connect(MADN3SController.nxt);
-        Log.d(TAG, "Iniciando Conexion con NXT: " + MADN3SController.nxt.getName());
+        if(!nxtStatus){
+        	MADN3SController.talker = new NXTTalker(mHandler);
+            MADN3SController.talker.connect(MADN3SController.nxt);
+            Log.d(TAG, "Iniciando Conexion con NXT: " + MADN3SController.nxt.getName());
+        }
         
         
         
-        HiddenMidgetConnector connectCamera1 = new HiddenMidgetConnector(camera1, camera1WeakReference, MADN3SController.readCamera1, "right");
-        connectCamera1.execute();
-        Log.d(TAG, "Iniciando conexion con Camara1: " + camera1.getName());
+        if(!camera1Status){
+        	HiddenMidgetConnector connectCamera1 = new HiddenMidgetConnector(camera1, camera1WeakReference, MADN3SController.readCamera1, "right");
+            connectCamera1.execute();
+            Log.d(TAG, "Iniciando conexion con Camara1: " + camera1.getName());
+        }
         
-        HiddenMidgetConnector connectCamera2 = new HiddenMidgetConnector(camera2, camera2WeakReference, MADN3SController.readCamera2, "left");
-        connectCamera2.execute();
-        Log.d(TAG, "Iniciando conexion con Camara2: " + camera2.getName()); 
+        if(!camera2Status){
+        	HiddenMidgetConnector connectCamera2 = new HiddenMidgetConnector(camera2, camera2WeakReference, MADN3SController.readCamera2, "left");
+            connectCamera2.execute();
+            Log.d(TAG, "Iniciando conexion con Camara2: " + camera2.getName());
+        }
+        
+         
         
         camera1NameTextView = (TextView) view.findViewById(R.id.camera1_name_connection_textView);
         camera1AddressTextView = (TextView) view.findViewById(R.id.camera1_address_connection_textView);
@@ -172,12 +184,16 @@ public class ConnectionFragment extends BaseFragment {
         	camera1AddressTextView.setText(camera1.getAddress());
         }
         
+        
         camera1StatusViewHolder = new StatusViewHolder(
         		view.findViewById(R.id.camera1_not_connected_imageView), 
         		view.findViewById(R.id.camera1_connected_imageView), 
         		view.findViewById(R.id.camera1_connecting_progressBar)
     		);
-
+	    if(camera1Status){
+        	camera1StatusViewHolder.success();
+        }
+        
         camera2NameTextView = (TextView) view.findViewById(R.id.camera2_name_connection_textView);
         camera2AddressTextView = (TextView) view.findViewById(R.id.camera2_address_connection_textView);
         
@@ -191,6 +207,9 @@ public class ConnectionFragment extends BaseFragment {
         		view.findViewById(R.id.camera2_connected_imageView), 
         		view.findViewById(R.id.camera2_connecting_progressBar)
     		);
+        if(camera2Status){
+        	camera2StatusViewHolder.success();
+        }
 
         scannerButton = (Button) view.findViewById(R.id.scanner_button);
         scannerButton.setOnClickListener(new View.OnClickListener() {

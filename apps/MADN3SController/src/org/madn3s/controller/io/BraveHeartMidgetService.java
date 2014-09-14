@@ -79,7 +79,21 @@ public class BraveHeartMidgetService extends IntentService {
 			bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
 			bundle.putInt("device", Device.NXT.getValue());
 			scannerBridge.callback(bundle);
-			sendMessageToCameras();
+			try {
+				JSONObject json = new JSONObject(jsonString);
+				String message = json.getString("message");
+				if(message.equalsIgnoreCase("picture")){
+					sendMessageToCameras();
+				} else if(message.equalsIgnoreCase("finish")){
+					bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
+					bundle.putInt("device",  Device.CAMERA1.getValue());
+					scannerBridge.callback(bundle);
+					bundle.putInt("device",  Device.CAMERA2.getValue());
+					scannerBridge.callback(bundle);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		} 
 	}
 	
@@ -99,7 +113,8 @@ public class BraveHeartMidgetService extends IntentService {
 	public void sendMessageToCameras(String msgString){
 		try{
 			JSONObject msg = new JSONObject(msgString);
-        	if(camera1WeakReference != null){
+			msg.put("iter", MADN3SController.sharedPrefsGetInt("iter"));
+			if(camera1WeakReference != null){
 	        	msg.put("side", "left");
 	        	msg.put("camera_name", camera1.getName());
 				HiddenMidgetWriter sendCamera1 = new HiddenMidgetWriter(camera1WeakReference, msg.toString());

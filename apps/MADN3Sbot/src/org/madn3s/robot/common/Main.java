@@ -34,14 +34,16 @@ public class Main {
 //		} catch (InterruptedException e) {
 //			Utils.printToScreen(e.getMessage());
 //		}
+//		moveToNextPoint("");
+//		Button.waitForAnyPress();
 		
 		Utils.printToScreen("Getting tunnel");
 		BluetoothTunnel bTunnel = BluetoothTunnel.getInstance();
 		Utils.printToScreen("Done tunnel");
 		Utils.printToScreen("");
-		boolean isLast = false, move = false;
+		boolean isLast = false, move = false, abort = false;
 		int counter = 0;
-		while(!isLast){
+		while(!abort){
 			Utils.printToScreen("-" + move + " " + isLast + " " + counter, 0,0, false);
 			String message = null;
 			while(message == null){
@@ -49,7 +51,13 @@ public class Main {
 				if(message != null && !message.isEmpty()){
 					Utils.printToScreen(message,0,1,false);
 					Utils.printToScreen("YEA ",0,2,false);
-					move = true;
+					if(message.equalsIgnoreCase("move")){
+						move = true;
+					} else if(message.equalsIgnoreCase("wait")){
+						move = false;
+					} else if(message.equalsIgnoreCase("abort")){
+						abort = true;
+					}
 				} else {
 					Utils.printToScreen("NAY ",0,2,false);
 				}
@@ -125,7 +133,11 @@ public class Main {
 			return true;
 		}
 		try {
+//			Motor.C.forward();
+//	    	Motor.A.backward();
 			Thread.sleep(10000);
+//			Motor.C.stop();
+//	    	Motor.A.stop();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

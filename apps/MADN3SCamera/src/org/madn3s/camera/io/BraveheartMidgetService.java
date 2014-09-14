@@ -146,13 +146,16 @@ public class BraveheartMidgetService extends IntentService {
 				if(msg.has("action")){
 					String action = msg.getString("action");
 					side = msg.getString("side");
-					projectName = msg.getString("project_name");
+					if(msg.has("project_name")){
+						projectName = msg.getString("project_name");
+					}
 					if(config == null){//kind of cheating...
 						config = msg;
 					}
 					Log.d(tag, "action: " + action);
 					if(action.equalsIgnoreCase("config")){
 						config = msg;
+						MADN3SCamera.isPictureTaken.set(true);
 					} else if(action.equalsIgnoreCase("photo")){
 						cameraCallback.callback(config);
 					} else if(action.equalsIgnoreCase("end_project")){

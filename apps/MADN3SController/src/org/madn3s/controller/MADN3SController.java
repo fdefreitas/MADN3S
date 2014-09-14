@@ -48,6 +48,7 @@ public class MADN3SController extends Application {
 	public static AtomicBoolean readCamera1;
 	public static AtomicBoolean readCamera2;
 	
+	
 	public static NXTTalker talker;
 
 	public static enum Mode {
@@ -224,6 +225,14 @@ public class MADN3SController extends Application {
 	
 	public static Long sharedPrefsGetLong(String key){
 		return sharedPreferences.getLong(key, (long) 0);
+	}
+	
+	public static void sharedPrefsPutFloat(String key, Float value){
+		sharedPreferencesEditor.putFloat(key, value).apply();
+	}
+	
+	public static Float sharedPrefsGetFloat(String key){
+		return sharedPreferences.getFloat(key, 0);
 	}
 
 	public static boolean isToyDevice(BluetoothDevice device) {

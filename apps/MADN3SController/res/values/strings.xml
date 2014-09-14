@@ -77,7 +77,7 @@
     <string name="settings_edge_detection_sobel_d_depth">D Depth</string>
     <string name="settings_edge_detection_sobel_d_x">D X</string>
     <string name="settings_edge_detection_sobel_d_y">D Y</string>
-    
+    <string name="settings_clean_images">Clean Images</string>
     
     
 </resources>

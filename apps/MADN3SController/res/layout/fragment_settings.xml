@@ -17,7 +17,7 @@
 
         <EditText
             android:id="@+id/points_text_edit"
-            android:layout_width="match_parent"
+            android:layout_width="196dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="38dp"
             android:ems="10"
@@ -25,6 +25,13 @@
 
             <requestFocus />
         </EditText>
+
+        <CheckBox
+            android:id="@+id/clean_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_clean_images" />
+
     </LinearLayout>
 
     <Button
@@ -264,25 +271,26 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/algorithm_text_view"
             android:layout_marginLeft="52dp"
-            android:layout_toRightOf="@+id/algorithm_text_view" >
+            android:layout_toRightOf="@+id/algorithm_text_view" 
+            android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/radio0"
+                android:id="@+id/canny_radio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/settings_edge_detection_canny" />
+            
+            <RadioButton
+                android:id="@+id/sobel_radio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:text="@string/settings_edge_detection_sobel" />
 
        </RadioGroup>
 
-        <RadioButton
-            android:id="@+id/radio1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/algorithm_radio_group"
-            android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@+id/algorithm_radio_group"
-            android:text="@string/settings_edge_detection_sobel" />
+        
 
         <TextView
             android:id="@+id/lower_threshold_text_view"
@@ -357,18 +365,6 @@
             android:text="@string/settings_edge_detection_sobel_d_x"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <EditText
-            android:id="@+id/d_x_text_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/textView3"
-            android:layout_alignBottom="@+id/textView3"
-            android:layout_alignRight="@+id/radio1"
-            android:layout_marginRight="11dp"
-            android:layout_toRightOf="@+id/algorithm_radio_group"
-            android:ems="10"
-            android:inputType="number" />
-
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
@@ -385,6 +381,17 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/textView4"
             android:layout_toRightOf="@+id/textView4"
+            android:ems="10"
+            android:inputType="number" />
+
+        <EditText
+            android:id="@+id/d_x_text_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView3"
+            android:layout_alignBottom="@+id/textView3"
+            android:layout_alignRight="@+id/algorithm_radio_group"
+            android:layout_toRightOf="@+id/textView3"
             android:ems="10"
             android:inputType="number" />
 

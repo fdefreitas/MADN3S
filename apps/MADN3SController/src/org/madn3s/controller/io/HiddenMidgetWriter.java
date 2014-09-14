@@ -3,6 +3,10 @@ package org.madn3s.controller.io;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.madn3s.controller.MADN3SController;
+
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -13,6 +17,7 @@ public class HiddenMidgetWriter extends AsyncTask<Void, Void, Void> {
 	private BluetoothSocket mSocket;
     private Exception e;
     private String msg;
+    
     
     public HiddenMidgetWriter(WeakReference<BluetoothSocket> mBluetoothSocketWeakReference, String msg){
     	mSocket = mBluetoothSocketWeakReference.get();

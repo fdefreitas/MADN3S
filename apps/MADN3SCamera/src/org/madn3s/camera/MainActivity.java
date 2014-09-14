@@ -38,6 +38,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -49,6 +50,8 @@ public class MainActivity extends Activity {
     private Camera mCamera;
     private CameraPreview mPreview;
     private Context mContext;
+    private TextView configTextView;
+    private MainActivity mActivity;
     
     public JSONObject config, result;
     
@@ -73,6 +76,7 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		mActivity = this;
 		
 		//Reiniciar Activity colocando el Dispositivo en "Discoverable"
 		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
@@ -84,6 +88,14 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void callback(Object msg) {
+				final String msgFinal =(String) msg;
+				mActivity.getWindow().getDecorView().post(
+					new Runnable() { 
+						public void run() {
+							configTextView.setText(msgFinal);
+						} 
+					});
+				
 //				Log.d("UniversalComms", "Callback. msg: " + (String)msg + ".-");
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveheartMidgetService.class);
 				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG, (String)msg);
@@ -125,6 +137,7 @@ public class MainActivity extends Activity {
 			}
 		};
 		
+		configTextView = (TextView) findViewById(R.id.configs_text_view);
       Button button = (Button) findViewById(R.id.connect_button);
       button.setOnClickListener(new View.OnClickListener() {
           @Override

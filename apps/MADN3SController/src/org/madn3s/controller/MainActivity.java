@@ -43,6 +43,25 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         super.onCreate(savedInstanceState);
         MADN3SController.sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
         MADN3SController.sharedPreferencesEditor = MADN3SController.sharedPreferences.edit();
+        
+        MADN3SController.sharedPrefsPutInt("points", 2);
+		MADN3SController.sharedPrefsPutInt("p1x", 0);
+		MADN3SController.sharedPrefsPutInt("p1y", 0);
+		MADN3SController.sharedPrefsPutInt("p2x", 1);
+		MADN3SController.sharedPrefsPutInt("p2y", 1);
+		MADN3SController.sharedPrefsPutInt("iterations", 1);
+		MADN3SController.sharedPrefsPutInt("maxCorners", 50);
+		MADN3SController.sharedPrefsPutFloat("qualityLevel", (float) 0.01);
+		MADN3SController.sharedPrefsPutInt("minDistance", 30);
+		MADN3SController.sharedPrefsPutFloat("upperThreshold", (float) 75);
+		MADN3SController.sharedPrefsPutFloat("lowerThreshold", (float) 35);
+		MADN3SController.sharedPrefsPutInt("dDepth", 0);
+		MADN3SController.sharedPrefsPutInt("dX", 0);
+		MADN3SController.sharedPrefsPutInt("dY", 0);
+		MADN3SController.sharedPrefsPutString("algorithm", "Canny");
+		MADN3SController.sharedPrefsPutInt("algorithmIndex", R.id.canny_radio);
+		MADN3SController.sharedPrefsPutBoolean("clean", false);
+		
         getApplication();
         setContentView(R.layout.activity_main); 
         
@@ -59,6 +78,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         MADN3SController.isRunning = new AtomicBoolean(true);
         MADN3SController.readCamera1 = new AtomicBoolean(false);
         MADN3SController.readCamera2 = new AtomicBoolean(false);
+        
         
         HiddenMidgetReader.bridge = new UniversalComms() {
 			@Override
@@ -84,6 +104,15 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 			public void callback(Object msg) {
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
 				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE, (String)msg);
+				startService(williamWallaceIntent);
+			}
+		};
+		
+		SettingsFragment.bridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
+				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND, (String)msg);
 				startService(williamWallaceIntent);
 			}
 		};

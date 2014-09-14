@@ -33,7 +33,7 @@ public class ControlsFragment extends BaseFragment {
     private boolean mSynchronizeMotors = true;
     private int mState;
     private BluetoothDevice device;
-    private NXTTalker talker;
+//    private NXTTalker talker;
 
     private ImageView frontImageView, backImageView, rightImageView,leftImageView;
 
@@ -55,9 +55,11 @@ public class ControlsFragment extends BaseFragment {
                 }
             }
         };
-
-        talker = new NXTTalker(mHandler);
-        talker.connect(device);
+        if(MADN3SController.talker == null){
+        	MADN3SController.talker = new NXTTalker(mHandler);
+        	MADN3SController.talker.connect(device);
+        }
+        
     }
 
     @Override
@@ -107,12 +109,12 @@ public class ControlsFragment extends BaseFragment {
                 byte l = (byte) (power*lmod);
                 byte r = (byte) (power*rmod);
                 if (!mReverseLR) {
-                    talker.motors(l, r, mRegulateSpeed, mSynchronizeMotors);
+                	MADN3SController.talker.motors(l, r, mRegulateSpeed, mSynchronizeMotors);
                 } else {
-                    talker.motors(r, l, mRegulateSpeed, mSynchronizeMotors);
+                	MADN3SController.talker.motors(r, l, mRegulateSpeed, mSynchronizeMotors);
                 }
             } else if ((action == MotionEvent.ACTION_UP) || (action == MotionEvent.ACTION_CANCEL)) {
-                talker.motors((byte) 0, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+            	MADN3SController.talker.motors((byte) 0, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
             }
             return true;
         }

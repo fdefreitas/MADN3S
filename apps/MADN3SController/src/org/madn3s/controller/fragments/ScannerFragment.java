@@ -225,8 +225,6 @@ public class ScannerFragment extends BaseFragment {
 	public void scan(String projectName){
 		try{
 			MADN3SController.sharedPrefsPutInt("iter", 0);
-			MADN3SController.sharedPrefsPutInt("points", 6);
-			MADN3SController.sharedPrefsPutBoolean("clean", true);
 			int points = MADN3SController.sharedPrefsGetInt("points");
 			for(int i = 0; i < points; ++i){
 				MADN3SController.removeKeyFromSharedPreferences("frame-"+i);
@@ -234,9 +232,12 @@ public class ScannerFragment extends BaseFragment {
 			JSONObject json = new JSONObject();
 	        json.put("action", "photo");
 	        json.put("project_name", projectName);
+	        Log.d(tag, "enviando comando");
 	        bridge.callback(json.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
+	
 }
