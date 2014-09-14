@@ -12,9 +12,7 @@ import org.madn3s.controller.fragments.ScannerFragment;
 import org.madn3s.controller.io.BraveHeartMidgetService;
 import org.madn3s.controller.io.HiddenMidgetReader;
 import org.madn3s.controller.io.UniversalComms;
-import org.madn3s.controller.viewer.models.files.ModelPickerActivity;
 
-import android.R.integer;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -202,6 +200,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 	@Override
 	protected void onDestroy() {
 		MADN3SController.isRunning.set(false);
+		stopService(new Intent(this, BraveHeartMidgetService.class));
 		super.onDestroy();
 	}
     

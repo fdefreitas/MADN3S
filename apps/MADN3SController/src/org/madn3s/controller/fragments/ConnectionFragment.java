@@ -16,7 +16,6 @@ import org.madn3s.controller.components.NXTTalker;
 import org.madn3s.controller.io.HiddenMidgetConnector;
 import org.madn3s.controller.io.HiddenMidgetReader;
 import org.madn3s.controller.io.UniversalComms;
-import org.madn3s.controller.models.DevicesAdapter;
 import org.madn3s.controller.models.StatusViewHolder;
 import org.madn3s.controller.viewer.models.files.ModelPickerActivity;
 
@@ -32,7 +31,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 

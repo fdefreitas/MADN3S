@@ -1,21 +1,19 @@
 package org.madn3s.controller.fragments;
 
+import org.madn3s.controller.MADN3SController;
+import org.madn3s.controller.R;
+import org.madn3s.controller.components.NXTTalker;
+
 import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import org.madn3s.controller.MADN3SController;
-import org.madn3s.controller.R;
-import org.madn3s.controller.components.NXTTalker;
 
 /**
  * Created by inaki on 1/11/14.
