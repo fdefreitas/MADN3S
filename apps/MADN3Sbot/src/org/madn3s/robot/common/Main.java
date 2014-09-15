@@ -41,7 +41,7 @@ public class Main {
 		BluetoothTunnel bTunnel = BluetoothTunnel.getInstance();
 		Utils.printToScreen("Done tunnel");
 		Utils.printToScreen("");
-		boolean isLast = false, move = false, abort = false;
+		boolean isLast = false, move = false, abort = false, finish = false;
 		int counter = 0;
 		while(!abort){
 			Utils.printToScreen("-" + move + " " + isLast + " " + counter, 0,0, false);
@@ -57,6 +57,8 @@ public class Main {
 						move = false;
 					} else if(message.equalsIgnoreCase("abort")){
 						abort = true;
+					} else if(message.equalsIgnoreCase("FINISH")){
+						finish = true;
 					}
 				} else {
 					Utils.printToScreen("NAY ",0,2,false);
@@ -74,10 +76,14 @@ public class Main {
 			} else {
 				Utils.printToScreen("NAY",0,3,false);
 			}
+			if(finish){
+				bTunnel.writeMessage("{\"error\":false,\"message\":\"FINISH\"}");
+				finish = false;
+			}
 			counter++;
 		}
 		Utils.printToScreen("Done",0,4,false);
-		Button.waitForAnyPress();
+//		Button.waitForAnyPress();
 		
 		
 		
@@ -133,11 +139,24 @@ public class Main {
 			return true;
 		}
 		try {
-//			Motor.C.forward();
-//	    	Motor.A.backward();
+			Motor.C.forward();
+	    	Motor.A.backward();
 			Thread.sleep(10000);
-//			Motor.C.stop();
+			Motor.C.stop();
+	    	Motor.A.stop();
+//	    	Motor.A.forward();
+//	    	Motor.B.forward();
+//	    	Motor.C.forward();
+//	    	Thread.sleep(5000);
 //	    	Motor.A.stop();
+//	    	Motor.B.stop();
+//	    	Motor.C.stop();
+//	    	Motor.A.resetTachoCount();
+//	        Motor.B.resetTachoCount();
+//	        Motor.C.resetTachoCount();
+	        Motor.A.rotate(90);
+	    	Motor.B.rotate(90);
+	    	Motor.C.rotate(90);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

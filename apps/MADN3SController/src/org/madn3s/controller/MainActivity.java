@@ -2,6 +2,7 @@ package org.madn3s.controller;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController.Mode;
 import org.madn3s.controller.components.NXTTalker;
 import org.madn3s.controller.fragments.BaseFragment;
@@ -13,6 +14,7 @@ import org.madn3s.controller.fragments.ScannerFragment;
 import org.madn3s.controller.fragments.SettingsFragment;
 import org.madn3s.controller.io.BraveHeartMidgetService;
 import org.madn3s.controller.io.HiddenMidgetReader;
+import org.madn3s.controller.io.HiddenMidgetWriter;
 import org.madn3s.controller.io.UniversalComms;
 
 import android.app.ActionBar;
@@ -44,7 +46,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         MADN3SController.sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
         MADN3SController.sharedPreferencesEditor = MADN3SController.sharedPreferences.edit();
         
-        MADN3SController.sharedPrefsPutInt("points", 2);
+        MADN3SController.sharedPrefsPutInt("points", 3);
 		MADN3SController.sharedPrefsPutInt("p1x", 0);
 		MADN3SController.sharedPrefsPutInt("p1y", 0);
 		MADN3SController.sharedPrefsPutInt("p2x", 1);
@@ -252,6 +254,19 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 
 	@Override
 	protected void onDestroy() {
+		MADN3SController.talker.write("abort".getBytes());
+		try {
+			JSONObject json = new JSONObject();
+	        json.put("action", "exit_app");
+	        json.put("side", "left");
+	        HiddenMidgetWriter sendCamera1 = new HiddenMidgetWriter(MADN3SController.camera1WeakReference, json.toString());
+	        sendCamera1.execute();
+	        json.put("side", "right");
+	        HiddenMidgetWriter sendCamera2 = new HiddenMidgetWriter(MADN3SController.camera2WeakReference, json.toString());
+	        sendCamera2.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		MADN3SController.isRunning.set(false);
 		stopService(new Intent(this, BraveHeartMidgetService.class));
 		super.onDestroy();

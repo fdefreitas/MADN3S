@@ -194,6 +194,7 @@ public class ScannerFragment extends BaseFragment {
 					JSONObject frame = MADN3SController.sharedPrefsGetJSONObject("frame-"+i);
 					Log.d(tag, "frame-"+i + " = " + frame.toString());
 				}
+				
 			}
 		});
 		
