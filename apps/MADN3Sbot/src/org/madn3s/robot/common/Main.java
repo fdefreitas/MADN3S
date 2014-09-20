@@ -8,6 +8,7 @@ import lejos.robotics.Color;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.navigation.OmniPilot;
 
+import org.json.JSONObject;
 import org.madn3s.fedor.LFJfedor;
 import org.madn3s.io.BluetoothTunnel;
 import org.madn3s.sandbox.HTSensors;
@@ -72,15 +73,17 @@ public class Main {
 //			while(message == null){
 //				message = bTunnel.readMessage();
 //				if(message != null && !message.isEmpty()){
-//					Utils.printToScreen(message,0,1,false);
+//					JSONObject msgJsonObject = new JSONObject(message);
+//					String action =  msgJsonObject.getString("action");
+//					Utils.printToScreen(action,0,1,false);
 //					Utils.printToScreen("YEA ",0,2,false);
-//					if(message.equalsIgnoreCase("move")){
+//					if(action.equalsIgnoreCase("move")){
 //						move = true;
-//					} else if(message.equalsIgnoreCase("wait")){
+//					} else if(action.equalsIgnoreCase("wait")){
 //						move = false;
-//					} else if(message.equalsIgnoreCase("abort")){
+//					} else if(action.equalsIgnoreCase("abort")){
 //						abort = true;
-//					} else if(message.equalsIgnoreCase("FINISH")){
+//					} else if(action.equalsIgnoreCase("FINISH")){
 //						finish = true;
 //					}
 //				} else {
@@ -91,8 +94,15 @@ public class Main {
 //				Utils.printToScreen("YEA",0,3,false);
 //				isLast = moveToNextPoint(message);
 //				if(!isLast){
-//					bTunnel.writeMessage("{\"error\":false,\"message\":\"PICTURE\"}");
+//					JSONObject response = new JSONObject();
+//					response.put("error", false);
+//					response.put("message", "PICTURE");
+//					bTunnel.writeMessage(msg.toString());
 //				} else {
+//					JSONObject response = new JSONObject();
+//					response.put("error", false);
+//					response.put("message", "FINISH");
+//					bTunnel.writeMessage(msg.toString());
 //					bTunnel.writeMessage("{\"error\":false,\"message\":\"FINISH\"}");
 //				}
 //				move = false;
@@ -100,7 +110,10 @@ public class Main {
 //				Utils.printToScreen("NAY",0,3,false);
 //			}
 //			if(finish){
-//				bTunnel.writeMessage("{\"error\":false,\"message\":\"FINISH\"}");
+//				JSONObject response = new JSONObject();
+//				response.put("error", false);
+//				response.put("message", "FINISH");
+//				bTunnel.writeMessage(msg.toString());
 //				finish = false;
 //			}
 //			counter++;
