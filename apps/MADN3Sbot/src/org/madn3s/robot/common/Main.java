@@ -19,44 +19,22 @@ import org.madn3s.sandbox.HTSensors;
 
 public class Main {
 	private static int i = 0;
+	private static OmniPilot omniPilot;
+	private static int n;
+	private static double angle;
+	private static float RADIUS = 9f;
+	private static float WHEEL_DIAMETER = 4.8f;
 	public static void main(String[] args) {
-		Utils.printToScreen("MADN3S");
 		
-//		Button.waitForAnyPress();
-//		Movement m = new Movement();
-//		Sensors s = new Sensors();
-//		Comms c = Comms.getInstance();
-//		c.establishBTConnection();
-//		HTSensors inst = HTSensors.getInstance();
-//		inst.calibrate();
-//		int button = Button.waitForAnyPress();
-//		long start = System.currentTimeMillis();
 		
-//		LFJfedor lfJfedor;
-//		try {
-//			lfJfedor = new LFJfedor();
-//			lfJfedor.initialize();
-//		} catch (InterruptedException e) {
-//			Utils.printToScreen(e.getMessage());
-//		}
-//		moveToNextPoint("");
-//		Button.waitForAnyPress();
-		
-		lejos.robotics.navigation.OmniPilot omniPilot;
-		omniPilot = new OmniPilot(105, 4.8f, Motor.C, Motor.B, Motor.A, false, false);
+		omniPilot = new OmniPilot(RADIUS, WHEEL_DIAMETER, Motor.C, Motor.B, Motor.A, false, false);
 		omniPilot.setTravelSpeed(15);
-//		omniPilot.forward();
-//		try {
-//			Thread.sleep(3000);
-//		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		omniPilot.stop();
 		
-		omniPilot.travel(100,0);
-		omniPilot.travel(-100,0);
-//		omniPilot.rotate(9);
+		n = 6;
+		angle = 360 / n;
+		
+		moveToNextPoint("move");
+		
 		
 //		Utils.printToScreen("Getting tunnel");
 //		BluetoothTunnel bTunnel = BluetoothTunnel.getInstance();
@@ -97,12 +75,12 @@ public class Main {
 //					JSONObject response = new JSONObject();
 //					response.put("error", false);
 //					response.put("message", "PICTURE");
-//					bTunnel.writeMessage(msg.toString());
+//					bTunnel.writeMessage(response.toString());
 //				} else {
 //					JSONObject response = new JSONObject();
 //					response.put("error", false);
 //					response.put("message", "FINISH");
-//					bTunnel.writeMessage(msg.toString());
+//					bTunnel.writeMessage(response.toString());
 //					bTunnel.writeMessage("{\"error\":false,\"message\":\"FINISH\"}");
 //				}
 //				move = false;
@@ -113,7 +91,7 @@ public class Main {
 //				JSONObject response = new JSONObject();
 //				response.put("error", false);
 //				response.put("message", "FINISH");
-//				bTunnel.writeMessage(msg.toString());
+//				bTunnel.writeMessage(response.toString());
 //				finish = false;
 //			}
 //			counter++;
@@ -131,29 +109,16 @@ public class Main {
 		if(msg.equalsIgnoreCase("FINISH")){
 			return true;
 		}
-		try {
-			moveByColor();
-			Motor.C.forward();
-	    	Motor.A.backward();
-			Thread.sleep(10000);
-			Motor.C.stop();
-	    	Motor.A.stop();
-//	    	Motor.A.forward();
-//	    	Motor.B.forward();
-//	    	Motor.C.forward();
-//	    	Thread.sleep(5000);
-//	    	Motor.A.stop();
-//	    	Motor.B.stop();
-//	    	Motor.C.stop();
-//	    	Motor.A.resetTachoCount();
-//	        Motor.B.resetTachoCount();
-//	        Motor.C.resetTachoCount();
-	        Motor.A.rotate(90);
-	    	Motor.B.rotate(90);
-	    	Motor.C.rotate(90);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+		//TODO: medimos y con el radio en 9 funciona casi perfecto, debe haber un pequeño error en la medicion
+		
+//		omniPilot.arc(RADIUS, angle);
+		float circumferenceRadius = 45f;
+		omniPilot.travelArc(circumferenceRadius, angle, (int)Math.floor(angle));
+			
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 		return false;
 	}
 
