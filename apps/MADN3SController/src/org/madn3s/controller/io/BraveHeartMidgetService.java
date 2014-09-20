@@ -185,7 +185,9 @@ public class BraveHeartMidgetService extends IntentService {
 						int points = MADN3SController.sharedPrefsGetInt("points");
 						MADN3SController.sharedPrefsPutInt("iter", iter);
 						if(iter < points){
-							sendMessageToNXT("MOVE");
+//							JSONObject json = new JSONObject();
+//					        json.put("action", "MOVE");
+					        sendMessageToNXT("MOVE");
 						} else {
 							notifyScanFinished();
 						}
@@ -215,6 +217,8 @@ public class BraveHeartMidgetService extends IntentService {
 	        json.put("project_name", MADN3SController.sharedPrefsGetString("project_name"));
 	        json.put("clean", MADN3SController.sharedPrefsGetBoolean("clean"));
 	        sendMessageToCameras(json.toString());
+//	        JSONObject json = new JSONObject();
+//	        json.put("action", "FINISH");
 	        sendMessageToNXT("FINISH");
 		} catch (JSONException e) {
 			e.printStackTrace();

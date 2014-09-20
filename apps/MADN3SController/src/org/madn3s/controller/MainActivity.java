@@ -46,7 +46,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         MADN3SController.sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
         MADN3SController.sharedPreferencesEditor = MADN3SController.sharedPreferences.edit();
         
-        MADN3SController.sharedPrefsPutInt("points", 3);
+        MADN3SController.sharedPrefsPutInt("points", 6);
 		MADN3SController.sharedPrefsPutInt("p1x", 0);
 		MADN3SController.sharedPrefsPutInt("p1y", 0);
 		MADN3SController.sharedPrefsPutInt("p2x", 1);
