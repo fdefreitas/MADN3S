@@ -2,7 +2,11 @@ package org.madn3s.robot.common;
 
 import lejos.nxt.Button;
 import lejos.nxt.Motor;
+import lejos.nxt.MotorPort;
+import lejos.nxt.NXTMotor;
 import lejos.robotics.Color;
+import lejos.robotics.RegulatedMotor;
+import lejos.robotics.navigation.OmniPilot;
 
 import org.madn3s.fedor.LFJfedor;
 import org.madn3s.io.BluetoothTunnel;
@@ -37,101 +41,77 @@ public class Main {
 //		moveToNextPoint("");
 //		Button.waitForAnyPress();
 		
-		Utils.printToScreen("Getting tunnel");
-		BluetoothTunnel bTunnel = BluetoothTunnel.getInstance();
-		Utils.printToScreen("Done tunnel");
-		Utils.printToScreen("");
-		boolean isLast = false, move = false, abort = false, finish = false;
-		int counter = 0;
-		while(!abort){
-			Utils.printToScreen("-" + move + " " + isLast + " " + counter, 0,0, false);
-			String message = null;
-			while(message == null){
-				message = bTunnel.readMessage();
-				if(message != null && !message.isEmpty()){
-					Utils.printToScreen(message,0,1,false);
-					Utils.printToScreen("YEA ",0,2,false);
-					if(message.equalsIgnoreCase("move")){
-						move = true;
-					} else if(message.equalsIgnoreCase("wait")){
-						move = false;
-					} else if(message.equalsIgnoreCase("abort")){
-						abort = true;
-					} else if(message.equalsIgnoreCase("FINISH")){
-						finish = true;
-					}
-				} else {
-					Utils.printToScreen("NAY ",0,2,false);
-				}
-			}
-			if(move){
-				Utils.printToScreen("YEA",0,3,false);
-				isLast = moveToNextPoint(message);
-				if(!isLast){
-					bTunnel.writeMessage("{\"error\":false,\"message\":\"PICTURE\"}");
-				} else {
-					bTunnel.writeMessage("{\"error\":false,\"message\":\"FINISH\"}");
-				}
-				move = false;
-			} else {
-				Utils.printToScreen("NAY",0,3,false);
-			}
-			if(finish){
-				bTunnel.writeMessage("{\"error\":false,\"message\":\"FINISH\"}");
-				finish = false;
-			}
-			counter++;
-		}
-		Utils.printToScreen("Done",0,4,false);
+		lejos.robotics.navigation.OmniPilot omniPilot;
+		omniPilot = new OmniPilot(105, 4.8f, Motor.C, Motor.B, Motor.A, false, false);
+		omniPilot.setTravelSpeed(15);
+//		omniPilot.forward();
+//		try {
+//			Thread.sleep(3000);
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		omniPilot.stop();
+		
+		omniPilot.travel(100,0);
+		omniPilot.travel(-100,0);
+//		omniPilot.rotate(9);
+		
+//		Utils.printToScreen("Getting tunnel");
+//		BluetoothTunnel bTunnel = BluetoothTunnel.getInstance();
+//		Utils.printToScreen("Done tunnel");
+//		Utils.printToScreen("");
+//		HTSensors inst = HTSensors.getInstance();
+//		inst.calibrate();
+//		Button.waitForAnyPress();
+//		boolean isLast = false, move = false, abort = false, finish = false;
+//		int counter = 0;
+//		while(!abort){
+//			Utils.printToScreen("-" + move + " " + isLast + " " + counter, 0,0, false);
+//			String message = null;
+//			while(message == null){
+//				message = bTunnel.readMessage();
+//				if(message != null && !message.isEmpty()){
+//					Utils.printToScreen(message,0,1,false);
+//					Utils.printToScreen("YEA ",0,2,false);
+//					if(message.equalsIgnoreCase("move")){
+//						move = true;
+//					} else if(message.equalsIgnoreCase("wait")){
+//						move = false;
+//					} else if(message.equalsIgnoreCase("abort")){
+//						abort = true;
+//					} else if(message.equalsIgnoreCase("FINISH")){
+//						finish = true;
+//					}
+//				} else {
+//					Utils.printToScreen("NAY ",0,2,false);
+//				}
+//			}
+//			if(move){
+//				Utils.printToScreen("YEA",0,3,false);
+//				isLast = moveToNextPoint(message);
+//				if(!isLast){
+//					bTunnel.writeMessage("{\"error\":false,\"message\":\"PICTURE\"}");
+//				} else {
+//					bTunnel.writeMessage("{\"error\":false,\"message\":\"FINISH\"}");
+//				}
+//				move = false;
+//			} else {
+//				Utils.printToScreen("NAY",0,3,false);
+//			}
+//			if(finish){
+//				bTunnel.writeMessage("{\"error\":false,\"message\":\"FINISH\"}");
+//				finish = false;
+//			}
+//			counter++;
+//		}
+//		Utils.printToScreen("Done",0,4,false);
 //		Button.waitForAnyPress();
 		
 		
 		
 		
-//		while(!Utils.buttonIsEscape(button)){
-//			while(true){
-//				int cColor = inst.getCentralColor();
-//				switch (cColor) {
-//					case Color.BLACK:
-//						Motor.A.backward();
-//						Motor.B.forward();
-//						//move
-//						break;
-//					case Color.WHITE:
-//						Motor.A.forward();
-//				    	Motor.B.backward();
-//						//return to black
-//				    	//usando c???
-//						break;
-//					case Color.RED: 
-//						Motor.A.stop();
-//				    	Motor.B.stop();
-//						//check alignement
-//						//send pic signal
-//						break;
-//					case Color.GREEN: 
-//						Motor.A.stop();
-//				    	Motor.B.stop();
-//						//final??
-//						break;
-//					default:
-//						Motor.A.stop();
-//				    	Motor.B.stop();
-//						//where am i????
-//				    	//return to black
-//						break;
-//				}
-//				inst.printValues();
-//				Utils.printToScreen("time = " + (System.currentTimeMillis() - start), 0,4, false);
-//				if((System.currentTimeMillis() - start) > 100000){
-//					Motor.A.stop();
-//			    	Motor.B.stop();
-//					break;
-//				}
-//				//deberiamos poner un break ante una señal de stop recibida desde la tablet
-//			}
-//			button = Button.waitForAnyPress();
-//		}
+
 	}
 
 	private static boolean moveToNextPoint(String msg) {
@@ -139,6 +119,7 @@ public class Main {
 			return true;
 		}
 		try {
+			moveByColor();
 			Motor.C.forward();
 	    	Motor.A.backward();
 			Thread.sleep(10000);
@@ -161,5 +142,51 @@ public class Main {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+	private static void moveByColor() {
+		long start = System.currentTimeMillis();
+		HTSensors inst = HTSensors.getInstance();
+		while(true){
+			int cColor = inst.getCentralColor();
+			switch (cColor) {
+				case Color.BLACK:
+					Motor.A.backward();
+					Motor.B.forward();
+					//move
+					break;
+				case Color.WHITE:
+					Motor.A.forward();
+			    	Motor.B.backward();
+					//return to black
+			    	//usando c???
+					break;
+				case Color.RED: 
+					Motor.A.stop();
+			    	Motor.B.stop();
+					//check alignement
+					//send pic signal
+					break;
+				case Color.GREEN: 
+					Motor.A.stop();
+			    	Motor.B.stop();
+					//final??
+					break;
+				default:
+					Motor.A.stop();
+			    	Motor.B.stop();
+					//where am i????
+			    	//return to black
+					break;
+			}
+			inst.printValues();
+			Utils.printToScreen("time = " + (System.currentTimeMillis() - start), 0,4, false);
+			if((System.currentTimeMillis() - start) > 100000){
+				Motor.A.stop();
+		    	Motor.B.stop();
+				break;
+			}
+			//deberiamos poner un break ante una señal de stop recibida desde la tablet
+		}
 	}
 }
