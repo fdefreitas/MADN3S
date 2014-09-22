@@ -7,6 +7,7 @@ import static org.madn3s.controller.MADN3SController.camera2WeakReference;
 
 import java.util.ArrayList;
 
+import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.MADN3SController.Device;
 import org.madn3s.controller.MADN3SController.Mode;
@@ -141,6 +142,17 @@ public class ConnectionFragment extends BaseFragment {
                             case NXTTalker.STATE_CONNECTED:
                                 nxtStatusViewHolder.success();
                                 nxtStatus = true;
+                                try {
+                                	JSONObject nxtJson = new JSONObject();
+                        	        nxtJson.put("command", "scanner");
+                        	        nxtJson.put("action", "config");
+                        	        nxtJson.put("points", MADN3SController.sharedPrefsGetInt("points"));
+                        	        nxtJson.put("circumference_radius", MADN3SController.sharedPrefsGetFloat("radius"));
+                        	        nxtJson.put("speed", MADN3SController.sharedPrefsGetInt("speed"));
+                        	        MADN3SController.talker.write(nxtJson.toString().getBytes());
+                        	    } catch (Exception e) {
+									Log.e(TAG, "error enviando configs al nxt");
+								}
                                 break;
                             case NXTTalker.STATE_NONE:
                                 nxtStatusViewHolder.failure();

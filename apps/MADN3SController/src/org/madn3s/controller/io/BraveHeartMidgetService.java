@@ -74,7 +74,6 @@ public class BraveHeartMidgetService extends IntentService {
 		} else if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE)){
 			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE);
 			jsonString = jsonString.substring(0, jsonString.lastIndexOf("}")+1);
-			Log.d(tag, jsonString.trim());
 			Bundle bundle = new Bundle();
 			bundle.putInt("state", org.madn3s.controller.MADN3SController.State.CONNECTED.getState());
 			bundle.putInt("device", Device.NXT.getValue());
@@ -185,9 +184,11 @@ public class BraveHeartMidgetService extends IntentService {
 						int points = MADN3SController.sharedPrefsGetInt("points");
 						MADN3SController.sharedPrefsPutInt("iter", iter);
 						if(iter < points){
-//							JSONObject json = new JSONObject();
-//					        json.put("action", "MOVE");
-					        sendMessageToNXT("MOVE");
+							JSONObject json = new JSONObject();
+							json.put("command", "scanner");
+					        json.put("action", "MOVE");
+					        sendMessageToNXT(json.toString());
+//					        sendMessageToNXT("MOVE");
 						} else {
 							notifyScanFinished();
 						}
@@ -217,9 +218,11 @@ public class BraveHeartMidgetService extends IntentService {
 	        json.put("project_name", MADN3SController.sharedPrefsGetString("project_name"));
 	        json.put("clean", MADN3SController.sharedPrefsGetBoolean("clean"));
 	        sendMessageToCameras(json.toString());
-//	        JSONObject json = new JSONObject();
-//	        json.put("action", "FINISH");
-	        sendMessageToNXT("FINISH");
+	        JSONObject nxtJson = new JSONObject();
+	        nxtJson.put("command", "scanner");
+	        nxtJson.put("action", "FINISH");
+	        sendMessageToNXT(nxtJson.toString());
+//	        sendMessageToNXT("FINISH");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

@@ -46,7 +46,9 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         MADN3SController.sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
         MADN3SController.sharedPreferencesEditor = MADN3SController.sharedPreferences.edit();
         
-        MADN3SController.sharedPrefsPutInt("points", 6);
+        MADN3SController.sharedPrefsPutInt("speed", 15);
+        MADN3SController.sharedPrefsPutFloat("radius", 99.0f);
+        MADN3SController.sharedPrefsPutInt("points", 7);
 		MADN3SController.sharedPrefsPutInt("p1x", 0);
 		MADN3SController.sharedPrefsPutInt("p1y", 0);
 		MADN3SController.sharedPrefsPutInt("p2x", 1);
@@ -254,8 +256,12 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 
 	@Override
 	protected void onDestroy() {
-		MADN3SController.talker.write("abort".getBytes());
+		
 		try {
+			JSONObject nxtJson = new JSONObject();
+	        nxtJson.put("command", "abort");
+	        nxtJson.put("action", "abort");
+			MADN3SController.talker.write(nxtJson.toString().getBytes());
 			JSONObject json = new JSONObject();
 	        json.put("action", "exit_app");
 	        json.put("side", "left");

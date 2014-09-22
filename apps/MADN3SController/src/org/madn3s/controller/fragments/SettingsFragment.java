@@ -165,7 +165,7 @@ public class SettingsFragment extends BaseFragment {
 				
 				MADN3SController.sharedPrefsPutBoolean("clean", cleanImagesCheckBox.isChecked());
 				
-				if(MADN3SController.camera1 != null && MADN3SController.camera2 != null){
+				if(MADN3SController.camera1 != null && MADN3SController.camera2 != null && MADN3SController.talker != null){
 					try{
 						JSONObject json = new JSONObject();
 				        json.put("action", "config");
@@ -228,6 +228,14 @@ public class SettingsFragment extends BaseFragment {
 						} else {
 							Log.d(tag, "camera2WeakReference null");
 						}
+						
+						JSONObject nxtJson = new JSONObject();
+            	        nxtJson.put("command", "scanner");
+            	        nxtJson.put("action", "config");
+            	        nxtJson.put("points", MADN3SController.sharedPrefsGetInt("points"));
+            	        nxtJson.put("circumference_radius", MADN3SController.sharedPrefsGetFloat("radius"));
+            	        nxtJson.put("speed", MADN3SController.sharedPrefsGetInt("speed"));
+            	        MADN3SController.talker.write(nxtJson.toString().getBytes());
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
