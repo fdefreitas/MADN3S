@@ -1,5 +1,6 @@
 package org.madn3s.controller.fragments;
 
+import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.R;
 import org.madn3s.controller.components.NXTTalker;
@@ -8,6 +9,7 @@ import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -87,34 +89,57 @@ public class ControlsFragment extends BaseFragment {
     }
 
     private class DirectionButtonOnTouchListener implements View.OnTouchListener {
-
+    	private boolean wait;
         private double lmod;
         private double rmod;
 
         public DirectionButtonOnTouchListener(double l, double r) {
             lmod = l;
             rmod = r;
+            wait = false;
         }
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            //Log.i("NXT", "onTouch event: " + Integer.toString(event.getAction()));
+            Log.i("NXT", "onTouch event: " + Integer.toString(event.getAction()));
             int action = event.getAction();
             //if ((action == MotionEvent.ACTION_DOWN) || (action == MotionEvent.ACTION_MOVE)) {
             if (action == MotionEvent.ACTION_DOWN) {
-                byte power = (byte) mPower;
-                if (mReverse) {
-                    power *= -1;
-                }
-                byte l = (byte) (power*lmod);
-                byte r = (byte) (power*rmod);
-                if (!mReverseLR) {
-                	MADN3SController.talker.motors(l, r, mRegulateSpeed, mSynchronizeMotors);
-                } else {
-                	MADN3SController.talker.motors(r, l, mRegulateSpeed, mSynchronizeMotors);
-                }
+//                byte power = (byte) mPower;
+//                if (mReverse) {
+//                    power *= -1;
+//                }
+//                byte l = (byte) (power*lmod);
+//                byte r = (byte) (power*rmod);
+//                if (!mReverseLR) {
+//                	MADN3SController.talker.motors(l, r, mRegulateSpeed, mSynchronizeMotors);
+//                } else {
+//                	MADN3SController.talker.motors(r, l, mRegulateSpeed, mSynchronizeMotors);
+//                }
+            	if(!wait){
+	            	try {
+	            		JSONObject nxtJson = new JSONObject();
+	         	        nxtJson.put("command", "rc");
+	         	        nxtJson.put("action", "forward");
+	         	        MADN3SController.talker.write(nxtJson.toString().getBytes());
+	         	        wait = true;
+	         	       Log.e(TAG, "foprward");
+	         	    } catch (Exception e) {
+							Log.e(TAG, "error enviando configs al nxt");
+					}
+            	}
             } else if ((action == MotionEvent.ACTION_UP) || (action == MotionEvent.ACTION_CANCEL)) {
-            	MADN3SController.talker.motors((byte) 0, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+//            	MADN3SController.talker.motors((byte) 0, (byte) 0, mRegulateSpeed, mSynchronizeMotors);
+            	try {
+            		JSONObject nxtJson = new JSONObject();
+         	        nxtJson.put("command", "rc");
+         	        nxtJson.put("action", "stop");
+         	        MADN3SController.talker.write(nxtJson.toString().getBytes());
+         	        wait = false;
+         	        Log.e(TAG, "stop");
+         	    } catch (Exception e) {
+						Log.e(TAG, "error enviando configs al nxt");
+				}
             }
             return true;
         }

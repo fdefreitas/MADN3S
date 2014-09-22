@@ -36,7 +36,7 @@ public class Main {
 				message = bTunnel.readMessage();
 				if(message != null && !message.isEmpty()){
 					try{
-						Utils.printToScreen(message, 0,1, false);
+						Utils.printToScreen(message, 0,1, true);
 						JSONObject msg = new JSONObject(message);
 						String command = msg.getString("command");
 						if(command.equalsIgnoreCase("scanner")){
