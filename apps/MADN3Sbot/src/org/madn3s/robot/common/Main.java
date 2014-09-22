@@ -26,6 +26,7 @@ public class Main {
 		double circumferenceRadius = 45;
 		
 		Scanner scanner = new Scanner(omniPilot, points, travelSpeed, RADIUS, WHEEL_DIAMETER, circumferenceRadius);
+		BluetoothControlled controlled = new BluetoothControlled(omniPilot);
 		
 		boolean abort = false;
 		while(!abort){
@@ -41,7 +42,7 @@ public class Main {
 						if(command.equalsIgnoreCase("scanner")){
 							scanner.processMsg(msg);
 						} if(command.equalsIgnoreCase("rc")){
-							
+							controlled.processMsg(msg);
 						} if(command.equalsIgnoreCase("abort")){
 							abort = true;
 						}
