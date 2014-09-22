@@ -12,7 +12,6 @@ import org.madn3s.controller.io.HiddenMidgetWriter;
 import org.madn3s.controller.io.UniversalComms;
 
 import android.os.Bundle;
-import android.preference.PreferenceFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +27,8 @@ public class SettingsFragment extends BaseFragment {
 	private static final String tag = "SettingsFragment";
 	public static UniversalComms bridge;
 	private EditText pointsEditText;
+	private EditText speedEditText;
+	private EditText radiusEditText;
 	
 	private CheckBox cleanImagesCheckBox;
 	
@@ -60,10 +61,14 @@ public class SettingsFragment extends BaseFragment {
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		pointsEditText = (EditText) getView().findViewById(R.id.points_text_edit);
+		pointsEditText = (EditText) getView().findViewById(R.id.points_editText);
 		pointsEditText.setText(""+MADN3SController.sharedPrefsGetInt("points"));
 		
-		cleanImagesCheckBox = (CheckBox) getView().findViewById(R.id.clean_check_box);
+		speedEditText = (EditText) getView().findViewById(R.id.speed_editText);
+		
+		radiusEditText = (EditText) getView().findViewById(R.id.radius_editText);
+		
+		cleanImagesCheckBox = (CheckBox) getView().findViewById(R.id.clean_checkBox);
 		cleanImagesCheckBox.setChecked(MADN3SController.sharedPrefsGetBoolean("clean"));
 		
 		p1xEditText = (EditText) getView().findViewById(R.id.p1_x_text_edit);
@@ -105,6 +110,14 @@ public class SettingsFragment extends BaseFragment {
 			public void onClick(View v) {
 				if(!pointsEditText.getText().toString().isEmpty()){
 					MADN3SController.sharedPrefsPutInt("points", Integer.parseInt(pointsEditText.getText().toString()));
+				}
+				
+				if(!speedEditText.getText().toString().isEmpty()){
+					MADN3SController.sharedPrefsPutInt("speed", Integer.parseInt(speedEditText.getText().toString()));
+				}
+				
+				if(!radiusEditText.getText().toString().isEmpty()){
+					MADN3SController.sharedPrefsPutInt("radius", Integer.parseInt(radiusEditText.getText().toString()));
 				}
 				
 				if(!p1xEditText.getText().toString().isEmpty()){

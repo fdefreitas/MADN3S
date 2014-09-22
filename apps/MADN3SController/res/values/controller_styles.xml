@@ -47,4 +47,14 @@
         <item name="android:textColor">@color/route_66</item>
     </style>
     
+    <style name="Controller.Scanner.Form" parent="Controller">
+    </style>
+    
+    <style name="Controller.Scanner.Form.Element" parent="Controller.Form">
+        <item name="android:layout_marginTop">@dimen/element_vertical_margin</item>
+        <item name="android:layout_marginRight">@dimen/element_horizontal_margin</item>
+        <item name="android:layout_marginBottom">@dimen/element_vertical_margin</item>
+        <item name="android:layout_marginLeft">@dimen/element_horizontal_margin</item>
+    </style>
+    
 </resources>

@@ -3,61 +3,114 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/settings_points_linearLayout"
-        style="@style/Controller.Scanner.Step" >
+        style="@style/Controller.Scanner.Step"
+        android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/points_text_view"
+            android:id="@+id/points_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="17dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="@dimen/element_vertical_margin"
+            android:layout_marginLeft="@dimen/element_horizontal_margin"
+            android:layout_marginRight="@dimen/element_horizontal_margin"
+            android:layout_marginTop="@dimen/element_vertical_margin"
             android:text="@string/settings_points"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <EditText
-            android:id="@+id/points_text_edit"
-            android:layout_width="196dp"
+            android:id="@+id/points_editText"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
-            android:layout_marginRight="38dp"
+            android:layout_alignBaseline="@+id/points_textView"
+            android:layout_marginBottom="@dimen/element_vertical_margin"
+            android:layout_marginLeft="@dimen/element_horizontal_margin"
+            android:layout_marginRight="@dimen/element_horizontal_margin"
+            android:layout_marginTop="@dimen/element_vertical_margin"
+            android:layout_toRightOf="@id/points_textView"
             android:ems="10"
             android:inputType="number" >
 
             <requestFocus />
         </EditText>
 
-        <CheckBox
-            android:id="@+id/clean_check_box"
+        <TextView
+            android:id="@+id/radius_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/element_vertical_margin"
+            android:layout_marginLeft="@dimen/element_horizontal_margin"
+            android:layout_marginRight="@dimen/element_horizontal_margin"
+            android:layout_marginTop="@dimen/element_vertical_margin"
+            android:layout_toRightOf="@id/points_editText"
+            android:text="@string/settings_radius"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/radius_editText"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/element_vertical_margin"
+            android:layout_marginLeft="@dimen/element_horizontal_margin"
+            android:layout_marginRight="@dimen/element_horizontal_margin"
+            android:layout_marginTop="@dimen/element_vertical_margin"
+            android:layout_toRightOf="@id/radius_textView"
+            android:ems="10"
+            android:inputType="number" />
+
+        <TextView
+            android:id="@+id/speed_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/points_textView"
+            android:layout_marginBottom="@dimen/element_vertical_margin"
+            android:layout_marginLeft="@dimen/element_horizontal_margin"
+            android:layout_marginRight="@dimen/element_horizontal_margin"
+            android:layout_marginTop="@dimen/element_vertical_margin"
+            android:text="@string/settings_speed"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <EditText
+            android:id="@+id/speed_editText"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/speed_textView"
+            android:layout_below="@+id/points_textView"
+            android:layout_marginBottom="@dimen/element_vertical_margin"
+            android:layout_marginLeft="@dimen/element_horizontal_margin"
+            android:layout_marginRight="@dimen/element_horizontal_margin"
+            android:layout_marginTop="@dimen/element_vertical_margin"
+            android:layout_toRightOf="@id/speed_textView"
+            android:ems="10"
+            android:inputType="number" >
+        </EditText>
+
+        <CheckBox
+            android:id="@+id/clean_checkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/radius_textView"
+            android:layout_marginBottom="@dimen/element_vertical_margin"
+            android:layout_marginLeft="@dimen/element_horizontal_margin"
+            android:layout_marginRight="@dimen/element_horizontal_margin"
+            android:layout_marginTop="@dimen/element_vertical_margin"
+            android:layout_toRightOf="@id/speed_editText"
             android:text="@string/settings_clean_images" />
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/settings_save_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="29dp"
-        android:text="@string/settings_save" />
+    </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/grabcut_relative_layout"
         style="@style/Controller.Scanner.Step"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/settings_points_linearLayout"
-        android:layout_marginTop="15dp" >
+        android:layout_below="@+id/settings_points_linearLayout" >
 
         <TextView
             android:id="@+id/grabcut_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
+            style="@style/Controller.Scanner.Form.Element"
             android:text="@string/settings_grabcut"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -66,16 +119,26 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/grabcut_text_view"
+            style="@style/Controller.Scanner.Form.Element"
             android:text="@string/settings_grabcut_rectangle_p1_x"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <EditText
+            android:id="@+id/p1_x_text_edit"
+            style="@style/Controller.Scanner.Form.Element"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@id/p1_x_text_view"
+            android:layout_toRightOf="@id/p1_x_text_view"
+            android:ems="10"
+            android:inputType="number" />
 
         <TextView
             android:id="@+id/p1_y_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/p1_x_text_edit"
-            android:layout_alignBottom="@+id/p1_x_text_edit"
-            android:layout_marginLeft="15dp"
+            android:layout_alignBaseline="@+id/p1_x_text_view"
+            style="@style/Controller.Scanner.Form.Element"
             android:layout_toRightOf="@+id/p1_x_text_edit"
             android:text="@string/settings_grabcut_rectangle_p1_y"
             android:textAppearance="?android:attr/textAppearanceMedium" />
@@ -85,17 +148,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/p1_y_text_view"
-            android:layout_alignBottom="@+id/p1_y_text_view"
             android:layout_toRightOf="@+id/p1_y_text_view"
-            android:ems="10"
-            android:inputType="number" />
-
-        <EditText
-            android:id="@+id/p1_x_text_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/p1_x_text_view"
-            android:layout_toRightOf="@+id/p1_x_text_view"
+            style="@style/Controller.Scanner.Form.Element"
             android:ems="10"
             android:inputType="number" />
 
@@ -103,9 +157,8 @@
             android:id="@+id/p2_x_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/p1_x_text_edit"
-            android:layout_marginTop="34dp"
+            android:layout_below="@+id/p1_x_text_view"
+            style="@style/Controller.Scanner.Form.Element"
             android:text="@string/settings_grabcut_rectangle_p2_x"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -113,8 +166,9 @@
             android:id="@+id/p2_x_text_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/p2_x_text_view"
+            android:layout_alignBaseline="@+id/p2_x_text_view"
             android:layout_toRightOf="@+id/p2_x_text_view"
+            style="@style/Controller.Scanner.Form.Element"
             android:ems="10"
             android:inputType="number" />
 
@@ -123,8 +177,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/p2_x_text_view"
-            android:layout_alignBottom="@+id/p2_x_text_view"
-            android:layout_alignLeft="@+id/p1_y_text_view"
+            android:layout_toRightOf="@+id/p2_x_text_edit"
+            style="@style/Controller.Scanner.Form.Element"
             android:text="@string/settings_grabcut_rectangle_p2_y"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -132,8 +186,9 @@
             android:id="@+id/p2_y_text_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/p2_y_text_view"
+            android:layout_alignBaseline="@+id/p2_y_text_view"
             android:layout_toRightOf="@+id/p2_y_text_view"
+            style="@style/Controller.Scanner.Form.Element"
             android:ems="10"
             android:inputType="number" />
 
@@ -141,9 +196,8 @@
             android:id="@+id/iterations_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/p2_x_text_view"
             android:layout_below="@+id/p2_x_text_view"
-            android:layout_marginTop="28dp"
+            style="@style/Controller.Scanner.Form.Element"
             android:text="@string/settings_iterations"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -151,22 +205,17 @@
             android:id="@+id/iterations_text_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/iterations_text_view"
-            android:layout_alignBottom="@+id/iterations_text_view"
-            android:layout_alignRight="@+id/p2_y_text_edit"
-            android:layout_marginLeft="18dp"
-            android:layout_toRightOf="@+id/iterations_text_view"
+            android:layout_alignBaseline="@id/iterations_text_view"
+            android:layout_toRightOf="@id/iterations_text_view"
+            style="@style/Controller.Scanner.Form.Element"
             android:ems="10"
             android:inputType="number" />
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayout1"
+        android:id="@+id/goodFeatures_relativeLayout"
         style="@style/Controller.Scanner.Step"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
         android:layout_below="@+id/grabcut_relative_layout" >
 
         <TextView
@@ -239,14 +288,11 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/edgeDetection_relativeLayout"
         style="@style/Controller.Scanner.Step"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/settings_save_button"
-        android:layout_alignLeft="@+id/relativeLayout1"
-        android:layout_alignRight="@+id/relativeLayout1"
-        android:layout_below="@+id/relativeLayout1"
-        android:layout_marginTop="18dp" >
+        android:layout_below="@+id/goodFeatures_relativeLayout" >
 
         <TextView
             android:id="@+id/edge_detection_text_view"
@@ -271,8 +317,8 @@
             android:layout_height="wrap_content"
             android:layout_alignTop="@+id/algorithm_text_view"
             android:layout_marginLeft="52dp"
-            android:layout_toRightOf="@+id/algorithm_text_view" 
-            android:orientation="horizontal">
+            android:layout_toRightOf="@+id/algorithm_text_view"
+            android:orientation="horizontal" >
 
             <RadioButton
                 android:id="@+id/canny_radio"
@@ -280,17 +326,14 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:text="@string/settings_edge_detection_canny" />
-            
+
             <RadioButton
                 android:id="@+id/sobel_radio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:text="@string/settings_edge_detection_sobel" />
-
-       </RadioGroup>
-
-        
+        </RadioGroup>
 
         <TextView
             android:id="@+id/lower_threshold_text_view"
@@ -395,6 +438,15 @@
             android:ems="10"
             android:inputType="number" />
 
-    </RelativeLayout>
+        </RelativeLayout>
+        
+        <Button
+            android:id="@+id/settings_save_button"
+            style="@style/Controller.Button.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/edgeDetection_relativeLayout"
+            android:layout_centerHorizontal="true"
+            android:text="@string/settings_save" />
 
 </RelativeLayout>
