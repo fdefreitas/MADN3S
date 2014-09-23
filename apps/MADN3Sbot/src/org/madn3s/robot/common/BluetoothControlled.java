@@ -1,5 +1,6 @@
 package org.madn3s.robot.common;
 
+import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.navigation.OmniPilot;
 
 import org.json.JSONObject;
@@ -9,10 +10,12 @@ public class BluetoothControlled {
 	
 	private OmniPilot omniPilot;
 	private BluetoothTunnel bTunnel;
+	private UltrasonicSensor uSensor;
 	
-	public BluetoothControlled(OmniPilot omniPilot) {
+	public BluetoothControlled(OmniPilot omniPilot, UltrasonicSensor uSensor) {
 		this.omniPilot = omniPilot;
 		this.bTunnel = BluetoothTunnel.getInstance();
+		this.uSensor = uSensor;
 	}
 	
 	public boolean processMsg(JSONObject message){

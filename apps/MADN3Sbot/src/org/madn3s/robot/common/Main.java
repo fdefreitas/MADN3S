@@ -1,6 +1,8 @@
 package org.madn3s.robot.common;
 
 import lejos.nxt.Motor;
+import lejos.nxt.SensorPort;
+import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.navigation.OmniPilot;
 
 import org.json.JSONObject;
@@ -25,8 +27,10 @@ public class Main {
 		omniPilot.setTravelSpeed(travelSpeed);
 		double circumferenceRadius = 45;
 		
-		Scanner scanner = new Scanner(omniPilot, points, travelSpeed, RADIUS, WHEEL_DIAMETER, circumferenceRadius);
-		BluetoothControlled controlled = new BluetoothControlled(omniPilot);
+		UltrasonicSensor uSensor = new UltrasonicSensor(SensorPort.S3);
+		
+		Scanner scanner = new Scanner(omniPilot, points, travelSpeed, RADIUS, WHEEL_DIAMETER, circumferenceRadius, uSensor);
+		BluetoothControlled controlled = new BluetoothControlled(omniPilot, uSensor);
 		
 		boolean abort = false;
 		while(!abort){

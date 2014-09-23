@@ -3,6 +3,7 @@ package org.madn3s.robot.common;
 import org.json.JSONObject;
 import org.madn3s.io.BluetoothTunnel;
 
+import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.navigation.OmniPilot;
 
 public class Scanner {
@@ -19,8 +20,9 @@ public class Scanner {
 	private boolean move;
 	private boolean finish = false;
 	private BluetoothTunnel bTunnel;
+	private UltrasonicSensor uSensor;
 	
-	public Scanner(OmniPilot omniPilot, int points, int travelSpeed, float radius, float wheelDiameter, double circumferenceRadius) {
+	public Scanner(OmniPilot omniPilot, int points, int travelSpeed, float radius, float wheelDiameter, double circumferenceRadius, UltrasonicSensor uSensor) {
 		this.omniPilot = omniPilot;
 		this.points = points;
 		this.travelSpeed = travelSpeed;
@@ -33,6 +35,7 @@ public class Scanner {
 		this.move = false;
 		this.finish = false;
 		this.bTunnel = BluetoothTunnel.getInstance();
+		this.uSensor = uSensor;
 	}
 	
 	public OmniPilot getOmniPilot() {
