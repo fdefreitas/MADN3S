@@ -47,7 +47,7 @@
         <item name="android:textColor">@color/route_66</item>
     </style>
     
-    <style name="Controller.Scanner.Form" parent="Controller">
+    <style name="Controller.Form" parent="Controller">
     </style>
     
     <style name="Controller.Scanner.Form.Element" parent="Controller.Form">

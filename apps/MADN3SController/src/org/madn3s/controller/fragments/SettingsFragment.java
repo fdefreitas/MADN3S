@@ -65,8 +65,10 @@ public class SettingsFragment extends BaseFragment {
 		pointsEditText.setText(""+MADN3SController.sharedPrefsGetInt("points"));
 		
 		speedEditText = (EditText) getView().findViewById(R.id.speed_editText);
+		speedEditText.setText(""+MADN3SController.sharedPrefsGetFloat("speed"));
 		
 		radiusEditText = (EditText) getView().findViewById(R.id.radius_editText);
+		radiusEditText.setText(""+MADN3SController.sharedPrefsGetFloat("radius"));
 		
 		cleanImagesCheckBox = (CheckBox) getView().findViewById(R.id.clean_checkBox);
 		cleanImagesCheckBox.setChecked(MADN3SController.sharedPrefsGetBoolean("clean"));
@@ -113,11 +115,11 @@ public class SettingsFragment extends BaseFragment {
 				}
 				
 				if(!speedEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("speed", Integer.parseInt(speedEditText.getText().toString()));
+					MADN3SController.sharedPrefsPutFloat("speed", Float.parseFloat(speedEditText.getText().toString()));
 				}
 				
 				if(!radiusEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("radius", Integer.parseInt(radiusEditText.getText().toString()));
+					MADN3SController.sharedPrefsPutFloat("radius", Float.parseFloat(radiusEditText.getText().toString()));
 				}
 				
 				if(!p1xEditText.getText().toString().isEmpty()){
