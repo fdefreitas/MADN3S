@@ -65,7 +65,7 @@ public class SettingsFragment extends BaseFragment {
 		pointsEditText.setText(""+MADN3SController.sharedPrefsGetInt("points"));
 		
 		speedEditText = (EditText) getView().findViewById(R.id.speed_editText);
-		speedEditText.setText(""+MADN3SController.sharedPrefsGetFloat("speed"));
+		speedEditText.setText(""+MADN3SController.sharedPrefsGetInt("speed"));
 		
 		radiusEditText = (EditText) getView().findViewById(R.id.radius_editText);
 		radiusEditText.setText(""+MADN3SController.sharedPrefsGetFloat("radius"));
