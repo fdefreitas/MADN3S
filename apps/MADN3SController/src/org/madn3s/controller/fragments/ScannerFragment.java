@@ -24,9 +24,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewDebug.IntToString;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 @SuppressWarnings("unused")
@@ -49,6 +51,8 @@ public class ScannerFragment extends BaseFragment {
 	private Button scanButton;
 	private Button generateModelButton;
 	private Button viewModelButton;
+	private TextView scanStepCurrentTextView;
+	private TextView scanStepTotalTextView;
 	
 	public ScannerFragment() {
 		mFragment = this;
@@ -118,6 +122,8 @@ public class ScannerFragment extends BaseFragment {
 		super.onViewCreated(view, savedInstanceState);
 		globalProgressBar = (ProgressBar) getView().findViewById(R.id.scanner_global_progressBar);
 		projectNameEditText = (EditText) getView().findViewById(R.id.scanner_project_name_editText);
+		scanStepTotalTextView = (TextView) getView().findViewById(R.id.scan_step_total_textView);
+		scanStepCurrentTextView = (TextView) getView().findViewById(R.id.scan_step_current_textView);
 		scanButton = (Button) getView().findViewById(R.id.scan_button);
 		scanButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -237,6 +243,24 @@ public class ScannerFragment extends BaseFragment {
 	        bridge.callback(json.toString());
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	private void setTotalScanSteps(int total){
+		if(globalProgressBar != null){
+			globalProgressBar.setMax(total);
+		}
+		if(scanStepTotalTextView != null){
+			scanStepTotalTextView.setText(Integer.toString(total));
+		}
+	}
+	
+	private void setCurrentScanStep(int current){
+		if(globalProgressBar != null){
+			globalProgressBar.setProgress(current);
+		}
+		if(scanStepCurrentTextView != null){
+			scanStepCurrentTextView.setText(Integer.toString(current));
 		}
 	}
 

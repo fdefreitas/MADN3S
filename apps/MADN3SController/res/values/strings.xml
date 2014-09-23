@@ -9,6 +9,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_example">Example action</string>
     <string name="action_settings">Settings</string>
+    <string name="example_lower">1</string>
+    <string name="example_total">6</string>
     
     <string name="description_arrow_front">Front Arrow</string>
     <string name="description_arrow_left">Left Arrow</string>
@@ -35,6 +37,7 @@
     <string name="nxt_action">Sending Signal to NXT</string>
     <string name="camera1_action">Sending Signal to Camera1</string>
     <string name="camera2_action">Sending Signal to Camera2</string>
+    <string name="scan_progress">Scan progress... </string>
     
     <string name="step1">Step 1</string>
     <string name="step2">Step 2</string>
@@ -55,6 +58,7 @@
     <string name="text_no_files">No files or directories</string>
     
     
+    <string name="general">General</string>
     <string name="settings_points">Points</string>
     <string name="settings_speed">Speed</string>
     <string name="settings_radius">Radius</string>
@@ -62,8 +66,10 @@
     <string name="settings_iterations">Iterations</string>
     <string name="settings_grabcut">Grab Cut</string>
     <string name="settings_grabcut_rectangle">Rectangle</string>
+    <string name="settings_grabcut_rectangle_p1_open">P1 (</string>
     <string name="settings_grabcut_rectangle_p1_x">P1 X</string>
     <string name="settings_grabcut_rectangle_p1_y">P1 Y</string>
+    <string name="settings_grabcut_rectangle_p2_open">P2 (</string>
     <string name="settings_grabcut_rectangle_p2_x">P2 X</string>
     <string name="settings_grabcut_rectangle_p2_y">P2 Y</string>
     <string name="settings_good_features">Good Features</string>
@@ -77,9 +83,16 @@
     <string name="settings_edge_detection_canny_upper_threshold">Upper Threshold</string>
     <string name="settings_edge_detection_sobel">Sobel</string>
     <string name="settings_edge_detection_sobel_d_depth">D Depth</string>
+    <string name="settings_edge_detection_sobel_d_opening">D (</string>
     <string name="settings_edge_detection_sobel_d_x">D X</string>
     <string name="settings_edge_detection_sobel_d_y">D Y</string>
     <string name="settings_clean_images">Clean Images</string>
     
+    <string name="x">X</string>
+    <string name="y">Y</string>
+    <string name="parenthesis_open">(</string>
+    <string name="parenthesis_close">)</string>
+    <string name="comma">,</string>
+    <string name="slash">/</string>
     
 </resources>

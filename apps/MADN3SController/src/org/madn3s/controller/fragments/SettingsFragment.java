@@ -73,37 +73,37 @@ public class SettingsFragment extends BaseFragment {
 		cleanImagesCheckBox = (CheckBox) getView().findViewById(R.id.clean_checkBox);
 		cleanImagesCheckBox.setChecked(MADN3SController.sharedPrefsGetBoolean("clean"));
 		
-		p1xEditText = (EditText) getView().findViewById(R.id.p1_x_text_edit);
-		p1yEditText = (EditText) getView().findViewById(R.id.p1_y_text_edit);
-		p2xEditText = (EditText) getView().findViewById(R.id.p2_x_text_edit);
-		p2yEditText = (EditText) getView().findViewById(R.id.p2_y_text_edit);
-		iterationsEditText = (EditText) getView().findViewById(R.id.iterations_text_edit);
+		p1xEditText = (EditText) getView().findViewById(R.id.p1_x_editText);
+		p1yEditText = (EditText) getView().findViewById(R.id.p1_y_editText);
+		p2xEditText = (EditText) getView().findViewById(R.id.p2_x_EditText);
+		p2yEditText = (EditText) getView().findViewById(R.id.p2_y_editText);
+		iterationsEditText = (EditText) getView().findViewById(R.id.iterations_editText);
 		p1xEditText.setText(""+MADN3SController.sharedPrefsGetInt("p1x"));
 		p1yEditText.setText(""+MADN3SController.sharedPrefsGetInt("p1y"));
 		p2xEditText.setText(""+MADN3SController.sharedPrefsGetInt("p2x"));
 		p2yEditText.setText(""+MADN3SController.sharedPrefsGetInt("p2y"));
 		iterationsEditText.setText(""+MADN3SController.sharedPrefsGetInt("iterations"));
 		
-		maxCornersEditText = (EditText) getView().findViewById(R.id.max_corner_text_edit);
-		qualityLevelEditText = (EditText) getView().findViewById(R.id.quality_level_text_edit);
-		minDistanceEditText = (EditText) getView().findViewById(R.id.min_distance_text_edit);
+		maxCornersEditText = (EditText) getView().findViewById(R.id.max_corners_editText);
+		qualityLevelEditText = (EditText) getView().findViewById(R.id.quality_level_editText);
+		minDistanceEditText = (EditText) getView().findViewById(R.id.min_distance_editText);
 		maxCornersEditText.setText(""+MADN3SController.sharedPrefsGetInt("maxCorners"));
 		qualityLevelEditText.setText(""+MADN3SController.sharedPrefsGetFloat("qualityLevel"));
 		minDistanceEditText.setText(""+MADN3SController.sharedPrefsGetInt("minDistance"));
 		
-		upperThresholdEditText = (EditText) getView().findViewById(R.id.upper_threshold_text_edit);
-		lowerThresholdEditText = (EditText) getView().findViewById(R.id.lower_threshold_edit_text);
+		upperThresholdEditText = (EditText) getView().findViewById(R.id.upper_threshold_editText);
+		lowerThresholdEditText = (EditText) getView().findViewById(R.id.lower_threshold_editText);
 		upperThresholdEditText.setText(""+MADN3SController.sharedPrefsGetFloat("upperThreshold"));
 		lowerThresholdEditText.setText(""+MADN3SController.sharedPrefsGetFloat("lowerThreshold"));
 		
-		dDepthEditText = (EditText) getView().findViewById(R.id.d_depth_text_edit);
-		dXEditText = (EditText) getView().findViewById(R.id.d_x_text_edit);
-		dYEditText = (EditText) getView().findViewById(R.id.d_y__text_edit);
+		dDepthEditText = (EditText) getView().findViewById(R.id.d_depth_editText);
+		dXEditText = (EditText) getView().findViewById(R.id.d_x_editText);
+		dYEditText = (EditText) getView().findViewById(R.id.d_y_editText);
 		dDepthEditText.setText(""+MADN3SController.sharedPrefsGetInt("dDepth"));
 		dXEditText.setText(""+MADN3SController.sharedPrefsGetInt("dX"));
 		dYEditText.setText(""+MADN3SController.sharedPrefsGetInt("dY"));
 		
-		algortihmRadioGroup = (RadioGroup) getView().findViewById(R.id.algorithm_radio_group);
+		algortihmRadioGroup = (RadioGroup) getView().findViewById(R.id.algorithm_radioGroup);
 		algortihmRadioGroup.check(MADN3SController.sharedPrefsGetInt("algorithmIndex"));
 		
 		saveButton = (Button) getView().findViewById(R.id.settings_save_button);
@@ -255,8 +255,7 @@ public class SettingsFragment extends BaseFragment {
 						e.printStackTrace();
 					}
 				} else {
-					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "No hay dispositivos a enviar la data. Data Guardada", Toast.LENGTH_LONG);
-					missingName.show();
+					Toast.makeText(getActivity(), "No hay dispositivos a enviar la data. Data Guardada", Toast.LENGTH_LONG).show();
 				}
 			}
 		});
