@@ -16,7 +16,7 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
-        android:name="@string/app_name" >
+        android:name="org.madn3s.controller.MADN3SController" >
         <activity
             android:name="org.madn3s.controller.MainActivity"
             android:label="@string/app_name" >

@@ -38,7 +38,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import org.madn3s.controller.fragments.ControlsFragment;
+import org.madn3s.controller.fragments.RemoteControlFragment;
 import org.madn3s.controller.io.UniversalComms;
 
 public class NXTTalker {
@@ -63,7 +63,7 @@ public class NXTTalker {
     private synchronized void setState(int state) {
         mState = state;
         if (mHandler != null) {
-            mHandler.obtainMessage(ControlsFragment.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
+            mHandler.obtainMessage(RemoteControlFragment.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
         } else {
             //XXX
         }
@@ -79,9 +79,9 @@ public class NXTTalker {
     
     private void toast(String text) {
         if (mHandler != null) {
-            Message msg = mHandler.obtainMessage(ControlsFragment.MESSAGE_TOAST);
+            Message msg = mHandler.obtainMessage(RemoteControlFragment.MESSAGE_TOAST);
             Bundle bundle = new Bundle();
-            bundle.putString(ControlsFragment.TOAST, text);
+            bundle.putString(RemoteControlFragment.TOAST, text);
             msg.setData(bundle);
             mHandler.sendMessage(msg);
         } else {

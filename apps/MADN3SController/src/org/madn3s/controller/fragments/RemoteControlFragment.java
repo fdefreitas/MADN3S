@@ -22,7 +22,7 @@ import android.widget.Toast;
  */
 
 // de aqui se debe eliminar la parte referente a levantar la conexion y se debe recibir el talker por parametro
-public class ControlsFragment extends BaseFragment {
+public class RemoteControlFragment extends BaseFragment {
     public static final int MESSAGE_STATE_CHANGE = 2;
     public static final int MESSAGE_TOAST = 1;
     public static final String TOAST = "toast";
@@ -39,7 +39,7 @@ public class ControlsFragment extends BaseFragment {
 
     private ImageView frontImageView, backImageView, rightImageView,leftImageView;
 
-    public ControlsFragment(){
+    public RemoteControlFragment(){
     	
         this.device = MADN3SController.nxt;
 
