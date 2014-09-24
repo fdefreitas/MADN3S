@@ -1,7 +1,7 @@
 package org.madn3s.controller.fragments;
 
-import static org.madn3s.controller.MADN3SController.camera1;
-import static org.madn3s.controller.MADN3SController.camera2;
+import static org.madn3s.controller.MADN3SController.rightCamera;
+import static org.madn3s.controller.MADN3SController.leftCamera;
 import static org.madn3s.controller.MADN3SController.isCameraDevice;
 import static org.madn3s.controller.MADN3SController.isToyDevice;
 import static org.madn3s.controller.MADN3SController.nxt;
@@ -227,10 +227,10 @@ public class DiscoveryFragment extends BaseFragment{
 			} else if(isToyDevice(deviceTemp) && isNxtSelected){
 				Toast.makeText(getActivity(), "Ya fue seleccionado un dispositivo NXT", Toast.LENGTH_LONG).show();
 			} else if(cams == 0){
-				camera1 = deviceTemp;
+				rightCamera = deviceTemp;
 				cams++;
 			} else if(cams == 1){
-				camera2 = deviceTemp;
+				leftCamera = deviceTemp;
 				cams++;
 			} else {
 				Toast.makeText(getActivity(), "Ya fueron seleccionadas 2 camaras", Toast.LENGTH_LONG).show();

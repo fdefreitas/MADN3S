@@ -1,7 +1,7 @@
 package org.madn3s.controller.io;
 
-import static org.madn3s.controller.MADN3SController.camera1;
-import static org.madn3s.controller.MADN3SController.camera1WeakReference;
+import static org.madn3s.controller.MADN3SController.rightCamera;
+import static org.madn3s.controller.MADN3SController.rightCameraWeakReference;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -81,12 +81,12 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
                 Log.d(tag, "BOND_BONDED - " + mSocket.getRemoteDevice().getName());
                 WeakReference<BluetoothSocket> mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
                 String side = "left";
-                if(MADN3SController.isCamera1(mSocket.getRemoteDevice().getAddress())){
+                if(MADN3SController.isRightCamera(mSocket.getRemoteDevice().getAddress())){
                 	side = "left";
-                	MADN3SController.camera1WeakReference = mSocketWeakReference;
-                } else if(MADN3SController.isCamera2(mSocket.getRemoteDevice().getAddress())){
+                	MADN3SController.rightCameraWeakReference = mSocketWeakReference;
+                } else if(MADN3SController.isLeftCamera(mSocket.getRemoteDevice().getAddress())){
                 	side = "right";
-                	MADN3SController.camera2WeakReference = mSocketWeakReference;
+                	MADN3SController.leftCameraWeakReference = mSocketWeakReference;
                 } else {
                 	Log.d(tag, "WHUT?!");
                 }

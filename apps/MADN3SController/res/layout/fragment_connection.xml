@@ -102,14 +102,14 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/camera1_name_connection_textView"
+                android:id="@+id/right_camera_name_connection_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/device_name"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
-                android:id="@+id/camera1_address_connection_textView"
+                android:id="@+id/right_camera_address_connection_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/container_margin"
@@ -118,7 +118,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/camera1_not_connected_imageView"
+            android:id="@+id/right_camera_not_connected_imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/indicator_not_connected"
@@ -126,12 +126,12 @@
             android:visibility="gone" />
 
         <ProgressBar
-            android:id="@+id/camera1_connecting_progressBar"
+            android:id="@+id/right_camera_connecting_progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <ImageView
-            android:id="@+id/camera1_connected_imageView"
+            android:id="@+id/right_camera_connected_imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/indicator_connected"
@@ -152,14 +152,14 @@
             android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/camera2_name_connection_textView"
+                android:id="@+id/left_camera_name_connection_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/device_name"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
 
             <TextView
-                android:id="@+id/camera2_address_connection_textView"
+                android:id="@+id/left_camera_address_connection_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/container_margin"
@@ -168,7 +168,7 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/camera2_not_connected_imageView"
+            android:id="@+id/left_camera_not_connected_imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/indicator_not_connected"
@@ -176,12 +176,12 @@
             android:visibility="gone" />
 
         <ProgressBar
-            android:id="@+id/camera2_connecting_progressBar"
+            android:id="@+id/left_camera_connecting_progressBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <ImageView
-            android:id="@+id/camera2_connected_imageView"
+            android:id="@+id/left_camera_connected_imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:adjustViewBounds="false"

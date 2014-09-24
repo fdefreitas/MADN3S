@@ -1,9 +1,9 @@
 package org.madn3s.controller.fragments;
 
-import static org.madn3s.controller.MADN3SController.camera1;
-import static org.madn3s.controller.MADN3SController.camera1WeakReference;
-import static org.madn3s.controller.MADN3SController.camera2;
-import static org.madn3s.controller.MADN3SController.camera2WeakReference;
+import static org.madn3s.controller.MADN3SController.rightCamera;
+import static org.madn3s.controller.MADN3SController.rightCameraWeakReference;
+import static org.madn3s.controller.MADN3SController.leftCamera;
+import static org.madn3s.controller.MADN3SController.leftCameraWeakReference;
 
 import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
@@ -183,7 +183,7 @@ public class SettingsFragment extends BaseFragment {
 				
 				MADN3SController.sharedPrefsPutBoolean("clean", cleanImagesCheckBox.isChecked());
 				
-				if(MADN3SController.camera1 != null && MADN3SController.camera2 != null && MADN3SController.talker != null){
+				if(MADN3SController.rightCamera != null && MADN3SController.leftCamera != null && MADN3SController.talker != null){
 					try{
 						JSONObject json = new JSONObject();
 				        json.put("action", "config");
@@ -225,24 +225,24 @@ public class SettingsFragment extends BaseFragment {
 //				        Log.d(tag, json.toString());
 //				        bridge.callback(json.toString());
 				        
-				        if(camera1WeakReference != null){
+				        if(rightCameraWeakReference != null){
 				        	json.put("side", "left");
-				        	json.put("camera_name", camera1.getName());
-							HiddenMidgetWriter sendCamera1 = new HiddenMidgetWriter(camera1WeakReference, json.toString());
+				        	json.put("camera_name", rightCamera.getName());
+							HiddenMidgetWriter sendCamera1 = new HiddenMidgetWriter(rightCameraWeakReference, json.toString());
 							sendCamera1.execute();
-					        Log.d(tag, "Enviando a Camara1: " + camera1.getName());
-					        MADN3SController.readCamera1.set(true);
+					        Log.d(tag, "Enviando a Camara1: " + rightCamera.getName());
+					        MADN3SController.readRightCamera.set(true);
 						} else {
 							Log.d(tag, "camera1WeakReference null");
 						}
 						
-						if(camera2WeakReference != null){
+						if(leftCameraWeakReference != null){
 							json.put("side", "right");
-							json.put("camera_name", camera2.getName());
-							HiddenMidgetWriter sendCamera2 = new HiddenMidgetWriter(camera2WeakReference, json.toString());
+							json.put("camera_name", leftCamera.getName());
+							HiddenMidgetWriter sendCamera2 = new HiddenMidgetWriter(leftCameraWeakReference, json.toString());
 							sendCamera2.execute();
-					        Log.d(tag, "Enviando a Camara2: " + camera2.getName());
-					        MADN3SController.readCamera2.set(true);
+					        Log.d(tag, "Enviando a Camara2: " + leftCamera.getName());
+					        MADN3SController.readLeftCamera.set(true);
 						} else {
 							Log.d(tag, "camera2WeakReference null");
 						}

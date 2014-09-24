@@ -1,9 +1,9 @@
 package org.madn3s.controller.fragments;
 
-import static org.madn3s.controller.MADN3SController.camera1;
-import static org.madn3s.controller.MADN3SController.camera1WeakReference;
-import static org.madn3s.controller.MADN3SController.camera2;
-import static org.madn3s.controller.MADN3SController.camera2WeakReference;
+import static org.madn3s.controller.MADN3SController.rightCamera;
+import static org.madn3s.controller.MADN3SController.rightCameraWeakReference;
+import static org.madn3s.controller.MADN3SController.leftCamera;
+import static org.madn3s.controller.MADN3SController.leftCameraWeakReference;
 
 import java.util.ArrayList;
 
@@ -57,24 +57,24 @@ public class ConnectionFragment extends BaseFragment {
     private TextView nxtAddressTextView;
     private StatusViewHolder nxtStatusViewHolder;
 
-    private TextView camera1NameTextView;
-    private TextView camera1AddressTextView;
-    private StatusViewHolder camera1StatusViewHolder;
+    private TextView rightCameraNameTextView;
+    private TextView rightCameraAddressTextView;
+    private StatusViewHolder rightCameraStatusViewHolder;
 
-    private TextView camera2NameTextView;
-    private TextView camera2AddressTextView;
-    private StatusViewHolder camera2StatusViewHolder;
+    private TextView leftCameraNameTextView;
+    private TextView leftCameraAddressTextView;
+    private StatusViewHolder leftCameraStatusViewHolder;
 
     private Button scannerButton;
     private Button remoteControlButton;
     private Button modelGalleryButton;
     
-    private boolean camera1Status;
-    private boolean camera2Status;
+    private boolean rightCameraStatus;
+    private boolean leftCameraStatus;
     private boolean nxtStatus;
     
     public ConnectionFragment(){
-    	camera1Status = camera2Status = nxtStatus = false;
+    	rightCameraStatus = leftCameraStatus = nxtStatus = false;
     }
 
     @Override
@@ -174,60 +174,60 @@ public class ConnectionFragment extends BaseFragment {
         
         
         
-        if(!camera1Status){
-        	HiddenMidgetConnector connectCamera1 = new HiddenMidgetConnector(camera1, camera1WeakReference, MADN3SController.readCamera1, "right");
+        if(!rightCameraStatus){
+        	HiddenMidgetConnector connectCamera1 = new HiddenMidgetConnector(rightCamera, rightCameraWeakReference, MADN3SController.readRightCamera, "right");
             connectCamera1.execute();
-            Log.d(TAG, "Iniciando conexion con Camara1: " + camera1.getName());
+            Log.d(TAG, "Iniciando conexion con Camara1: " + rightCamera.getName());
         }
         
-        if(!camera2Status){
-        	HiddenMidgetConnector connectCamera2 = new HiddenMidgetConnector(camera2, camera2WeakReference, MADN3SController.readCamera2, "left");
+        if(!leftCameraStatus){
+        	HiddenMidgetConnector connectCamera2 = new HiddenMidgetConnector(leftCamera, leftCameraWeakReference, MADN3SController.readLeftCamera, "left");
             connectCamera2.execute();
-            Log.d(TAG, "Iniciando conexion con Camara2: " + camera2.getName());
+            Log.d(TAG, "Iniciando conexion con Camara2: " + leftCamera.getName());
         }
         
          
         
-        camera1NameTextView = (TextView) view.findViewById(R.id.camera1_name_connection_textView);
-        camera1AddressTextView = (TextView) view.findViewById(R.id.camera1_address_connection_textView);
+        rightCameraNameTextView = (TextView) view.findViewById(R.id.right_camera_name_connection_textView);
+        rightCameraAddressTextView = (TextView) view.findViewById(R.id.right_camera_address_connection_textView);
         
-        if(camera1 != null){
-        	camera1NameTextView.setText(camera1.getName());
-        	camera1AddressTextView.setText(camera1.getAddress());
+        if(rightCamera != null){
+        	rightCameraNameTextView.setText(rightCamera.getName());
+        	rightCameraAddressTextView.setText(rightCamera.getAddress());
         }
         
         
-        camera1StatusViewHolder = new StatusViewHolder(
-        		view.findViewById(R.id.camera1_not_connected_imageView), 
-        		view.findViewById(R.id.camera1_connected_imageView), 
-        		view.findViewById(R.id.camera1_connecting_progressBar)
+        rightCameraStatusViewHolder = new StatusViewHolder(
+        		view.findViewById(R.id.right_camera_not_connected_imageView), 
+        		view.findViewById(R.id.right_camera_connected_imageView), 
+        		view.findViewById(R.id.right_camera_connecting_progressBar)
     		);
-	    if(camera1Status){
-        	camera1StatusViewHolder.success();
+	    if(rightCameraStatus){
+        	rightCameraStatusViewHolder.success();
         }
         
-        camera2NameTextView = (TextView) view.findViewById(R.id.camera2_name_connection_textView);
-        camera2AddressTextView = (TextView) view.findViewById(R.id.camera2_address_connection_textView);
+        leftCameraNameTextView = (TextView) view.findViewById(R.id.left_camera_name_connection_textView);
+        leftCameraAddressTextView = (TextView) view.findViewById(R.id.left_camera_address_connection_textView);
         
-        if(camera2 != null){
-	        camera2NameTextView.setText(camera2.getName());
-	        camera2AddressTextView.setText(camera2.getAddress());
+        if(leftCamera != null){
+	        leftCameraNameTextView.setText(leftCamera.getName());
+	        leftCameraAddressTextView.setText(leftCamera.getAddress());
         }
         
-        camera2StatusViewHolder = new StatusViewHolder(
-        		view.findViewById(R.id.camera2_not_connected_imageView), 
-        		view.findViewById(R.id.camera2_connected_imageView), 
-        		view.findViewById(R.id.camera2_connecting_progressBar)
+        leftCameraStatusViewHolder = new StatusViewHolder(
+        		view.findViewById(R.id.left_camera_not_connected_imageView), 
+        		view.findViewById(R.id.left_camera_connected_imageView), 
+        		view.findViewById(R.id.left_camera_connecting_progressBar)
     		);
-        if(camera2Status){
-        	camera2StatusViewHolder.success();
+        if(leftCameraStatus){
+        	leftCameraStatusViewHolder.success();
         }
 
         scannerButton = (Button) view.findViewById(R.id.scanner_button);
         scannerButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				if(camera1Status && camera2Status && nxtStatus){
+				if(rightCameraStatus && leftCameraStatus && nxtStatus){
 					listener.onObjectSelected(Mode.SCAN, mFragment);
 				} else {
 					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "Faltan dispositivos por conectar", Toast.LENGTH_LONG);
@@ -266,11 +266,11 @@ public class ConnectionFragment extends BaseFragment {
     protected void setMarkers(State state, Device device) {
     	StatusViewHolder statusHolder;
     	switch (device){
-	        case CAMERA1:
-	        	statusHolder = camera1StatusViewHolder;
+	        case RIGHT_CAMERA:
+	        	statusHolder = rightCameraStatusViewHolder;
 	        	break;
-	        case CAMERA2:
-	        	statusHolder = camera2StatusViewHolder;
+	        case LEFT_CAMERA:
+	        	statusHolder = leftCameraStatusViewHolder;
 	        	break;
 	        default:
 	        case NXT:
@@ -281,10 +281,10 @@ public class ConnectionFragment extends BaseFragment {
     	switch (state){
 	        case CONNECTED:
         		statusHolder.success();
-        		if(device == Device.CAMERA1){
-        			camera1Status = true;
-        		} else if(device == Device.CAMERA2){
-        			camera2Status = true;
+        		if(device == Device.RIGHT_CAMERA){
+        			rightCameraStatus = true;
+        		} else if(device == Device.LEFT_CAMERA){
+        			leftCameraStatus = true;
         		} else if(device == Device.NXT){
         			nxtStatus = true;
         		}

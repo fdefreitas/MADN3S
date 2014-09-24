@@ -91,10 +91,10 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 				state = org.madn3s.controller.MADN3SController.State.FAILED.getState();
 			}
 			
-			if(MADN3SController.isCamera1(mSocket.getRemoteDevice().getAddress())){
-	        	device = Device.CAMERA1.getValue();
-	        } else if(MADN3SController.isCamera2(mSocket.getRemoteDevice().getAddress())){
-	        	device = Device.CAMERA2.getValue();
+			if(MADN3SController.isRightCamera(mSocket.getRemoteDevice().getAddress())){
+	        	device = Device.RIGHT_CAMERA.getValue();
+	        } else if(MADN3SController.isLeftCamera(mSocket.getRemoteDevice().getAddress())){
+	        	device = Device.LEFT_CAMERA.getValue();
 	        } else {
 	        	device = Device.NXT.getValue();
 	        }

@@ -187,12 +187,12 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 	        json.put("action", "exit_app");
 	        json.put("side", "left");
 	        
-	        HiddenMidgetWriter sendCamera1 = new HiddenMidgetWriter(MADN3SController.camera1WeakReference, json.toString());
+	        HiddenMidgetWriter sendCamera1 = new HiddenMidgetWriter(MADN3SController.rightCameraWeakReference, json.toString());
 	        sendCamera1.execute();
 	        
 	        json.put("side", "right");
 	        
-	        HiddenMidgetWriter sendCamera2 = new HiddenMidgetWriter(MADN3SController.camera2WeakReference, json.toString());
+	        HiddenMidgetWriter sendCamera2 = new HiddenMidgetWriter(MADN3SController.leftCameraWeakReference, json.toString());
 	        sendCamera2.execute();
 		} catch (Exception e) {
 			e.printStackTrace();

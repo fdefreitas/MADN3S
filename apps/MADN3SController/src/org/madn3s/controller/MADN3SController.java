@@ -33,21 +33,20 @@ public class MADN3SController extends Application {
 	public static SharedPreferences sharedPreferences;
 	public static Editor sharedPreferencesEditor;
 	public static BluetoothDevice nxt;
-	public static BluetoothDevice camera1;
-	public static BluetoothDevice camera2;
+	public static BluetoothDevice rightCamera;
+	public static BluetoothDevice leftCamera;
 
 	private Handler mBluetoothHandler;
 	private Handler.Callback mBluetoothHandlerCallback = null;
 
-	public static WeakReference<BluetoothSocket> camera1WeakReference = null;
-	public static WeakReference<BluetoothSocket> camera2WeakReference = null;
+	public static WeakReference<BluetoothSocket> rightCameraWeakReference = null;
+	public static WeakReference<BluetoothSocket> leftCameraWeakReference = null;
 
 	public static AtomicBoolean isPictureTaken;
 	public static AtomicBoolean isRunning;
 
-	public static AtomicBoolean readCamera1;
-	public static AtomicBoolean readCamera2;
-	
+	public static AtomicBoolean readRightCamera;
+	public static AtomicBoolean readLeftCamera;
 	
 	public static NXTTalker talker;
 
@@ -73,7 +72,7 @@ public class MADN3SController extends Application {
 	}
 
 	public static enum Device {
-		NXT("NXT", 0), CAMERA1("CAMERA1", 1), CAMERA2("CAMERA2", 2);
+		NXT("NXT", 0), RIGHT_CAMERA("RIGHT_CAMERA", 1), LEFT_CAMERA("LEFT_CAMERA", 2);
 
 		private String strVal;
 		private int intVal;
@@ -97,10 +96,10 @@ public class MADN3SController extends Application {
 			case 0:
 				return NXT;
 			case 1:
-				return CAMERA1;
+				return RIGHT_CAMERA;
 			default:
 			case 2:
-				return CAMERA2;
+				return LEFT_CAMERA;
 			}
 		}
 	}
@@ -144,8 +143,8 @@ public class MADN3SController extends Application {
 		
 		MADN3SController.isPictureTaken = new AtomicBoolean(true);
         MADN3SController.isRunning = new AtomicBoolean(true);
-        MADN3SController.readCamera1 = new AtomicBoolean(false);
-        MADN3SController.readCamera2 = new AtomicBoolean(false);
+        MADN3SController.readRightCamera = new AtomicBoolean(false);
+        MADN3SController.readLeftCamera = new AtomicBoolean(false);
 		
 		mBluetoothHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {
@@ -252,18 +251,18 @@ public class MADN3SController extends Application {
 						.getBluetoothClass().getDeviceClass() == BluetoothClass.Device.Major.MISC);
 	}
 
-	public static boolean isCamera1(String macAddress) {
-		if (macAddress != null && camera1 != null
-				&& camera1.getAddress() != null) {
-			return macAddress.equalsIgnoreCase(camera1.getAddress());
+	public static boolean isRightCamera(String macAddress) {
+		if (macAddress != null && rightCamera != null
+				&& rightCamera.getAddress() != null) {
+			return macAddress.equalsIgnoreCase(rightCamera.getAddress());
 		}
 		return false;
 	}
 
-	public static boolean isCamera2(String macAddress) {
-		if (macAddress != null && camera2 != null
-				&& camera2.getAddress() != null) {
-			return macAddress.equalsIgnoreCase(camera2.getAddress());
+	public static boolean isLeftCamera(String macAddress) {
+		if (macAddress != null && leftCamera != null
+				&& leftCamera.getAddress() != null) {
+			return macAddress.equalsIgnoreCase(leftCamera.getAddress());
 		}
 		return false;
 	}

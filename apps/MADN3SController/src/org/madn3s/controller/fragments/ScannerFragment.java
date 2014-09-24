@@ -86,12 +86,12 @@ public class ScannerFragment extends BaseFragment {
 			case NXT:
 				deviceActionViewHolder = nxtActionViewHolder;
 				break;
-			case CAMERA1:
+			case RIGHT_CAMERA:
 				deviceActionViewHolder = camera1ActionViewHolder;		
 				break;
 			default:
 				Log.d(tag, "Device switch unhandled default case");
-			case CAMERA2:
+			case LEFT_CAMERA:
 				deviceActionViewHolder = camera2ActionViewHolder;
 				break;
 		}
