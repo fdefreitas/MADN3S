@@ -1,9 +1,9 @@
 package org.madn3s.controller.fragments;
 
-import static org.madn3s.controller.MADN3SController.rightCamera;
-import static org.madn3s.controller.MADN3SController.rightCameraWeakReference;
 import static org.madn3s.controller.MADN3SController.leftCamera;
 import static org.madn3s.controller.MADN3SController.leftCameraWeakReference;
+import static org.madn3s.controller.MADN3SController.rightCamera;
+import static org.madn3s.controller.MADN3SController.rightCameraWeakReference;
 
 import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
@@ -23,6 +23,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 public class SettingsFragment extends BaseFragment {
@@ -52,6 +54,9 @@ public class SettingsFragment extends BaseFragment {
 	private EditText dYEditText;
 	
 	private RadioGroup algortihmRadioGroup;
+	
+	private RelativeLayout cannyParamsRelativeLayout;
+	private RelativeLayout sobelParamsRelativeLayout;
 	
 	private Button saveButton;
 	
@@ -94,11 +99,23 @@ public class SettingsFragment extends BaseFragment {
 		qualityLevelEditText.setText(""+MADN3SController.sharedPrefsGetFloat("qualityLevel"));
 		minDistanceEditText.setText(""+MADN3SController.sharedPrefsGetInt("minDistance"));
 		
+		algortihmRadioGroup = (RadioGroup) getView().findViewById(R.id.algorithm_radioGroup);
+		algortihmRadioGroup.check(MADN3SController.sharedPrefsGetInt("algorithmIndex"));
+		algortihmRadioGroup.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				toggleEdgeDetectionParams(checkedId);
+			}
+		});
+		
+		cannyParamsRelativeLayout = (RelativeLayout) getView().findViewById(R.id.canny_params);
 		upperThresholdEditText = (EditText) getView().findViewById(R.id.upper_threshold_editText);
 		lowerThresholdEditText = (EditText) getView().findViewById(R.id.lower_threshold_editText);
 		upperThresholdEditText.setText(""+MADN3SController.sharedPrefsGetFloat("upperThreshold"));
 		lowerThresholdEditText.setText(""+MADN3SController.sharedPrefsGetFloat("lowerThreshold"));
 		
+		sobelParamsRelativeLayout = (RelativeLayout) getView().findViewById(R.id.sobel_params);
 		dDepthEditText = (EditText) getView().findViewById(R.id.d_depth_editText);
 		dXEditText = (EditText) getView().findViewById(R.id.d_x_editText);
 		dYEditText = (EditText) getView().findViewById(R.id.d_y_editText);
@@ -106,13 +123,11 @@ public class SettingsFragment extends BaseFragment {
 		dXEditText.setText(""+MADN3SController.sharedPrefsGetInt("dX"));
 		dYEditText.setText(""+MADN3SController.sharedPrefsGetInt("dY"));
 		
-		algortihmRadioGroup = (RadioGroup) getView().findViewById(R.id.algorithm_radioGroup);
-		algortihmRadioGroup.check(MADN3SController.sharedPrefsGetInt("algorithmIndex"));
-		
 		saveButton = (Button) getView().findViewById(R.id.settings_save_button);
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				//TODO optimizar esto, extraer a funcion y crear funcion que maneje los put con validacion de isEmpty() 
 				if(!pointsEditText.getText().toString().isEmpty()){
 					MADN3SController.sharedPrefsPutInt("points", Integer.parseInt(pointsEditText.getText().toString()));
 				}
@@ -262,6 +277,8 @@ public class SettingsFragment extends BaseFragment {
 				}
 			}
 		});
+		
+		toggleEdgeDetectionParams(R.id.canny_radio);
 	}
 	
 	@Override
@@ -269,5 +286,24 @@ public class SettingsFragment extends BaseFragment {
 		menu.clear();
 	    inflater.inflate(R.menu.settings, menu);
 	    super.onCreateOptionsMenu(menu,inflater);
+	}
+	
+	protected void toggleEdgeDetectionParams(int checkedId){
+		if(sobelParamsRelativeLayout != null && cannyParamsRelativeLayout != null){
+			switch (checkedId) {
+			case R.id.sobel_radio:
+				Log.d(tag, "Sobel Checked");
+				sobelParamsRelativeLayout.setVisibility(View.VISIBLE);
+				cannyParamsRelativeLayout.setVisibility(View.GONE);
+				break;
+	
+			default:
+			case R.id.canny_radio:
+				Log.d(tag, "Canny Checked");
+				sobelParamsRelativeLayout.setVisibility(View.GONE);
+				cannyParamsRelativeLayout.setVisibility(View.VISIBLE);
+				break;
+			}
+		}
 	}
 }

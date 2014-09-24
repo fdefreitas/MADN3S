@@ -345,125 +345,133 @@
 	                android:layout_marginLeft="20dp"
 	                android:text="@string/settings_edge_detection_sobel" />
 	        </RadioGroup>
-	
-	        <TextView
-	            android:id="@+id/lower_threshold_textView"
-	            android:layout_width="wrap_content"
+
+	        <RelativeLayout
+	            android:id="@+id/canny_params"
+	            android:layout_width="match_parent"
 	            android:layout_height="wrap_content"
-	            android:layout_below="@+id/algorithm_textView"
-	            style="@style/Controller.Form.Element"
-	            android:text="@string/settings_edge_detection_canny_lower_threshold"
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	
-	        <EditText
-	            android:id="@+id/lower_threshold_editText"
-	            android:layout_width="@dimen/input_medium_width"
-	            android:layout_height="wrap_content"
-	            android:layout_alignBaseline="@+id/lower_threshold_textView"
-	            android:layout_toRightOf="@+id/lower_threshold_textView"
-	            style="@style/Controller.Form.Element"
-	            android:ems="10"
-	            android:inputType="numberDecimal" />
-	
-	        <TextView
-	            android:id="@+id/upper_threshold_textView"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_below="@+id/lower_threshold_textView"
-	            style="@style/Controller.Form.Element"
-	            android:text="@string/settings_edge_detection_canny_upper_threshold"
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	
-	        <EditText
-	            android:id="@+id/upper_threshold_editText"
-	            android:layout_width="@dimen/input_medium_width"
-	            android:layout_height="wrap_content"
-	            android:layout_alignBaseline="@+id/upper_threshold_textView"
-	            android:layout_toRightOf="@+id/upper_threshold_textView"
-	            style="@style/Controller.Form.Element"
-	            android:ems="10"
-	            android:inputType="numberDecimal" />
-	
-	        <TextView
-	            android:id="@+id/d_depth_textView"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_below="@+id/upper_threshold_textView"
-	            style="@style/Controller.Form.Element"
-	            android:text="@string/settings_edge_detection_sobel_d_depth"
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	
-	        <EditText
-	            android:id="@+id/d_depth_editText"
-	            android:layout_width="@dimen/input_medium_width"
-	            android:layout_height="wrap_content"
-	            android:layout_alignBaseline="@+id/d_depth_textView"
-	            android:layout_toRightOf="@+id/d_depth_textView"
-	            style="@style/Controller.Form.Element"
-	            android:ems="10"
-	            android:inputType="number" />
-	
-	        <TextView
-	            android:id="@+id/d_opening_textView"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_below="@+id/d_depth_textView"
-	            android:text="@string/settings_edge_detection_sobel_d_opening"
-	            style="@style/Controller.Form.Element"
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	
-	        <EditText
-	            android:id="@+id/d_x_editText"
-	            android:layout_width="@dimen/input_small_width"
-	            android:layout_height="wrap_content"
-	            android:layout_alignBaseline="@+id/d_opening_textView"
-	            android:layout_toRightOf="@+id/d_opening_textView"
-	            style="@style/Controller.Form.Element"
-	            android:hint="@string/x"
-	            android:ems="10"
-	            android:inputType="number" />
-	        
-	        <TextView
-	            android:id="@+id/d_separator_textView"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignBaseline="@+id/d_x_editText"
-	            android:layout_toRightOf="@+id/d_x_editText"
-	            style="@style/Controller.Form.Element"
-	            android:text="@string/comma"
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	
-	        <EditText
-	            android:id="@+id/d_y_editText"
-	            android:layout_width="@dimen/input_small_width"
-	            android:layout_height="wrap_content"
-	            android:layout_alignBaseline="@+id/d_opening_textView"
-	            android:layout_toRightOf="@+id/d_separator_textView"
-	            style="@style/Controller.Form.Element"
-	            android:hint="@string/y"
-	            android:ems="10"
-	            android:inputType="number" />
-	        
-	        <TextView
-	            android:id="@+id/d_closing_textView"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_alignBaseline="@+id/d_x_editText"
-	            android:layout_toRightOf="@+id/d_y_editText"
-	            style="@style/Controller.Form.Element"
-	            android:text="@string/parenthesis_close"
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	
+	            android:layout_below="@+id/algorithm_radioGroup" >
+	            
+	            <TextView
+              android:id="@+id/lower_threshold_textView"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentTop="true"
+              style="@style/Controller.Form.Element"
+              android:text="@string/settings_edge_detection_canny_lower_threshold"
+              android:textAppearance="?android:attr/textAppearanceMedium" />
+  
+		          <EditText
+		              android:id="@+id/lower_threshold_editText"
+		              android:layout_width="@dimen/input_medium_width"
+		              android:layout_height="wrap_content"
+		              android:layout_alignBaseline="@+id/lower_threshold_textView"
+		              android:layout_toRightOf="@+id/lower_threshold_textView"
+		              style="@style/Controller.Form.Element"
+		              android:ems="10"
+		              android:inputType="numberDecimal" />
+		  
+		          <TextView
+		              android:id="@+id/upper_threshold_textView"
+		              android:layout_width="wrap_content"
+		              android:layout_height="wrap_content"
+		              android:layout_below="@+id/lower_threshold_textView"
+		              style="@style/Controller.Form.Element"
+		              android:text="@string/settings_edge_detection_canny_upper_threshold"
+		              android:textAppearance="?android:attr/textAppearanceMedium" />
+		  
+		          <EditText
+		              android:id="@+id/upper_threshold_editText"
+		              android:layout_width="@dimen/input_medium_width"
+		              android:layout_height="wrap_content"
+		              android:layout_alignBaseline="@+id/upper_threshold_textView"
+		              android:layout_toRightOf="@+id/upper_threshold_textView"
+		              style="@style/Controller.Form.Element"
+		              android:ems="10"
+		              android:inputType="numberDecimal" />
+	            
 	        </RelativeLayout>
 	        
-	        <Button
-	            android:id="@+id/settings_save_button"
-	            style="@style/Controller.Button.Primary"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_below="@+id/edgeDetection_relativeLayout"
-	            android:layout_centerHorizontal="true"
-	            android:text="@string/settings_save" />
+	        <RelativeLayout
+              android:id="@+id/sobel_params"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_below="@+id/canny_params" >
+		          
+	            <TextView
+		              android:id="@+id/d_depth_textView"
+		              android:layout_width="wrap_content"
+		              android:layout_height="wrap_content"
+		              android:layout_alignParentTop="true"
+		              style="@style/Controller.Form.Element"
+		              android:text="@string/settings_edge_detection_sobel_d_depth"
+		              android:textAppearance="?android:attr/textAppearanceMedium" />
+  
+		          <EditText
+		              android:id="@+id/d_depth_editText"
+		              android:layout_width="@dimen/input_medium_width"
+		              android:layout_height="wrap_content"
+		              android:layout_alignBaseline="@+id/d_depth_textView"
+		              android:layout_toRightOf="@+id/d_depth_textView"
+		              style="@style/Controller.Form.Element"
+		              android:ems="10"
+		              android:inputType="number" />
+		  
+		          <TextView
+		              android:id="@+id/d_x_textView"
+		              android:layout_width="wrap_content"
+		              android:layout_height="wrap_content"
+		              android:layout_below="@+id/d_depth_textView"
+		              android:text="@string/settings_edge_detection_sobel_d_x"
+		              android:textStyle="italic"
+		              style="@style/Controller.Form.Element"
+		              android:textAppearance="?android:attr/textAppearanceMedium" />
+		  
+		          <EditText
+		              android:id="@+id/d_x_editText"
+		              android:layout_width="@dimen/input_small_width"
+		              android:layout_height="wrap_content"
+		              android:layout_alignBaseline="@+id/d_x_textView"
+		              android:layout_toRightOf="@+id/d_x_textView"
+		              style="@style/Controller.Form.Element"
+		              android:hint="@string/settings_edge_detection_sobel_d_x"
+		              android:ems="10"
+		              android:inputType="number" />
+		          
+		          <TextView
+		              android:id="@+id/d_y_textView"
+		              android:layout_width="wrap_content"
+		              android:layout_height="wrap_content"
+		              android:layout_alignBaseline="@+id/d_x_editText"
+		              android:layout_toRightOf="@+id/d_x_editText"
+		              style="@style/Controller.Form.Element"
+		              android:text="@string/settings_edge_detection_sobel_d_y"
+		              android:textStyle="italic"
+		              android:textAppearance="?android:attr/textAppearanceMedium" />
+		  
+		          <EditText
+		              android:id="@+id/d_y_editText"
+		              android:layout_width="@dimen/input_small_width"
+		              android:layout_height="wrap_content"
+		              android:layout_alignBaseline="@+id/d_x_textView"
+		              android:layout_toRightOf="@+id/d_y_textView"
+		              style="@style/Controller.Form.Element"
+		              android:hint="@string/settings_edge_detection_sobel_d_y"
+		              android:ems="10"
+		              android:inputType="number" />
+	            
+          </RelativeLayout>
+	
+       </RelativeLayout>
+       
+       <Button
+           android:id="@+id/settings_save_button"
+           style="@style/Controller.Button.Primary"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_below="@+id/edgeDetection_relativeLayout"
+           android:layout_centerHorizontal="true"
+           android:text="@string/settings_save" />
 	
 	</RelativeLayout>
 </ScrollView>
