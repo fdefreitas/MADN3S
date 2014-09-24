@@ -96,7 +96,6 @@ public class Midgeteer extends Thread {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 	        camera.startPreview();

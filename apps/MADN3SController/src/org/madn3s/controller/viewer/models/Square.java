@@ -71,13 +71,11 @@ public class Square extends Drawable{
 
 	@Override
 	public void setCenter() {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void setNormal() {
-		// TODO Auto-generated method stub
 		
 	}
 }

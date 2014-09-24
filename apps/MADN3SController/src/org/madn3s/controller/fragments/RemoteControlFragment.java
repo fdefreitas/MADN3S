@@ -21,7 +21,7 @@ import android.widget.Toast;
  * Created by inaki on 1/11/14.
  */
 
-// de aqui se debe eliminar la parte referente a levantar la conexion y se debe recibir el talker por parametro
+//TODO de aqui se debe eliminar la parte referente a levantar la conexion y se debe recibir el talker por parametro
 public class RemoteControlFragment extends BaseFragment {
     public static final int MESSAGE_STATE_CHANGE = 2;
     public static final int MESSAGE_TOAST = 1;

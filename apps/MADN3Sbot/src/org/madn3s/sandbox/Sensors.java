@@ -12,7 +12,6 @@ public class Sensors {
 	private TouchSensor touch;
 	private LightSensor light;
 	public Sensors() {
-		// TODO Auto-generated constructor stub
 		touch = new TouchSensor(SensorPort.S1);
 		light = new LightSensor(SensorPort.S4);
 	}

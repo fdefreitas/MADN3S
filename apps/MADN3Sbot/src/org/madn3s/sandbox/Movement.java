@@ -14,7 +14,6 @@ public class Movement {
 	private LightSensor light;
 	
 	public Movement() {
-		// TODO Auto-generated constructor stub
 		touch = new TouchSensor(SensorPort.S1);
 		light = new LightSensor(SensorPort.S4);
 		Utils.printToScreen("Calibrando...", 0,0, false);

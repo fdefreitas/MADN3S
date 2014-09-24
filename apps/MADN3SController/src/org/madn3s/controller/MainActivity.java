@@ -105,10 +105,9 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 
 	@Override
     public void onNavigationDrawerItemSelected(int position) {
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, new DiscoveryFragment())
-                .commit();
+        mFragmentManager.beginTransaction()
+            .replace(R.id.container, new DiscoveryFragment())
+            .commit();
     }
 
     public void onSectionAttached(int number) {
@@ -136,9 +135,6 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
             getMenuInflater().inflate(R.menu.main, menu);
             restoreActionBar();
             return true;
@@ -148,23 +144,26 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-        	launchSettingsFragment();
+        switch (id) {
+		case R.id.action_settings:
+			launchSettingsFragment();
             return true;
-        }
+
+		default:
+			break;
+		}
         return super.onOptionsItemSelected(item);
     }
     
     @Override
     public void onObjectSelected(Object selected, BaseFragment fragment) {
     	Mode mode = (Mode) selected;
+    	
     	mFragmentManager.beginTransaction()
     		.remove(fragment)
     		.commit();
+    	//TODO revisar casos de switch
         switch (mode){
         	case CONTROLLER:
         		launchRemoteControlFragment();
