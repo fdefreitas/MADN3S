@@ -105,6 +105,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 
 	@Override
     public void onNavigationDrawerItemSelected(int position) {
+		mFragmentManager = getFragmentManager();
         mFragmentManager.beginTransaction()
             .replace(R.id.container, new DiscoveryFragment())
             .commit();
