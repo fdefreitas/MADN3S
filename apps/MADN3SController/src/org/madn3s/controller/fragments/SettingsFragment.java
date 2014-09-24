@@ -126,156 +126,9 @@ public class SettingsFragment extends BaseFragment {
 		saveButton = (Button) getView().findViewById(R.id.settings_save_button);
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View v) {
-				//TODO optimizar esto, extraer a funcion y crear funcion que maneje los put con validacion de isEmpty() 
-				if(!pointsEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("points", Integer.parseInt(pointsEditText.getText().toString()));
-				}
-				
-				if(!speedEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("speed", Integer.parseInt(speedEditText.getText().toString()));
-				}
-				
-				if(!radiusEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutFloat("radius", Float.parseFloat(radiusEditText.getText().toString()));
-				}
-				
-				if(!p1xEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("p1x", Integer.parseInt(p1xEditText.getText().toString()));
-				}
-				
-				if(!p1yEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("p1y", Integer.parseInt(p1yEditText.getText().toString()));
-				}
-				
-				if(!p2xEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("p2x", Integer.parseInt(p2xEditText.getText().toString()));
-				}
-				
-				if(!p2yEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("p2y", Integer.parseInt(p2yEditText.getText().toString()));
-				}
-				
-				if(!iterationsEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("iterations", Integer.parseInt(iterationsEditText.getText().toString()));
-				}
-				
-				if(!maxCornersEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("maxCorners", Integer.parseInt(maxCornersEditText.getText().toString()));
-				}
-				
-				if(!qualityLevelEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutFloat("qualityLevel", Float.parseFloat(qualityLevelEditText.getText().toString()));
-				}
-				
-				if(!minDistanceEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("minDistance", Integer.parseInt(minDistanceEditText.getText().toString()));
-				}
-				
-				if(!upperThresholdEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutFloat("upperThreshold", Float.parseFloat(upperThresholdEditText.getText().toString()));
-				}
-				
-				if(!lowerThresholdEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutFloat("lowerThreshold", Float.parseFloat(lowerThresholdEditText.getText().toString()));
-				}
-				
-				if(!dDepthEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("dDepth", Integer.parseInt(dDepthEditText.getText().toString()));
-				}
-				
-				if(!dXEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("dX", Integer.parseInt(dXEditText.getText().toString()));
-				}
-				
-				if(!dYEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutInt("dY", Integer.parseInt(dYEditText.getText().toString()));
-				}
-				MADN3SController.sharedPrefsPutBoolean("loaded", true);
-				
-				RadioButton selectedAlgorithmRadioButton = (RadioButton) getView().findViewById(algortihmRadioGroup.getCheckedRadioButtonId());
-				MADN3SController.sharedPrefsPutString("algorithm", selectedAlgorithmRadioButton.getText().toString());
-				MADN3SController.sharedPrefsPutInt("algorithmIndex", algortihmRadioGroup.getCheckedRadioButtonId());
-				
-				MADN3SController.sharedPrefsPutBoolean("clean", cleanImagesCheckBox.isChecked());
-				
-				if(MADN3SController.rightCamera != null && MADN3SController.leftCamera != null && MADN3SController.talker != null){
-					try{
-						JSONObject json = new JSONObject();
-				        json.put("action", "config");
-				        json.put("clean", MADN3SController.sharedPrefsGetBoolean("clean"));
-				        
-				        JSONObject grabCut = new JSONObject();
-				        JSONObject rectangle = new JSONObject();
-				        JSONObject point1 = new JSONObject();
-				        point1.put("x", MADN3SController.sharedPrefsGetInt("p1x"));
-				        point1.put("y", MADN3SController.sharedPrefsGetInt("p1y"));
-				        rectangle.put("point_1", point1);
-				        JSONObject point2 = new JSONObject();
-				        point2.put("x", MADN3SController.sharedPrefsGetInt("p2x"));
-				        point2.put("y", MADN3SController.sharedPrefsGetInt("p2y"));
-				        rectangle.put("point_2", point2);
-				        grabCut.put("rectangle", rectangle);
-				        grabCut.put("iterations", MADN3SController.sharedPrefsGetInt("iterations"));
-				        json.put("grab_cut", grabCut);
-				        
-				        JSONObject goodFeatures = new JSONObject();
-				        goodFeatures.put("max_corners", MADN3SController.sharedPrefsGetInt("maxCorners"));
-				        goodFeatures.put("quality_level", MADN3SController.sharedPrefsGetFloat("qualityLevel"));
-				        goodFeatures.put("min_distance", MADN3SController.sharedPrefsGetInt("minDistance"));
-				        json.put("good_features", goodFeatures);
-				        
-				        JSONObject edgeDetection = new JSONObject();
-				        edgeDetection.put("algorithm", MADN3SController.sharedPrefsGetString("algorithm"));
-				        edgeDetection.put("algorithm_index", MADN3SController.sharedPrefsGetInt("algorithmIndex"));
-				        JSONObject canny = new JSONObject();
-				        canny.put("lower_threshold", MADN3SController.sharedPrefsGetFloat("lowerThreshold"));
-				        canny.put("upper_threshold", MADN3SController.sharedPrefsGetFloat("upperThreshold"));
-				        edgeDetection.put("canny_config", canny);
-				        JSONObject sobel = new JSONObject();
-				        sobel.put("d_depth", MADN3SController.sharedPrefsGetInt("dDepth"));
-				        sobel.put("d_x", MADN3SController.sharedPrefsGetInt("dX"));
-				        sobel.put("d_y", MADN3SController.sharedPrefsGetInt("dY"));
-				        edgeDetection.put("sobel_config", sobel);
-				        json.put("edge_detection", edgeDetection);
-//				        Log.d(tag, json.toString());
-//				        bridge.callback(json.toString());
-				        
-				        if(rightCameraWeakReference != null){
-				        	json.put("side", "left");
-				        	json.put("camera_name", rightCamera.getName());
-							HiddenMidgetWriter sendCamera1 = new HiddenMidgetWriter(rightCameraWeakReference, json.toString());
-							sendCamera1.execute();
-					        Log.d(tag, "Enviando a Camara1: " + rightCamera.getName());
-					        MADN3SController.readRightCamera.set(true);
-						} else {
-							Log.d(tag, "camera1WeakReference null");
-						}
-						
-						if(leftCameraWeakReference != null){
-							json.put("side", "right");
-							json.put("camera_name", leftCamera.getName());
-							HiddenMidgetWriter sendCamera2 = new HiddenMidgetWriter(leftCameraWeakReference, json.toString());
-							sendCamera2.execute();
-					        Log.d(tag, "Enviando a Camara2: " + leftCamera.getName());
-					        MADN3SController.readLeftCamera.set(true);
-						} else {
-							Log.d(tag, "camera2WeakReference null");
-						}
-						
-						JSONObject nxtJson = new JSONObject();
-            	        nxtJson.put("command", "scanner");
-            	        nxtJson.put("action", "config");
-            	        nxtJson.put("points", MADN3SController.sharedPrefsGetInt("points"));
-            	        nxtJson.put("circumference_radius", MADN3SController.sharedPrefsGetFloat("radius"));
-            	        nxtJson.put("speed", MADN3SController.sharedPrefsGetInt("speed"));
-            	        MADN3SController.talker.write(nxtJson.toString().getBytes());
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-				} else {
-					Toast.makeText(getActivity(), "No hay dispositivos a enviar la data. Data Guardada", Toast.LENGTH_LONG).show();
-				}
+			public void onClick(View v) { 
+				saveSettings();
+				sendSettings();
 			}
 		});
 		
@@ -305,6 +158,168 @@ public class SettingsFragment extends BaseFragment {
 				cannyParamsRelativeLayout.setVisibility(View.VISIBLE);
 				break;
 			}
+		}
+	}
+
+	/**
+	 * 
+	 */
+	private void saveSettings() {
+		if(!pointsEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutInt("points", Integer.parseInt(pointsEditText.getText().toString()));
+		}
+		
+		if(!speedEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutInt("speed", Integer.parseInt(speedEditText.getText().toString()));
+		}
+		
+		if(!radiusEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutFloat("radius", Float.parseFloat(radiusEditText.getText().toString()));
+		}
+		
+		if(!p1xEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutInt("p1x", Integer.parseInt(p1xEditText.getText().toString()));
+		}
+		
+		if(!p1yEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutInt("p1y", Integer.parseInt(p1yEditText.getText().toString()));
+		}
+		
+		if(!p2xEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutInt("p2x", Integer.parseInt(p2xEditText.getText().toString()));
+		}
+		
+		if(!p2yEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutInt("p2y", Integer.parseInt(p2yEditText.getText().toString()));
+		}
+		
+		if(!iterationsEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutInt("iterations", Integer.parseInt(iterationsEditText.getText().toString()));
+		}
+		
+		if(!maxCornersEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutInt("maxCorners", Integer.parseInt(maxCornersEditText.getText().toString()));
+		}
+		
+		if(!qualityLevelEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutFloat("qualityLevel", Float.parseFloat(qualityLevelEditText.getText().toString()));
+		}
+		
+		if(!minDistanceEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutInt("minDistance", Integer.parseInt(minDistanceEditText.getText().toString()));
+		}
+		
+		if(!upperThresholdEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutFloat("upperThreshold", Float.parseFloat(upperThresholdEditText.getText().toString()));
+		}
+		
+		if(!lowerThresholdEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutFloat("lowerThreshold", Float.parseFloat(lowerThresholdEditText.getText().toString()));
+		}
+		
+		if(!dDepthEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutInt("dDepth", Integer.parseInt(dDepthEditText.getText().toString()));
+		}
+		
+		if(!dXEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutInt("dX", Integer.parseInt(dXEditText.getText().toString()));
+		}
+		
+		if(!dYEditText.getText().toString().isEmpty()){
+			MADN3SController.sharedPrefsPutInt("dY", Integer.parseInt(dYEditText.getText().toString()));
+		}
+		MADN3SController.sharedPrefsPutBoolean("loaded", true);
+		
+		RadioButton selectedAlgorithmRadioButton = (RadioButton) getView().findViewById(algortihmRadioGroup.getCheckedRadioButtonId());
+		MADN3SController.sharedPrefsPutString("algorithm", selectedAlgorithmRadioButton.getText().toString());
+		MADN3SController.sharedPrefsPutInt("algorithmIndex", algortihmRadioGroup.getCheckedRadioButtonId());
+		
+		MADN3SController.sharedPrefsPutBoolean("clean", cleanImagesCheckBox.isChecked());
+	}
+
+	/**
+	 * 
+	 */
+	private void sendSettings() {
+		if(MADN3SController.rightCamera != null && MADN3SController.leftCamera != null && MADN3SController.talker != null){
+			try{
+				JSONObject json = new JSONObject();
+		        json.put("action", "config");
+		        json.put("clean", MADN3SController.sharedPrefsGetBoolean("clean"));
+		        
+		        JSONObject rectangle = new JSONObject();
+		        
+		        JSONObject point1 = new JSONObject();
+		        point1.put("x", MADN3SController.sharedPrefsGetInt("p1x"));
+		        point1.put("y", MADN3SController.sharedPrefsGetInt("p1y"));
+		        rectangle.put("point_1", point1);
+		        
+		        JSONObject point2 = new JSONObject();
+		        point2.put("x", MADN3SController.sharedPrefsGetInt("p2x"));
+		        point2.put("y", MADN3SController.sharedPrefsGetInt("p2y"));
+		        rectangle.put("point_2", point2);
+		        
+		        JSONObject grabCut = new JSONObject();
+		        grabCut.put("rectangle", rectangle);
+		        grabCut.put("iterations", MADN3SController.sharedPrefsGetInt("iterations"));
+		        json.put("grab_cut", grabCut);
+		        
+		        JSONObject goodFeatures = new JSONObject();
+		        goodFeatures.put("max_corners", MADN3SController.sharedPrefsGetInt("maxCorners"));
+		        goodFeatures.put("quality_level", MADN3SController.sharedPrefsGetFloat("qualityLevel"));
+		        goodFeatures.put("min_distance", MADN3SController.sharedPrefsGetInt("minDistance"));
+		        json.put("good_features", goodFeatures);
+		        
+		        JSONObject edgeDetection = new JSONObject();
+		        edgeDetection.put("algorithm", MADN3SController.sharedPrefsGetString("algorithm"));
+		        edgeDetection.put("algorithm_index", MADN3SController.sharedPrefsGetInt("algorithmIndex"));
+		        
+		        JSONObject canny = new JSONObject();
+		        canny.put("lower_threshold", MADN3SController.sharedPrefsGetFloat("lowerThreshold"));
+		        canny.put("upper_threshold", MADN3SController.sharedPrefsGetFloat("upperThreshold"));
+		        edgeDetection.put("canny_config", canny);
+		        
+		        JSONObject sobel = new JSONObject();
+		        sobel.put("d_depth", MADN3SController.sharedPrefsGetInt("dDepth"));
+		        sobel.put("d_x", MADN3SController.sharedPrefsGetInt("dX"));
+		        sobel.put("d_y", MADN3SController.sharedPrefsGetInt("dY"));
+		        edgeDetection.put("sobel_config", sobel);
+		        json.put("edge_detection", edgeDetection);
+		        
+		        if(rightCameraWeakReference != null){
+		        	json.put("side", "right");
+		        	json.put("camera_name", rightCamera.getName());
+					HiddenMidgetWriter rightCameraWriter = new HiddenMidgetWriter(rightCameraWeakReference, json.toString());
+					rightCameraWriter.execute();
+			        Log.d(tag, "Enviando a rightCamera: " + rightCamera.getName());
+			        MADN3SController.readRightCamera.set(true);
+				} else {
+					Log.d(tag, "rightCameraWeakReference = null");
+				}
+				
+				if(leftCameraWeakReference != null){
+					json.put("side", "left");
+					json.put("camera_name", leftCamera.getName());
+					HiddenMidgetWriter leftCameraWriter = new HiddenMidgetWriter(leftCameraWeakReference, json.toString());
+					leftCameraWriter.execute();
+			        Log.d(tag, "Enviando a leftCamera: " + leftCamera.getName());
+			        MADN3SController.readLeftCamera.set(true);
+				} else {
+					Log.d(tag, "leftCameraWeakReference = null");
+				}
+				
+				JSONObject nxtJson = new JSONObject();
+		        nxtJson.put("command", "scanner");
+		        nxtJson.put("action", "config");
+		        nxtJson.put("points", MADN3SController.sharedPrefsGetInt("points"));
+		        nxtJson.put("circumference_radius", MADN3SController.sharedPrefsGetFloat("radius"));
+		        nxtJson.put("speed", MADN3SController.sharedPrefsGetInt("speed"));
+		        MADN3SController.talker.write(nxtJson.toString().getBytes());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		} else {
+			Toast.makeText(getActivity(), "No hay dispositivos a enviar la data. Data Guardada", Toast.LENGTH_LONG).show();
 		}
 	}
 }
