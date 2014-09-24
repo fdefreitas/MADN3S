@@ -140,7 +140,13 @@ public class MADN3SController extends Application {
 	public void onCreate() {
 		super.onCreate();
 		setSharedPreferences();
-		Log.d(tag, "si ves esto puedes avanzar...");
+		Log.d(tag, "MADN3SController onCreate()");
+		
+		MADN3SController.isPictureTaken = new AtomicBoolean(true);
+        MADN3SController.isRunning = new AtomicBoolean(true);
+        MADN3SController.readCamera1 = new AtomicBoolean(false);
+        MADN3SController.readCamera2 = new AtomicBoolean(false);
+		
 		mBluetoothHandler = new Handler() {
 			public void handleMessage(android.os.Message msg) {
 				if (mBluetoothHandlerCallback != null) {

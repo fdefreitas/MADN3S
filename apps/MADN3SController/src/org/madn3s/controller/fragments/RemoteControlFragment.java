@@ -27,7 +27,7 @@ public class RemoteControlFragment extends BaseFragment {
     public static final int MESSAGE_TOAST = 1;
     public static final String TOAST = "toast";
 
-    private static final String TAG = "ControlsFragment";
+    private static final String tag = "ControlsFragment";
     private int mPower = 80;
     private boolean mReverse = false;
     private boolean mReverseLR = false;
@@ -101,7 +101,7 @@ public class RemoteControlFragment extends BaseFragment {
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            Log.i("NXT", "onTouch event: " + Integer.toString(event.getAction()));
+            Log.i(tag, "onTouch event: " + Integer.toString(event.getAction()));
             int action = event.getAction();
             //if ((action == MotionEvent.ACTION_DOWN) || (action == MotionEvent.ACTION_MOVE)) {
             if (action == MotionEvent.ACTION_DOWN) {
@@ -123,9 +123,9 @@ public class RemoteControlFragment extends BaseFragment {
 	         	        nxtJson.put("action", "forward");
 	         	        MADN3SController.talker.write(nxtJson.toString().getBytes());
 	         	        wait = true;
-	         	       Log.e(TAG, "foprward");
+	         	        Log.e(tag, "forward");
 	         	    } catch (Exception e) {
-							Log.e(TAG, "error enviando configs al nxt");
+						Log.e(tag, "error enviando configs al nxt");
 					}
             	}
             } else if ((action == MotionEvent.ACTION_UP) || (action == MotionEvent.ACTION_CANCEL)) {
@@ -136,9 +136,9 @@ public class RemoteControlFragment extends BaseFragment {
          	        nxtJson.put("action", "stop");
          	        MADN3SController.talker.write(nxtJson.toString().getBytes());
          	        wait = false;
-         	        Log.e(TAG, "stop");
+         	        Log.e(tag, "stop");
          	    } catch (Exception e) {
-						Log.e(TAG, "error enviando configs al nxt");
+						Log.e(tag, "error enviando configs al nxt");
 				}
             }
             return true;

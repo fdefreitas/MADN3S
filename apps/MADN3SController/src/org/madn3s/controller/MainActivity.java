@@ -48,12 +48,6 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         
         mFragmentManager = getFragmentManager();
         
-        //TODO mover de aqui
-        MADN3SController.isPictureTaken = new AtomicBoolean(true);
-        MADN3SController.isRunning = new AtomicBoolean(true);
-        MADN3SController.readCamera1 = new AtomicBoolean(false);
-        MADN3SController.readCamera2 = new AtomicBoolean(false);
-        
         //TODO validar si se debe llamar sin verificar ningún tipo de condición primero
         initializeSharedPrefs();
         
