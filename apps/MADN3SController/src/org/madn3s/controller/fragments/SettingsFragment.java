@@ -118,7 +118,7 @@ public class SettingsFragment extends BaseFragment {
 				}
 				
 				if(!speedEditText.getText().toString().isEmpty()){
-					MADN3SController.sharedPrefsPutFloat("speed", Float.parseFloat(speedEditText.getText().toString()));
+					MADN3SController.sharedPrefsPutInt("speed", Integer.parseInt(speedEditText.getText().toString()));
 				}
 				
 				if(!radiusEditText.getText().toString().isEmpty()){
@@ -176,6 +176,7 @@ public class SettingsFragment extends BaseFragment {
 				if(!dYEditText.getText().toString().isEmpty()){
 					MADN3SController.sharedPrefsPutInt("dY", Integer.parseInt(dYEditText.getText().toString()));
 				}
+				MADN3SController.sharedPrefsPutBoolean("loaded", true);
 				
 				RadioButton selectedAlgorithmRadioButton = (RadioButton) getView().findViewById(algortihmRadioGroup.getCheckedRadioButtonId());
 				MADN3SController.sharedPrefsPutString("algorithm", selectedAlgorithmRadioButton.getText().toString());

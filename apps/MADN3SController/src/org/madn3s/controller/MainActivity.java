@@ -258,25 +258,27 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
      */
 	private void initializeSharedPrefs() {
 		try {
-			MADN3SController.sharedPrefsPutInt("speed", 15);
-			MADN3SController.sharedPrefsPutFloat("radius", 99.0f);
-			MADN3SController.sharedPrefsPutInt("points", 7);
-			MADN3SController.sharedPrefsPutInt("p1x", 0);
-			MADN3SController.sharedPrefsPutInt("p1y", 0);
-			MADN3SController.sharedPrefsPutInt("p2x", 1);
-			MADN3SController.sharedPrefsPutInt("p2y", 1);
-			MADN3SController.sharedPrefsPutInt("iterations", 1);
-			MADN3SController.sharedPrefsPutInt("maxCorners", 50);
-			MADN3SController.sharedPrefsPutFloat("qualityLevel", (float) 0.01);
-			MADN3SController.sharedPrefsPutInt("minDistance", 30);
-			MADN3SController.sharedPrefsPutFloat("upperThreshold", (float) 75);
-			MADN3SController.sharedPrefsPutFloat("lowerThreshold", (float) 35);
-			MADN3SController.sharedPrefsPutInt("dDepth", 0);
-			MADN3SController.sharedPrefsPutInt("dX", 0);
-			MADN3SController.sharedPrefsPutInt("dY", 0);
-			MADN3SController.sharedPrefsPutString("algorithm", "Canny");
-			MADN3SController.sharedPrefsPutInt("algorithmIndex", R.id.canny_radio);
-			MADN3SController.sharedPrefsPutBoolean("clean", false);
+			if(!MADN3SController.sharedPrefsGetBoolean("loaded")){
+				MADN3SController.sharedPrefsPutInt("speed", 15);
+				MADN3SController.sharedPrefsPutFloat("radius", 45.0f);
+				MADN3SController.sharedPrefsPutInt("points", 6);
+				MADN3SController.sharedPrefsPutInt("p1x", 0);
+				MADN3SController.sharedPrefsPutInt("p1y", 0);
+				MADN3SController.sharedPrefsPutInt("p2x", 1);
+				MADN3SController.sharedPrefsPutInt("p2y", 1);
+				MADN3SController.sharedPrefsPutInt("iterations", 1);
+				MADN3SController.sharedPrefsPutInt("maxCorners", 50);
+				MADN3SController.sharedPrefsPutFloat("qualityLevel", (float) 0.01);
+				MADN3SController.sharedPrefsPutInt("minDistance", 30);
+				MADN3SController.sharedPrefsPutFloat("upperThreshold", (float) 75);
+				MADN3SController.sharedPrefsPutFloat("lowerThreshold", (float) 35);
+				MADN3SController.sharedPrefsPutInt("dDepth", 0);
+				MADN3SController.sharedPrefsPutInt("dX", 0);
+				MADN3SController.sharedPrefsPutInt("dY", 0);
+				MADN3SController.sharedPrefsPutString("algorithm", "Canny");
+				MADN3SController.sharedPrefsPutInt("algorithmIndex", R.id.canny_radio);
+				MADN3SController.sharedPrefsPutBoolean("clean", false);
+			} 
 		} catch (Exception e) {
 			Log.d(tag, "Exception. Could not initialize SharedPrefs");
 			e.printStackTrace();
