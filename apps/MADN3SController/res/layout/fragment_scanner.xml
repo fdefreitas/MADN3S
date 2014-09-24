@@ -134,7 +134,7 @@
             android:id="@+id/camera1_action_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/camera1_action"
+            android:text="@string/right_camera_action"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <FrameLayout
@@ -175,7 +175,7 @@
             android:id="@+id/camera2_action_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/camera2_action"
+            android:text="@string/left_camera_action"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <FrameLayout

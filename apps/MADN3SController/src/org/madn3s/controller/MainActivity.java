@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController.Mode;
 import org.madn3s.controller.components.NXTTalker;
+import org.madn3s.controller.components.CameraSelectionDialogFragment;
 import org.madn3s.controller.fragments.BaseFragment;
 import org.madn3s.controller.fragments.ConnectionFragment;
 import org.madn3s.controller.fragments.RemoteControlFragment;
@@ -19,6 +20,7 @@ import org.madn3s.controller.io.UniversalComms;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
@@ -29,12 +31,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 public class MainActivity extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks
-        , BaseFragment.OnItemSelectedListener {
+        , BaseFragment.OnItemSelectedListener, CameraSelectionDialogFragment.DialogListener {
 
 	private static final String tag = "MainActivity";
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
 	private FragmentManager mFragmentManager;
+	private DiscoveryFragment mDiscoveryFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,8 +94,9 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 		startService(williamWallaceIntent);
         
         if (savedInstanceState == null) {
+        	mDiscoveryFragment = new DiscoveryFragment();
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new DiscoveryFragment())
+                    .add(R.id.container, mDiscoveryFragment)
                     .commit();
         }
     }    
@@ -159,6 +163,9 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
     		.remove(fragment)
     		.commit();
     	//TODO revisar casos de switch
+    	/*TODO esto se está llamando desde DiscoveryFragment cableado 
+    	 * como SCANNER y este llama es a ConnectionFragment, 
+    	 * este switch debería llamarse desde ConnectionFragment*/
         switch (mode){
         	case CONTROLLER:
         		launchRemoteControlFragment();
@@ -282,6 +289,20 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 		} catch (Exception e) {
 			Log.d(tag, "Exception. Could not initialize SharedPrefs");
 			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onDialogPositiveClick(DialogFragment dialog) {
+		if(mDiscoveryFragment != null){
+			mDiscoveryFragment.onDevicesSelectionCompleted();
+		}
+	}
+
+	@Override
+	public void onDialogNegativeClick(DialogFragment dialog) {
+		if(mDiscoveryFragment != null){
+			mDiscoveryFragment.onDevicesSelectionCancelled();
 		}
 	}
 }

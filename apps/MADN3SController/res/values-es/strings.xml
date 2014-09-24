@@ -32,8 +32,8 @@
     
     <string name="calibration">Calibración</string>
     <string name="nxt_action">Enviando señal a NXT</string>
-    <string name="camera1_action">Enviando señal a Camera1</string>
-    <string name="camera2_action">Enviando señal a Camera2</string>
+    <string name="right_camera_action">Enviando señal a Camera1</string>
+    <string name="left_camera_action">Enviando señal a Camera2</string>
     
     <string name="step1">Paso 1</string>
     <string name="step2">Paso 2</string>

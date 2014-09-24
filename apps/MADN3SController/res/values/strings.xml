@@ -20,6 +20,9 @@
     <string name="new_devices">New Devices</string>
     <string name="paired_devices">Paired Devices</string>
     <string name="cameras">Cameras</string>
+    <string name="right_camera_label">Right Camera:</string>
+    <string name="left_camera_label">Left Camera:</string>
+    <string name="cameras_position_designation">Camera Positions</string>
     <string name="nxt">NXT</string>
     <string name="connect">Connect</string>
     <string name="scan">Scan</string>
@@ -35,9 +38,9 @@
     
     <string name="calibration">Calibration</string>
     <string name="nxt_action">Sending Signal to NXT</string>
-    <string name="camera1_action">Sending Signal to Camera1</string>
-    <string name="camera2_action">Sending Signal to Camera2</string>
-    <string name="scan_progress">Scan progress... </string>
+    <string name="right_camera_action">Sending Signal to Camera1</string>
+    <string name="left_camera_action">Sending Signal to Camera2</string>
+    <string name="scan_progress">Scan progress&#8230; </string>
     
     <string name="step1">Step 1</string>
     <string name="step2">Step 2</string>
@@ -51,6 +54,8 @@
     <string name="scanner">Scanner</string>
     <string name="remote_control">R/C</string>
     <string name="model_gallery">Gallery</string>
+    <string name="done">Done</string>
+    <string name="cancel">Cancel</string>
     
     <string name="text_selected_file">Selected file</string>
     <string name="text_no_file_selected">No file has been selected</string>

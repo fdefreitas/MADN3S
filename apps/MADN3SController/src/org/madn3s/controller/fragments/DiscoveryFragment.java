@@ -1,25 +1,26 @@
 package org.madn3s.controller.fragments;
 
-import static org.madn3s.controller.MADN3SController.rightCamera;
-import static org.madn3s.controller.MADN3SController.leftCamera;
 import static org.madn3s.controller.MADN3SController.isCameraDevice;
 import static org.madn3s.controller.MADN3SController.isToyDevice;
+import static org.madn3s.controller.MADN3SController.leftCamera;
 import static org.madn3s.controller.MADN3SController.nxt;
+import static org.madn3s.controller.MADN3SController.rightCamera;
 
 import java.util.ArrayList;
 
+import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.MADN3SController.Mode;
 import org.madn3s.controller.R;
+import org.madn3s.controller.components.CameraSelectionDialogFragment;
 import org.madn3s.controller.io.BTConnection;
+import org.madn3s.controller.models.DevicesAdapter;
 import org.madn3s.controller.models.NewDevicesAdapter;
 import org.madn3s.controller.models.PairedDevicesAdapter;
 
-import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -32,13 +33,14 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 /**
  * Created by inaki on 12/7/13.
  */
-public class DiscoveryFragment extends BaseFragment{
+public class DiscoveryFragment extends BaseFragment {
 	public static final String tag = "MainFragment";
 	public static final String EXTRA_DEVICE_ADDRESS = "device_address";
 
@@ -56,6 +58,9 @@ public class DiscoveryFragment extends BaseFragment{
 	private boolean isNxtSelected;
 	private int cams;
 	private DiscoveryFragment mFragment;
+	private CameraSelectionDialogFragment cameraSelectionDialogFragment;
+	private Spinner rightCameraSpinner;
+	private Spinner leftCameraSpinner;
 	
 	public DiscoveryFragment() {
 		mFragment = this;
@@ -113,11 +118,10 @@ public class DiscoveryFragment extends BaseFragment{
 
 				try {
 					ArrayList<BluetoothDevice> temporaryPairedDevices = new ArrayList<BluetoothDevice>();
-//					for(BluetoothDevice device:  BTConnection.pairedDevices){
 					for(BluetoothDevice device:  btAdapter.getBondedDevices()){
 						if (isToyDevice(device)){
 							temporaryPairedDevices.add(device);
-							Log.d(tag, "For de Toy filter: "+device.getName());
+							Log.d(tag, "Toy Filter Device: "+device.getName());
 						}
 					}
 					
@@ -130,11 +134,10 @@ public class DiscoveryFragment extends BaseFragment{
 					nxtNewDevicesListView.setOnItemClickListener(onDeviceAdapterClickListener);
 
 					temporaryPairedDevices = new ArrayList<BluetoothDevice>();
-//					for(BluetoothDevice device:  BTConnection.pairedDevices){
 					for(BluetoothDevice device:  btAdapter.getBondedDevices()){
 						if (isCameraDevice(device)){
 							temporaryPairedDevices.add(device);
-							Log.d(tag, "for camera filter: "+device.getName());
+							Log.d(tag, "Camera Filter Device: "+device.getName());
 						}
 					}
 					cameraPairedDevicesAdapter = new PairedDevicesAdapter(temporaryPairedDevices, getActivity().getBaseContext());
@@ -166,31 +169,11 @@ public class DiscoveryFragment extends BaseFragment{
 			@Override
 			public void onClick(View v) {
 				try {
-					
-					if(isNxtSelected && cams == 2){
-						Log.d(tag, "Mode: SCANNER");
-						listener.onObjectSelected(Mode.SCANNER, mFragment);
-//					} else if (isNxtSelected){
-//						Log.d(tag, "Mode: CONTROLLER");
-//						AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-//							alertDialogBuilder.setTitle("Iniciar Modo Control Remoto");
-//							alertDialogBuilder
-//								.setMessage("No ha seleccionado Cámaras. Está seguro que desea iniciar el modo 'Control Remoto' del NXT?")
-//								.setCancelable(true)
-//								.setPositiveButton("Yes",new DialogInterface.OnClickListener() {
-//									public void onClick(DialogInterface dialog,int id) {
-//										listener.onObjectSelected(Mode.CONTROLLER, mFragment);
-//									}
-//								  })
-//								.setNegativeButton("No",new DialogInterface.OnClickListener() {
-//									public void onClick(DialogInterface dialog,int id) {
-//										dialog.cancel();
-//									}
-//								});				 
-//						alertDialogBuilder.create().show();
-						
+//					if(isNxtSelected && cams == 2){
+					if(true){
+						showCamerasDialog();
 					} else {
-						Toast.makeText(getActivity(), "Debe seleccionar al menos un dispositivo NXT", Toast.LENGTH_LONG).show();
+						Toast.makeText(getActivity(), "Debe seleccionar un dispositivo NXT y 2 Cámaras", Toast.LENGTH_LONG).show();
 					}
 				} catch (/*Interrupted*/Exception e) {
 					e.printStackTrace();
@@ -211,7 +194,66 @@ public class DiscoveryFragment extends BaseFragment{
 			
 		}
 	}
+	
+	public void showCamerasDialog() {
+		DevicesAdapter camerasAdapter = new DevicesAdapter(getActivity());
+		camerasAdapter.add(MADN3SController.leftCamera);
+		camerasAdapter.add(MADN3SController.rightCamera);
+        cameraSelectionDialogFragment = new CameraSelectionDialogFragment();
+        rightCameraSpinner = (Spinner) cameraSelectionDialogFragment.getView().findViewById(R.id.right_camera_spinner);
+        rightCameraSpinner.setAdapter(camerasAdapter);
+        rightCameraSpinner.setSelection(0);
+        rightCameraSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				MADN3SController.rightCamera = (BluetoothDevice) parent.getAdapter().getItem(position);
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				
+			}
+		});
+        leftCameraSpinner = (Spinner) cameraSelectionDialogFragment.getView().findViewById(R.id.left_camera_spinner);
+        leftCameraSpinner.setAdapter(camerasAdapter);
+        rightCameraSpinner.setSelection(1);
+        leftCameraSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+			@Override
+			public void onItemSelected(AdapterView<?> parent, View view,
+					int position, long id) {
+				MADN3SController.leftCamera = (BluetoothDevice) parent.getAdapter().getItem(position);
+				
+			}
+
+			@Override
+			public void onNothingSelected(AdapterView<?> parent) {
+				
+			}
+		});
+        cameraSelectionDialogFragment.show(getFragmentManager(), "CameraSelectionDialogFragment");
+    }
+	
+	public void onDevicesSelectionCompleted(){
+		if(isNxtSelected && cams == 2){
+			cameraSelectionDialogFragment.dismiss();
+			Log.d(tag, "Mode: SCANNER");
+			listener.onObjectSelected(Mode.SCANNER, mFragment);
+			onDevicesSelectionCompleted();
+		}else if(isNxtSelected && cams == 2 && MADN3SController.rightCamera == MADN3SController.leftCamera) {
+			Toast.makeText(getActivity(), "Debe seleccionar Cámaras diferentes para cada posición", Toast.LENGTH_LONG).show();
+		} else {
+			Toast.makeText(getActivity(), "Debe seleccionar un dispositivo NXT y 2 Cámaras", Toast.LENGTH_LONG).show();
+		}
+	}
+
+	public void onDevicesSelectionCancelled(){
+		Log.d(tag, "Device Selection Cancelled");
+	}
+	
 	private AdapterView.OnItemClickListener onDeviceAdapterClickListener = new AdapterView.OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
