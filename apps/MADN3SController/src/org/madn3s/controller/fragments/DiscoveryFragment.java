@@ -132,8 +132,10 @@ public class DiscoveryFragment extends BaseFragment{
 					temporaryPairedDevices = new ArrayList<BluetoothDevice>();
 //					for(BluetoothDevice device:  BTConnection.pairedDevices){
 					for(BluetoothDevice device:  btAdapter.getBondedDevices()){
-						temporaryPairedDevices.add(device);
-						Log.d(tag, "for camera filter: "+device.getName());
+						if (isCameraDevice(device)){
+							temporaryPairedDevices.add(device);
+							Log.d(tag, "for camera filter: "+device.getName());
+						}
 					}
 					cameraPairedDevicesAdapter = new PairedDevicesAdapter(temporaryPairedDevices, getActivity().getBaseContext());
 					cameraPairedDevicesListView.setAdapter(cameraPairedDevicesAdapter);
