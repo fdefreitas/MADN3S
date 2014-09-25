@@ -38,9 +38,6 @@ public class CameraSelectionDialogFragment extends DialogFragment {
 	private DevicesAdapter camerasAdapter;
     
     public CameraSelectionDialogFragment() {
-    	camerasAdapter = new DevicesAdapter(getActivity());
-		camerasAdapter.add(MADN3SController.leftCamera);
-		camerasAdapter.add(MADN3SController.rightCamera);
 	}
 	
     @Override
@@ -48,6 +45,9 @@ public class CameraSelectionDialogFragment extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         view = inflater.inflate(R.layout.dialog_cameras_picker, null);
+        camerasAdapter = new DevicesAdapter(view.getContext());
+		camerasAdapter.add(MADN3SController.leftCamera);
+		camerasAdapter.add(MADN3SController.rightCamera);
         rightCameraSpinner = (Spinner) view.findViewById(R.id.right_camera_spinner);
         rightCameraSpinner.setAdapter(camerasAdapter);
         rightCameraSpinner.setSelection(0);
