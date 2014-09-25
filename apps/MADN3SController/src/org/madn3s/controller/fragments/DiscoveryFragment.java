@@ -196,44 +196,7 @@ public class DiscoveryFragment extends BaseFragment {
 	}
 	
 	public void showCamerasDialog() {
-		DevicesAdapter camerasAdapter = new DevicesAdapter(getActivity());
-		camerasAdapter.add(MADN3SController.leftCamera);
-		camerasAdapter.add(MADN3SController.rightCamera);
         cameraSelectionDialogFragment = new CameraSelectionDialogFragment();
-        rightCameraSpinner = (Spinner) cameraSelectionDialogFragment.getView().findViewById(R.id.right_camera_spinner);
-        rightCameraSpinner.setAdapter(camerasAdapter);
-        rightCameraSpinner.setSelection(0);
-        rightCameraSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int position, long id) {
-				MADN3SController.rightCamera = (BluetoothDevice) parent.getAdapter().getItem(position);
-				
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-				
-			}
-		});
-        leftCameraSpinner = (Spinner) cameraSelectionDialogFragment.getView().findViewById(R.id.left_camera_spinner);
-        leftCameraSpinner.setAdapter(camerasAdapter);
-        rightCameraSpinner.setSelection(1);
-        leftCameraSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-			@Override
-			public void onItemSelected(AdapterView<?> parent, View view,
-					int position, long id) {
-				MADN3SController.leftCamera = (BluetoothDevice) parent.getAdapter().getItem(position);
-				
-			}
-
-			@Override
-			public void onNothingSelected(AdapterView<?> parent) {
-				
-			}
-		});
         cameraSelectionDialogFragment.show(getFragmentManager(), "CameraSelectionDialogFragment");
     }
 	
