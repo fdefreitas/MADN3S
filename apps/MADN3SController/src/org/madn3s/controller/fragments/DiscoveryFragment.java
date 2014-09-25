@@ -13,7 +13,6 @@ import org.madn3s.controller.MADN3SController.Mode;
 import org.madn3s.controller.R;
 import org.madn3s.controller.components.CameraSelectionDialogFragment;
 import org.madn3s.controller.io.BTConnection;
-import org.madn3s.controller.models.DevicesAdapter;
 import org.madn3s.controller.models.NewDevicesAdapter;
 import org.madn3s.controller.models.PairedDevicesAdapter;
 
@@ -33,7 +32,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,7 +39,7 @@ import android.widget.Toast;
  * Created by inaki on 12/7/13.
  */
 public class DiscoveryFragment extends BaseFragment {
-	public static final String tag = "MainFragment";
+	public static final String tag = "DiscoveryFragment";
 	public static final String EXTRA_DEVICE_ADDRESS = "device_address";
 
 	private BluetoothAdapter btAdapter;
@@ -87,13 +85,17 @@ public class DiscoveryFragment extends BaseFragment {
 		
 		nxtDevicesLayout = (LinearLayout) getView().findViewById(R.id.nxt_devices_layout);
 		nxtDevicesLayout.setVisibility(View.GONE);
+		
 		nxtPairedDevicesListView = (ListView) getView().findViewById(R.id.nxt_paired_devices_listView);
+		
 		nxtNewDevicesListView = (ListView) getView().findViewById(R.id.nxt_new_devices_listView);
 
 		cameraConnectionTextView = (TextView) getView().findViewById(R.id.cameras_connection_textView);
 		cameraConnectionTextView.setVisibility(View.GONE);
+		
 		cameraDevicesLayout = (LinearLayout) getView().findViewById(R.id.camera_devices_layout);
 		cameraDevicesLayout.setVisibility(View.GONE);
+		
 		cameraPairedDevicesListView = (ListView) getView().findViewById(R.id.camera_paired_devices_listView);
 		cameraNewDevicesListView = (ListView) getView().findViewById(R.id.cameras_new_devices_listView);
 
@@ -216,28 +218,40 @@ public class DiscoveryFragment extends BaseFragment {
 	private AdapterView.OnItemClickListener onDeviceAdapterClickListener = new AdapterView.OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-			BTConnection btc = BTConnection.getInstance();
-			btc.cancelDiscovery();
-
-			BluetoothDevice deviceTemp = (BluetoothDevice) parent.getAdapter().getItem(position);
-			Log.d(tag, "ItemClick Device: " + deviceTemp.getName());
-			
-			if(isToyDevice(deviceTemp) && !isNxtSelected){
-				nxt = deviceTemp;
-				isNxtSelected = true;
-			} else if(isToyDevice(deviceTemp) && isNxtSelected){
-				Toast.makeText(getActivity(), "Ya fue seleccionado un dispositivo NXT", Toast.LENGTH_LONG).show();
-			} else if(cams == 0){
-				rightCamera = deviceTemp;
-				cams++;
-			} else if(cams == 1){
-				leftCamera = deviceTemp;
-				cams++;
+//			BTConnection btc = BTConnection.getInstance();
+//			btc.cancelDiscovery();
+			cancelDiscovery();
+			Log.d(tag, "view.isSelected() before: " + view.isSelected());
+			if(view.isSelected() == true){
+				view.setSelected(false);
 			} else {
-				Toast.makeText(getActivity(), "Ya fueron seleccionadas 2 camaras", Toast.LENGTH_LONG).show();
+				view.setSelected(true);
 			}
+			Log.d(tag, "view.isSelected() after: " + view.isSelected());
 
-			Log.d(tag, "Cameras Selected: " + cams + ", isNxtSelected: " + isNxtSelected);
+			if(view.isSelected() == true){
+				BluetoothDevice deviceTemp = (BluetoothDevice) parent.getAdapter().getItem(position);
+				Log.d(tag, "ItemClick Device: " + deviceTemp.getName());
+				
+				if(isToyDevice(deviceTemp) && !isNxtSelected){
+					nxt = deviceTemp;
+					isNxtSelected = true;
+				} else if(isToyDevice(deviceTemp) && isNxtSelected){
+					Toast.makeText(getActivity(), "Ya fue seleccionado un dispositivo NXT", Toast.LENGTH_LONG).show();
+				} else if(cams == 0){
+					rightCamera = deviceTemp;
+					cams++;
+				} else if(cams == 1 && deviceTemp != rightCamera){
+					leftCamera = deviceTemp;
+					cams++;
+				} else if(cams == 2){
+					Toast.makeText(getActivity(), "Ya fueron seleccionadas 2 camaras", Toast.LENGTH_LONG).show();
+				} else {
+					Toast.makeText(getActivity(), "Debe seleccionar 2 cámaras", Toast.LENGTH_LONG).show();
+				}
+	
+				Log.d(tag, "Cameras Selected: " + cams + ", isNxtSelected: " + isNxtSelected);
+			}
 		}
 	};
 

@@ -79,7 +79,7 @@
                 android:id="@+id/nxt_paired_devices_listView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:listitem="@android:layout/simple_list_item_1" >
+                tools:listitem="@layout/row_device" >
             </ListView>
         </LinearLayout>
 
@@ -105,7 +105,7 @@
                 android:id="@+id/nxt_new_devices_listView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                tools:listitem="@android:layout/simple_list_item_1" >
+                tools:listitem="@layout/row_device" >
             </ListView>
         </LinearLayout>
     </LinearLayout>
@@ -151,7 +151,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:choiceMode="multipleChoice"
-                tools:listitem="@android:layout/simple_list_item_1" >
+                tools:listitem="@layout/row_device" >
             </ListView>
         </LinearLayout>
 
@@ -178,7 +178,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:choiceMode="multipleChoice"
-                tools:listitem="@android:layout/simple_list_item_1" >
+                tools:listitem="@layout/row_device" >
             </ListView>
         </LinearLayout>
     </LinearLayout>

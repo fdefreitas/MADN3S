@@ -4,12 +4,15 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:background="@drawable/selector_row_device"
+    android:padding="@dimen/list_item_padding">
 
     <TextView
         android:id="@+id/device_name_textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:text="@string/device_name" />
 
     <TextView
@@ -17,7 +20,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/container_margin"
-        android:text="@string/device_address"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        android:text="@string/device_address" />
 
 </LinearLayout>

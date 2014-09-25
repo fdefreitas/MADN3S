@@ -52,7 +52,7 @@ public class NewDevicesAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        if(convertView == null) convertView = ((LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.row_new_device, parent, false);
+        if(convertView == null) convertView = ((LayoutInflater)mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.row_device, parent, false);
 
         assert convertView != null;
         TextView name = (TextView) convertView.findViewById(R.id.device_name_textView);
