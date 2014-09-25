@@ -175,18 +175,16 @@ public class ConnectionFragment extends BaseFragment {
         
         
         if(!rightCameraStatus){
-        	HiddenMidgetConnector connectCamera1 = new HiddenMidgetConnector(rightCamera, rightCameraWeakReference, MADN3SController.readRightCamera, "right");
-            connectCamera1.execute();
-            Log.d(TAG, "Iniciando conexion con Camara1: " + rightCamera.getName());
+        	HiddenMidgetConnector rightCameraConnector = new HiddenMidgetConnector(rightCamera, rightCameraWeakReference, MADN3SController.readRightCamera, "right");
+            rightCameraConnector.execute();
+            Log.d(TAG, "Iniciando conexion con Right Camera: " + rightCamera.getName());
         }
         
         if(!leftCameraStatus){
-        	HiddenMidgetConnector connectCamera2 = new HiddenMidgetConnector(leftCamera, leftCameraWeakReference, MADN3SController.readLeftCamera, "left");
-            connectCamera2.execute();
-            Log.d(TAG, "Iniciando conexion con Camara2: " + leftCamera.getName());
+        	HiddenMidgetConnector leftCameraConnector = new HiddenMidgetConnector(leftCamera, leftCameraWeakReference, MADN3SController.readLeftCamera, "left");
+            leftCameraConnector.execute();
+            Log.d(TAG, "Iniciando conexion con Left Camera: " + leftCamera.getName());
         }
-        
-         
         
         rightCameraNameTextView = (TextView) view.findViewById(R.id.right_camera_name_connection_textView);
         rightCameraAddressTextView = (TextView) view.findViewById(R.id.right_camera_address_connection_textView);
@@ -196,12 +194,12 @@ public class ConnectionFragment extends BaseFragment {
         	rightCameraAddressTextView.setText(rightCamera.getAddress());
         }
         
-        
         rightCameraStatusViewHolder = new StatusViewHolder(
         		view.findViewById(R.id.right_camera_not_connected_imageView), 
         		view.findViewById(R.id.right_camera_connected_imageView), 
         		view.findViewById(R.id.right_camera_connecting_progressBar)
     		);
+        
 	    if(rightCameraStatus){
         	rightCameraStatusViewHolder.success();
         }
