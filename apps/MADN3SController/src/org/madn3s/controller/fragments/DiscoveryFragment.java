@@ -167,8 +167,7 @@ public class DiscoveryFragment extends BaseFragment {
 			@Override
 			public void onClick(View v) {
 				try {
-//					if(isNxtSelected && cams == 2){
-					if(true){
+					if(isNxtSelected && cams == 2){
 						showCamerasDialog();
 					} else {
 						Toast.makeText(getActivity(), "Debe seleccionar un dispositivo NXT y 2 Cámaras", Toast.LENGTH_LONG).show();
