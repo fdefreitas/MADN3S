@@ -13,6 +13,7 @@ import org.madn3s.controller.MADN3SController.Mode;
 import org.madn3s.controller.R;
 import org.madn3s.controller.components.CameraSelectionDialogFragment;
 import org.madn3s.controller.io.BTConnection;
+import org.madn3s.controller.models.DevicesAdapter;
 import org.madn3s.controller.models.NewDevicesAdapter;
 import org.madn3s.controller.models.PairedDevicesAdapter;
 
@@ -222,14 +223,16 @@ public class DiscoveryFragment extends BaseFragment {
 //			btc.cancelDiscovery();
 			cancelDiscovery();
 			Log.d(tag, "view.isSelected() before: " + view.isSelected());
-			if(view.isSelected() == true){
+			if(view.isSelected()){
 				view.setSelected(false);
 			} else {
 				view.setSelected(true);
 			}
 			Log.d(tag, "view.isSelected() after: " + view.isSelected());
 
-			if(view.isSelected() == true){
+//			((DevicesAdapter) parent.getAdapter()).notifyDataSetInvalidated();
+			
+			if(view.isSelected()){
 				BluetoothDevice deviceTemp = (BluetoothDevice) parent.getAdapter().getItem(position);
 				Log.d(tag, "ItemClick Device: " + deviceTemp.getName());
 				
@@ -247,7 +250,7 @@ public class DiscoveryFragment extends BaseFragment {
 				} else if(cams == 2){
 					Toast.makeText(getActivity(), "Ya fueron seleccionadas 2 camaras", Toast.LENGTH_LONG).show();
 				} else {
-					Toast.makeText(getActivity(), "Debe seleccionar 2 cámaras", Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), "Debe seleccionar 2 cámaras diferentes", Toast.LENGTH_LONG).show();
 				}
 	
 				Log.d(tag, "Cameras Selected: " + cams + ", isNxtSelected: " + isNxtSelected);
