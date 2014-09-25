@@ -59,8 +59,6 @@ public class DiscoveryFragment extends BaseFragment {
 	private int cams;
 	private DiscoveryFragment mFragment;
 	private CameraSelectionDialogFragment cameraSelectionDialogFragment;
-	private Spinner rightCameraSpinner;
-	private Spinner leftCameraSpinner;
 	
 	public DiscoveryFragment() {
 		mFragment = this;
@@ -205,7 +203,6 @@ public class DiscoveryFragment extends BaseFragment {
 			cameraSelectionDialogFragment.dismiss();
 			Log.d(tag, "Mode: SCANNER");
 			listener.onObjectSelected(Mode.SCANNER, mFragment);
-			onDevicesSelectionCompleted();
 		}else if(isNxtSelected && cams == 2 && MADN3SController.rightCamera == MADN3SController.leftCamera) {
 			Toast.makeText(getActivity(), "Debe seleccionar Cámaras diferentes para cada posición", Toast.LENGTH_LONG).show();
 		} else {
