@@ -3,6 +3,7 @@ package org.madn3s.robot.common;
 import org.json.JSONObject;
 import org.madn3s.io.BluetoothTunnel;
 
+import lejos.nxt.Button;
 import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.navigation.OmniPilot;
 
@@ -16,26 +17,30 @@ public class Scanner {
 	private float wheelDiameter = 4.8f;
 	private double circumferenceRadius;
 	private double distance;
+	private double bias;
 	private boolean last;
 	private boolean move;
 	private boolean finish = false;
+	private boolean firstTime = true;
 	private BluetoothTunnel bTunnel;
 	private UltrasonicSensor uSensor;
 	
-	public Scanner(OmniPilot omniPilot, int points, int travelSpeed, float radius, float wheelDiameter, double circumferenceRadius, UltrasonicSensor uSensor) {
+	public Scanner(OmniPilot omniPilot, int points, int travelSpeed, float radius, float wheelDiameter, UltrasonicSensor uSensor) {
 		this.omniPilot = omniPilot;
+		this.uSensor = uSensor;
+		this.uSensor.continuous();
 		this.points = points;
 		this.travelSpeed = travelSpeed;
 		this.angle = 360 / points;
 		this.radius = radius;
 		this.wheelDiameter = wheelDiameter;
-		this.circumferenceRadius = circumferenceRadius;
-		this.distance = 2 * this.circumferenceRadius * Math.sin(Math.PI / points);
+		this.circumferenceRadius = this.uSensor.getDistance();
 		this.last = false;
 		this.move = false;
 		this.finish = false;
+		this.bias = 1;
+		this.distance = Math.floor(2 * this.circumferenceRadius * Math.sin(Math.PI / points)) - bias;
 		this.bTunnel = BluetoothTunnel.getInstance();
-		this.uSensor = uSensor;
 	}
 	
 	public OmniPilot getOmniPilot() {
@@ -91,7 +96,7 @@ public class Scanner {
 		boolean result = false;
 		try{
 			String action =  message.getString("action");
-			Utils.printToScreen(action,0,1,false);
+			Utils.printToScreen(action, 0, 1, false);
 			if(action.equalsIgnoreCase("move")){
 				move = true;
 			} else if(action.equalsIgnoreCase("wait")){
@@ -99,22 +104,26 @@ public class Scanner {
 			} else if(action.equalsIgnoreCase("FINISH")){
 				finish = true;
 			} else if(action.equalsIgnoreCase("config")){
+				circumferenceRadius = uSensor.getDistance();
 				move = finish = false;
 				boolean calculate = false;
 				if(message.has("points")){
 					points =  message.getInt("points");
 					calculate = true;
 				}
-				if(message.has("circumference_radius")){
-					circumferenceRadius = message.getDouble("circumference_radius");
+				
+				if(message.has("bias")){
+					bias =  message.getDouble("bias");
 					calculate = true;
 				}
+				
 				if(message.has("speed")){
 					travelSpeed = message.getInt("speed");
 					omniPilot.setTravelSpeed(travelSpeed);
 				}
+				
 				if(calculate){
-					distance =  2 * circumferenceRadius * Math.sin(Math.PI / points);
+					distance =  Math.floor(2 * circumferenceRadius * Math.sin(Math.PI / points)) - bias;
 				}
 			}
 			
