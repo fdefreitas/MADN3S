@@ -1,0 +1,1 @@
+/home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/MADN3SController/jni/CMakeFiles/KiwiNative.dir
