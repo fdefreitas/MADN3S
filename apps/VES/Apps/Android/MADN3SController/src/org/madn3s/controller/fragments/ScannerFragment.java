@@ -4,6 +4,7 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.MADN3SController.Device;
@@ -13,6 +14,7 @@ import org.madn3s.controller.io.BraveHeartMidgetService;
 import org.madn3s.controller.io.UniversalComms;
 import org.madn3s.controller.models.ScanStepViewHolder;
 import org.madn3s.controller.models.StatusViewHolder;
+import org.madn3s.controller.ves.KiwiNative;
 import org.madn3s.controller.viewer.models.files.FileComparator;
 import org.madn3s.controller.viewer.opengl.ModelDisplayActivity;
 
@@ -196,11 +198,14 @@ public class ScannerFragment extends BaseFragment {
 			@Override
 			public void onClick(View v) {
 				int points = MADN3SController.sharedPrefsGetInt("points");
+				JSONArray framesJson = new JSONArray();
 				for(int i = 0; i < points; i++){
 					JSONObject frame = MADN3SController.sharedPrefsGetJSONObject("frame-"+i);
+					framesJson.put(frame);
 					Log.d(tag, "frame-"+i + " = " + frame.toString());
 				}
-				
+				//TODO probar que funciona
+				KiwiNative.testLog(framesJson.toString());
 			}
 		});
 		
