@@ -327,10 +327,20 @@ jni/CMakeFiles/KiwiNative.dir/KiwiNative.cpp.o
  /home/fernando/dev/NVPACK/android-ndk-r9c/sources/cxx-stl/gnu-libstdc++/4.8/libs/armeabi-v7a/include/bits/time_members.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Common/Core/vtkCommonCoreModule.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Common/Core/vtkConfigure.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Common/Core/vtkMathConfigure.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Common/Core/vtkVersionMacros.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Common/DataModel/vtkCommonDataModelModule.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Common/ExecutionModel/vtkCommonExecutionModelModule.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Common/Math/vtkCommonMathModule.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Common/System/vtkCommonSystemModule.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Common/Transforms/vtkCommonTransformsModule.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Filters/Extraction/vtkFiltersExtractionModule.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Filters/General/vtkFiltersGeneralModule.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Filters/Statistics/vtkFiltersStatisticsModule.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/IO/Geometry/vtkIOGeometryModule.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/IO/Image/vtkIOImageModule.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/IO/XML/vtkIOXMLModule.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Rendering/Core/vtkRenderingCoreModule.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/ThirdParty/libxml2/vtklibxml2/config.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Utilities/KWSys/vtksys/Configure.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Build/vtk-android/Utilities/KWSys/vtksys/Configure.hxx
@@ -540,26 +550,103 @@ jni/CMakeFiles/KiwiNative.dir/KiwiNative.cpp.o
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Install/eigen/Eigen/src/plugins/MatrixCwiseBinaryOps.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Install/eigen/Eigen/src/plugins/MatrixCwiseUnaryOps.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkABI.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkAbstractArray.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkArrayIterator.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkArrayIteratorTemplate.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkArrayIteratorTemplate.txx
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkArrayIteratorTemplateImplicit.txx
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkAutoInit.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkCollection.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkCommonInformationKeyManager.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkDataArray.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkDataArrayTemplate.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkDataArrayTemplate.txx
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkDataArrayTemplateImplicit.txx
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkDebugLeaksManager.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkIOStream.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkIOStreamFwd.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkIdList.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkIdTypeArray.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkIndent.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkInformation.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkInformationDoubleVectorKey.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkInformationInformationVectorKey.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkInformationKey.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkInformationVector.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkIntArray.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkMath.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkOStrStreamWrapper.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkOStreamWrapper.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkObject.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkObjectBase.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkObjectFactory.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkOutputWindow.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkPoints.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkScalarsToColors.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkSetGet.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkSmartPointer.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkSmartPointerBase.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkSortDataArray.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkStdString.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkSystemIncludes.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkTimeStamp.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkType.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkTypeTraits.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkUnicodeString.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkUnsignedCharArray.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkVariant.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkVariantCast.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkVariantInlineOperators.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkVersion.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkWeakPointerBase.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkWin32Header.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Core/vtkWindow.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/DataModel/vtkCell.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/DataModel/vtkCellArray.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/DataModel/vtkCellLinks.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/DataModel/vtkCellType.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/DataModel/vtkCellTypes.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/DataModel/vtkDataObject.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/DataModel/vtkDataSet.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/DataModel/vtkIterativeClosestPointTransform.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/DataModel/vtkPointSet.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/DataModel/vtkPolyData.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/ExecutionModel/vtkAlgorithm.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/ExecutionModel/vtkImageAlgorithm.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/ExecutionModel/vtkPolyDataAlgorithm.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Math/vtkMatrix4x4.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/System/vtkTimerLog.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Transforms/vtkAbstractTransform.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Transforms/vtkHomogeneousTransform.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Transforms/vtkLandmarkTransform.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Transforms/vtkLinearTransform.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Common/Transforms/vtkTransform.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Filters/General/vtkTransformPolyDataFilter.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Filters/General/vtkVertexGlyphFilter.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/IO/XML/vtkXMLDataReader.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/IO/XML/vtkXMLPolyDataReader.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/IO/XML/vtkXMLPolyDataWriter.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/IO/XML/vtkXMLReader.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/IO/XML/vtkXMLUnstructuredDataReader.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/IO/XML/vtkXMLUnstructuredDataWriter.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/IO/XML/vtkXMLWriter.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkAbstractMapper.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkAbstractMapper3D.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkActor.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkActorCollection.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkMapper.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkPolyDataMapper.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkProp.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkProp3D.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkPropCollection.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkProperty.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkRenderWindow.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkRenderWindowInteractor.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkRenderer.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkTexture.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkViewport.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkVolume.h
+ /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/Rendering/Core/vtkVolumeCollection.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/CMakeBuild/build/CMakeExternals/Source/vtk/ThirdParty/jsoncpp/json/json.h
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/MADN3SController/jni/KiwiNative.cpp
  /home/fernando/dev/thesis/MADN3S/apps/VES/Apps/Android/MADN3SController/jni/vtkAndroidOutputWindow.h

@@ -5,8 +5,10 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.madn3s.controller.components.NXTTalker;
+import org.madn3s.controller.ves.KiwiNative;
 
 import android.app.Application;
 import android.bluetooth.BluetoothClass;
@@ -49,6 +51,7 @@ public class MADN3SController extends Application {
 	public static AtomicBoolean readLeftCamera;
 	
 	public static NXTTalker talker;
+	public static boolean isOpenCvLoaded;
 
 	public static enum Mode {
 		SCANNER("SCANNER", 0), CONTROLLER("CONTROLLER", 1), SCAN("SCAN", 2);
@@ -273,5 +276,26 @@ public class MADN3SController extends Application {
 
 	public void setBluetoothHandlerCallBack(Handler.Callback callback) {
 		this.mBluetoothHandlerCallback = callback;
+	}
+	
+	public static void pointsTest(){
+		int points = MADN3SController.sharedPrefsGetInt("points");
+		JSONArray framesJson = new JSONArray();
+		JSONObject pointsJson = new JSONObject();
+		for(int i = 0; i < points; i++){
+			JSONObject frame = MADN3SController.sharedPrefsGetJSONObject("frame-"+i);
+			framesJson.put(frame);
+//			Log.d(tag, "frame-"+i + " = " + frame.toString());
+		}
+		
+		try {
+			pointsJson.put("name", MADN3SController.sharedPrefsGetString("project_name"));
+			pointsJson.put("pictures", framesJson);
+			Log.d(tag, "pointTest.pointsJson String length: " + pointsJson.toString().length());
+			KiwiNative.doProcess(pointsJson.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+			Log.e(tag, "generateModelButton.OnClick. Error composing points JSONObject");
+		}
 	}
 }

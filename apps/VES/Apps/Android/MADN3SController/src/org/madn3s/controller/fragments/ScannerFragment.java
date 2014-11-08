@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.MADN3SController.Device;
@@ -199,13 +200,22 @@ public class ScannerFragment extends BaseFragment {
 			public void onClick(View v) {
 				int points = MADN3SController.sharedPrefsGetInt("points");
 				JSONArray framesJson = new JSONArray();
+				JSONObject pointsJson = new JSONObject();
 				for(int i = 0; i < points; i++){
 					JSONObject frame = MADN3SController.sharedPrefsGetJSONObject("frame-"+i);
 					framesJson.put(frame);
 					Log.d(tag, "frame-"+i + " = " + frame.toString());
 				}
-				//TODO probar que funciona
-				KiwiNative.testLog(framesJson.toString());
+				
+				try {
+					pointsJson.put("name", MADN3SController.sharedPrefsGetString("project_name"));
+					pointsJson.put("pictures", framesJson);
+					Log.d(tag, "generateModelButton.OnClick. pointsJson: " + pointsJson.toString(1));
+					KiwiNative.doProcess(pointsJson.toString());
+				} catch (JSONException e) {
+					e.printStackTrace();
+					Log.e(tag, "generateModelButton.OnClick. Error composing points JSONObject");
+				}
 			}
 		});
 		
@@ -238,9 +248,11 @@ public class ScannerFragment extends BaseFragment {
 		try{
 			MADN3SController.sharedPrefsPutInt("iter", 0);
 			int points = MADN3SController.sharedPrefsGetInt("points");
-			for(int i = 0; i < points; ++i){
-				MADN3SController.removeKeyFromSharedPreferences("frame-"+i);
-			}
+			//TODO permtir borrar contenedor para no hacer for
+//			for(int i = 0; i < points; ++i){
+//				MADN3SController.removeKeyFromSharedPreferences("frame-"+i);
+//			}
+			
 			JSONObject json = new JSONObject();
 	        json.put("action", "photo");
 	        json.put("project_name", projectName);

@@ -35,6 +35,26 @@
 
 #include <vtkIterativeClosestPointTransform.h>
 
+#include <vtkVersion.h>
+#include <vtkSmartPointer.h>
+#include <vtkTransform.h>
+#include <vtkVertexGlyphFilter.h>
+#include <vtkPoints.h>
+#include <vtkPolyData.h>
+#include <vtkCellArray.h>
+#include <vtkTransformPolyDataFilter.h>
+#include <vtkLandmarkTransform.h>
+#include <vtkMath.h>
+#include <vtkMatrix4x4.h>
+#include <vtkXMLPolyDataWriter.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkActor.h>
+#include <vtkRenderWindow.h>
+#include <vtkRenderer.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkXMLPolyDataReader.h>
+#include <vtkProperty.h>
+
 
 #define  LOG_TAG    "MADN3SController"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
@@ -84,6 +104,63 @@ bool testLog(const std::string& message){
 
 	return true;
 }
+
+//----------------------------------------------------------------------------
+bool doProcess(const std::string& pointsJsonStr){
+	LOGI("Native doProcess. jsonReceived length: %d ", pointsJsonStr.length());
+	Json::Value root;
+	Json::Reader reader;
+	bool parsingSuccessful = reader.parse(pointsJsonStr, root);
+	if ( !parsingSuccessful ) {
+	    std::cout  << "Failed to parse JSONObject\n"
+	               << reader.getFormattedErrorMessages();
+	    LOGI("Native doProcess. Failed to parse configuration.");
+	    return false;
+	}
+
+	LOGI("Native doProcess. Obteniendo name.");
+	std::string projectName = root.get("name", "not_set" ).asString();
+	LOGI("Native doProcess. name: %s", projectName.c_str());
+	LOGI("Native doProcess. Obteniendo pictures.");
+	Json::Value pictures = root["pictures"];
+//	LOGI("Native doProcess. pictures parseadas");
+//	LOGI("Native doProcess. pictures type: %s", pictures.type());
+	LOGI("Native doProcess. pictures length: %d", pictures.size());
+	Json::Value picture;
+	Json::Value left;
+	Json::Value right;
+	Json::Value pointsRight;
+	Json::Value pointsLeft;
+	Json::Value point;
+
+	LOGI("Native doProcess. Empezando for de pictures.");
+	for(int i = 0; i < pictures.size(); i++){
+		picture = pictures[i];
+		left = picture["left"];
+		right = picture["right"];
+		pointsLeft = left["points"];
+		pointsRight = right["points"];
+		LOGI("Native doProcess. Obteniendo left points de %d.", i);
+		for(int j = 0; j < pointsLeft.size(); j++){
+			point = pointsLeft[j];
+			LOGI("Native doProcess. point left(%d, %d): (%d,%d) ", i, j, point["x"].asInt(), point["y"].asInt());
+		}
+
+		LOGI("Native doProcess. Obteniendo right points de %d.", i);
+		for(int j = 0; j < pointsRight.size(); j++){
+			point = pointsRight[j];
+			LOGI("Native doProcess. point right(%d, %d): (%d,%d) ", i, j, point["x"].asInt(), point["y"].asInt());
+		}
+	}
+	LOGI("Native doProcess. For done moddafocka!.");
+
+	LOGI("Native doProcess. instanciando ICP de la muerte.");
+	vtkSmartPointer<vtkIterativeClosestPointTransform> icp =
+	      vtkSmartPointer<vtkIterativeClosestPointTransform>::New();
+	LOGI("Native doProcess. el todopoderoso ICP nos perdonó la vida.");
+	return icp != NULL;
+}
+
 //----------------------------------------------------------------------------
 void resetView()
 {
@@ -175,6 +252,7 @@ bool setupGraphics(int w, int h)
 extern "C" {
   JNIEXPORT void JNICALL Java_org_madn3s_controller_ves_KiwiNative_init(JNIEnv * env, jobject obj,  jint width, jint height);
   JNIEXPORT jboolean JNICALL Java_org_madn3s_controller_ves_KiwiNative_testLog(JNIEnv * env, jobject obj,  jstring message);
+  JNIEXPORT jboolean JNICALL Java_org_madn3s_controller_ves_KiwiNative_doProcess(JNIEnv * env, jobject obj,  jstring pointsJsonStr);
   JNIEXPORT void JNICALL Java_org_madn3s_controller_ves_KiwiNative_reshape(JNIEnv * env, jobject obj,  jint width, jint height);
   JNIEXPORT void JNICALL Java_org_madn3s_controller_ves_KiwiNative_handleSingleTouchPanGesture(JNIEnv * env, jobject obj,  jfloat dx, jfloat dy);
   JNIEXPORT void JNICALL Java_org_madn3s_controller_ves_KiwiNative_handleTwoTouchPanGesture(JNIEnv * env, jobject obj,  jfloat x0, jfloat y0, jfloat x1, jfloat y1);
@@ -230,9 +308,20 @@ JNIEXPORT jboolean JNICALL Java_org_madn3s_controller_ves_KiwiNative_testLog(JNI
 
 	  if (javaStr) {
 		std::string messageStr = javaStr;
-//		env->ReleaseStringUTFChars(message, javaStr);
 		return testLog(messageStr);
 	  }
+	return false;
+}
+
+JNIEXPORT jboolean JNICALL Java_org_madn3s_controller_ves_KiwiNative_doProcess(JNIEnv * env, jobject obj, jstring pointsJsonStr)
+{
+	const char *javaStr = env->GetStringUTFChars(pointsJsonStr, NULL);
+	LOGI("JNIExport Java_org_madn3s_controller_ves_KiwiNative_doProcess. pointsJsonStr length: %d", strlen(javaStr));
+	if (javaStr) {
+		std::string messageStr = javaStr;
+		LOGI("JNIExport Java_org_madn3s_controller_ves_KiwiNative_doProcess. messageStr length: %d", messageStr.length());
+		return doProcess(messageStr);
+	}
 	return false;
 }
 

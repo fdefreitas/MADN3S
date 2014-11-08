@@ -1,7 +1,5 @@
 package org.madn3s.controller;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController.Mode;
 import org.madn3s.controller.components.NXTTalker;
@@ -17,8 +15,10 @@ import org.madn3s.controller.io.BraveHeartMidgetService;
 import org.madn3s.controller.io.HiddenMidgetReader;
 import org.madn3s.controller.io.HiddenMidgetWriter;
 import org.madn3s.controller.io.UniversalComms;
-
 import org.madn3s.controller.ves.KiwiNative;
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
 
 import android.app.ActionBar;
 import android.app.Activity;
@@ -31,6 +31,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 
 public class MainActivity extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks
         , BaseFragment.OnItemSelectedListener, CameraSelectionDialogFragment.DialogListener {
@@ -40,6 +41,23 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
     private CharSequence mTitle;
 	private FragmentManager mFragmentManager;
 	private DiscoveryFragment mDiscoveryFragment;
+	
+	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+	       @Override
+	       public void onManagerConnected(int status) {
+	           switch (status) {
+	               case LoaderCallbackInterface.SUCCESS:
+	               {
+	                   Log.i(tag, "OpenCV loaded successfully");
+	                   MADN3SController.isOpenCvLoaded = true;
+	               } break;
+	               default:
+	               {
+	                   super.onManagerConnected(status);
+	               } break;
+	           }
+	       }
+	   };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +67,7 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
         mTitle = getTitle();
         
         KiwiNative.testLog("{\"hello\": \"world\"}");
+        MADN3SController.pointsTest();
         
         
         mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
@@ -308,6 +327,15 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 	public void onDialogNegativeClick(DialogFragment dialog) {
 		if(mDiscoveryFragment != null){
 			mDiscoveryFragment.onDevicesSelectionCancelled();
+		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		if(! MADN3SController.isOpenCvLoaded) {
+			OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_5, this, mLoaderCallback);
 		}
 	}
 }

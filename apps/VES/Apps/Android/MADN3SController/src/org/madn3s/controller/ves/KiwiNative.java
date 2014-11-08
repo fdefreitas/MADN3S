@@ -24,6 +24,8 @@ public class KiwiNative {
 
 	public static native synchronized boolean testLog(String message);
 	
+	public static native synchronized boolean doProcess(String pointsJsonStr);
+	
 	public static native synchronized void reshape(int width, int height);
 
 	public static native synchronized void handleSingleTouchPanGesture(
