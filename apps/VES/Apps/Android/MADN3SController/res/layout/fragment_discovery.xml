@@ -9,33 +9,37 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".MainActivity$PlaceholderFragment" >
 
-    <LinearLayout
-        android:id="@+id/buttons_layout"
-        android:layout_width="match_parent"
+
+    <Button
+        android:id="@+id/scan_button"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/button_separator"
+        android:layout_alignTop="@+id/button_separator"
+        android:text="@string/scan" />
+    
+    <View
+        android:id="@+id/button_separator"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
         android:layout_alignParentTop="true"
-        android:orientation="horizontal" >
+        android:layout_centerHorizontal="true" />
 
-        <Button
-            android:id="@+id/scan_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/scan" />
-
-        <Button
-            android:id="@+id/connect_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/connect" />
-    </LinearLayout>
+    <Button
+        android:id="@+id/connect_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_toRightOf="@+id/button_separator"
+        android:layout_alignTop="@+id/button_separator"
+        android:text="@string/connect" />
 
     <ProgressBar
         android:id="@+id/discovery_progressBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/buttons_layout"
+        android:layout_below="@+id/button_separator"
         android:layout_margin="8dp"
         android:indeterminate="true"
         android:visibility="visible" />

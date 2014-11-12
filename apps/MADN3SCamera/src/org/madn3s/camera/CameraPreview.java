@@ -1,9 +1,11 @@
 package org.madn3s.camera;
 
+import java.io.IOException;
+import java.util.List;
+
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.graphics.Point;
 import android.hardware.Camera;
 import android.util.Log;
@@ -12,18 +14,11 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 
-import java.io.IOException;
-import java.util.List;
-
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
-    private static final String tag = "CameraPreview";
+    private static final String tag = CameraPreview.class.getSimpleName();
 	private SurfaceHolder mHolder;
     private Camera mCamera;
     private Context context;
-
-    public Camera getmCamera() {
-		return mCamera;
-	}
 
 	public CameraPreview(Context context, Camera camera) {
         super(context);
@@ -31,12 +26,12 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mCamera = camera;
         boolean hasFlash = context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);//this is lying...
         if(hasFlash){
-            Log.d(tag, "FLASH AVAILABLE");
+            Log.d(tag, "Flash Available");
 //            Camera.Parameters p = mCamera.getParameters();
 //            p.setFlashMode(Camera.Parameters.FLASH_MODE_AUTO);
 //            mCamera.setParameters(p);
         } else {
-            Log.d(tag, "NO FLASH AVAILABLE");
+            Log.d(tag, "No Flash Available");
         }
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
@@ -59,7 +54,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
         } catch (IOException e) {
-            Log.d(MADN3SCamera.TAG, "Error setting camera preview: " + e.getMessage());
+            Log.d(tag, "Error setting camera preview: " + e.getMessage());
         }
     }
 
@@ -98,8 +93,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 //                Log.d("CameraPreview", "height: " + sizeE.height + " width: " + sizeE.width);
 //            }
 
-            Log.d("CameraPreview", "SELECTED height: " + previewSize.height + " width: " + previewSize.width);
-            Log.d("CameraPreview", "Screen Size height: " + height + " width: " + width);
+            Log.d(tag, "Selected height: " + previewSize.height + " width: " + previewSize.width);
+            Log.d(tag, "Screen Size height: " + height + " width: " + width);
 
             mHolder.setFixedSize(previewSize.width, previewSize.height);
         }
@@ -134,17 +129,21 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         }
     }
 
-
-    private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int w, int h) {
-        final double ASPECT_TOLERANCE = 0.1;
-        double targetRatio=(double)h / w;
+    /**
+     * Returns optimal PreviewSize by iterating available sizes from 
+     * camera hardware
+     */
+    private Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int width, int heigth) {
+        
+    	final double ASPECT_TOLERANCE = 0.1;
+        double targetRatio = (double)(heigth / width);
 
         if (sizes == null) return null;
 
         Camera.Size optimalSize = null;
         double minDiff = Double.MAX_VALUE;
 
-        int targetHeight = h;
+        int targetHeight = heigth;
 //        Log.d(MADN3SCamera.TAG, " minDiff " + minDiff + " targetHeight " + targetHeight + " targetRatio " + targetRatio + " ASPECT_TOLERANCE " + ASPECT_TOLERANCE);
         for (Camera.Size size : sizes) {
             double ratio = (double) size.width / size.height;
@@ -171,4 +170,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 //        Log.d(MADN3SCamera.TAG, "optimalSize " + (optimalSize==null?"no":"yes"));
         return optimalSize;
     }
+    
+    public Camera getmCamera() {
+		return mCamera;
+	}
 }

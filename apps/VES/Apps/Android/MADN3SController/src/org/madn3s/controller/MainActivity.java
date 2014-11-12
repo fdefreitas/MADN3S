@@ -8,14 +8,12 @@ import org.madn3s.controller.fragments.BaseFragment;
 import org.madn3s.controller.fragments.ConnectionFragment;
 import org.madn3s.controller.fragments.RemoteControlFragment;
 import org.madn3s.controller.fragments.DiscoveryFragment;
-import org.madn3s.controller.fragments.NavigationDrawerFragment;
 import org.madn3s.controller.fragments.ScannerFragment;
 import org.madn3s.controller.fragments.SettingsFragment;
 import org.madn3s.controller.io.BraveHeartMidgetService;
 import org.madn3s.controller.io.HiddenMidgetReader;
 import org.madn3s.controller.io.HiddenMidgetWriter;
 import org.madn3s.controller.io.UniversalComms;
-import org.madn3s.controller.ves.KiwiNative;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
@@ -27,95 +25,25 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
-public class MainActivity extends Activity implements NavigationDrawerFragment.NavigationDrawerCallbacks
-        , BaseFragment.OnItemSelectedListener, CameraSelectionDialogFragment.DialogListener {
+public class MainActivity extends Activity implements 
+		BaseFragment.OnItemSelectedListener
+		, CameraSelectionDialogFragment.DialogListener {
 
-	private static final String tag = "MainActivity";
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+	private static final String tag = MainActivity.class.getSimpleName();
     private CharSequence mTitle;
 	private FragmentManager mFragmentManager;
 	private DiscoveryFragment mDiscoveryFragment;
 	
-	private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
-	       @Override
-	       public void onManagerConnected(int status) {
-	           switch (status) {
-	               case LoaderCallbackInterface.SUCCESS:
-	               {
-	                   Log.i(tag, "OpenCV loaded successfully");
-	                   MADN3SController.isOpenCvLoaded = true;
-	               } break;
-	               default:
-	               {
-	                   super.onManagerConnected(status);
-	               } break;
-	           }
-	       }
-	   };
+	private BaseLoaderCallback mLoaderCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mNavigationDrawerFragment = (NavigationDrawerFragment) getFragmentManager().findFragmentById(R.id.navigation_drawer);
-        mTitle = getTitle();
-        
-        KiwiNative.testLog("{\"hello\": \"world\"}");
-        MADN3SController.pointsTest();
-        
-        
-        mNavigationDrawerFragment.setUp(R.id.navigation_drawer,
-                (DrawerLayout) findViewById(R.id.drawer_layout));
-        
-        mFragmentManager = getFragmentManager();
-        
-        //TODO validar si se debe llamar sin verificar ningún tipo de condición primero
-        initializeSharedPrefs();
-        
-        HiddenMidgetReader.bridge = new UniversalComms() {
-			@Override
-			public void callback(Object msg) {
-				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
-				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG, (String)msg);
-				startService(williamWallaceIntent);
-			}
-		};
-		
-		ScannerFragment.bridge = new UniversalComms() {
-			@Override
-			public void callback(Object msg) {
-				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
-				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND, (String)msg);
-				startService(williamWallaceIntent);
-			}
-		};
-		
-		NXTTalker.bridge = new UniversalComms() {
-			@Override
-			public void callback(Object msg) {
-				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
-				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE, (String)msg);
-				startService(williamWallaceIntent);
-			}
-		};
-		
-		SettingsFragment.bridge = new UniversalComms() {
-			@Override
-			public void callback(Object msg) {
-				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
-				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND, (String)msg);
-				startService(williamWallaceIntent);
-			}
-		};
-		
-		Intent williamWallaceIntent = new Intent(this, BraveHeartMidgetService.class);
-		startService(williamWallaceIntent);
         
         if (savedInstanceState == null) {
         	mDiscoveryFragment = new DiscoveryFragment();
@@ -123,46 +51,30 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
                     .add(R.id.container, mDiscoveryFragment)
                     .commit();
         }
-    }    
 
-	@Override
-    public void onNavigationDrawerItemSelected(int position) {
-		mFragmentManager = getFragmentManager();
-        mFragmentManager.beginTransaction()
-            .replace(R.id.container, new DiscoveryFragment())
-            .commit();
+        initializeSharedPrefs();
+        setUpBridges();
+		
+		Intent williamWallaceIntent = new Intent(this, BraveHeartMidgetService.class);
+		startService(williamWallaceIntent);
+        
+        MADN3SController.pointsTest();
     }
-
-    public void onSectionAttached(int number) {
-        switch (number) {
-            case 1:
-                mTitle = getString(R.string.title_section1);
-                break;
-            case 2:
-                mTitle = getString(R.string.title_section2);
-                break;
-            case 3:
-                mTitle = getString(R.string.title_section3);
-                break;
-        }
-    }
+    
+    @Override
+	protected void onResume() {
+		super.onResume();
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		if(!MADN3SController.isOpenCvLoaded) {
+			OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_5, this, mLoaderCallback);
+		}
+	}
 
     public void restoreActionBar() {
         ActionBar actionBar = getActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setTitle(mTitle);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            getMenuInflater().inflate(R.menu.main, menu);
-            restoreActionBar();
-            return true;
-        }
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -207,6 +119,72 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
     
     @Override
 	protected void onDestroy() {
+		finishCommunications();
+		super.onDestroy();
+	}
+    
+    /**
+	 * Sets up OpenCV Init Callback and all <code>UniversalComms</code> Bridges and Callbacks
+	 */
+	private void setUpBridges() {
+		
+		mLoaderCallback = new BaseLoaderCallback(this) {
+		       @Override
+		       public void onManagerConnected(int status) {
+		           switch (status) {
+		               case LoaderCallbackInterface.SUCCESS:
+		                   Log.i(tag, "OpenCV loaded successfully");
+		                   MADN3SController.isOpenCvLoaded = true;
+		                   break;
+		               default:
+		                   super.onManagerConnected(status);
+		                   break;
+		           }
+		       }
+		   };
+		
+		HiddenMidgetReader.bridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
+				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG, (String)msg);
+				startService(williamWallaceIntent);
+			}
+		};
+		
+		ScannerFragment.bridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
+				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND, (String)msg);
+				startService(williamWallaceIntent);
+			}
+		};
+		
+		NXTTalker.bridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
+				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE, (String)msg);
+				startService(williamWallaceIntent);
+			}
+		};
+		
+		SettingsFragment.bridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
+				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND, (String)msg);
+				startService(williamWallaceIntent);
+			}
+		};
+	}
+
+	/**
+	 * Sends <code>abort</code> signal to cameras and robot and 
+	 * closes communication channels with them
+	 */
+	private void finishCommunications() {
 		try {
 			JSONObject nxtJson = new JSONObject();
 	        nxtJson.put("command", "abort");
@@ -218,19 +196,21 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 	        json.put("action", "exit_app");
 	        json.put("side", "left");
 	        
-	        HiddenMidgetWriter sendCamera1 = new HiddenMidgetWriter(MADN3SController.rightCameraWeakReference, json.toString());
-	        sendCamera1.execute();
+	        HiddenMidgetWriter sendRightCamera = new HiddenMidgetWriter(
+	        		MADN3SController.rightCameraWeakReference, json.toString());
+	        sendRightCamera.execute();
 	        
 	        json.put("side", "right");
 	        
-	        HiddenMidgetWriter sendCamera2 = new HiddenMidgetWriter(MADN3SController.leftCameraWeakReference, json.toString());
-	        sendCamera2.execute();
+	        HiddenMidgetWriter sendLeftCamera = new HiddenMidgetWriter(
+	        		MADN3SController.leftCameraWeakReference, json.toString());
+	        sendLeftCamera.execute();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		MADN3SController.isRunning.set(false);
 		stopService(new Intent(this, BraveHeartMidgetService.class));
-		super.onDestroy();
 	}
 
     
@@ -327,15 +307,6 @@ public class MainActivity extends Activity implements NavigationDrawerFragment.N
 	public void onDialogNegativeClick(DialogFragment dialog) {
 		if(mDiscoveryFragment != null){
 			mDiscoveryFragment.onDevicesSelectionCancelled();
-		}
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-		if(! MADN3SController.isOpenCvLoaded) {
-			OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_5, this, mLoaderCallback);
 		}
 	}
 }
