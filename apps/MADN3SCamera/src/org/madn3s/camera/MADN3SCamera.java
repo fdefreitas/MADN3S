@@ -1,22 +1,22 @@
 package org.madn3s.camera;
 
-import android.app.Application;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.hardware.Camera;
-import android.net.Uri;
-import android.os.Environment;
-import android.os.Handler;
-import android.util.Log;
-import android.widget.Toast;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import android.app.Application;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.hardware.Camera;
+import android.net.Uri;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Created by inaki on 3/4/14.
@@ -115,12 +115,18 @@ public class MADN3SCamera extends Application {
     public static String saveBitmapAsJpeg(Bitmap bitmap, String tag){
     	FileOutputStream out;
         try {
-            File imgFile = getOutputMediaFile(MEDIA_TYPE_IMAGE, projectName, tag);
+            final File imgFile = getOutputMediaFile(MEDIA_TYPE_IMAGE, projectName, tag);
 
             out = new FileOutputStream(imgFile.getAbsoluteFile());
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
             
-            Toast.makeText(appContext, imgFile.getName(), Toast.LENGTH_SHORT).show();
+            new Handler(Looper.getMainLooper()).post(new Runnable() {             
+                @Override
+                public void run() { 
+                	Toast.makeText(appContext, imgFile.getName(), Toast.LENGTH_SHORT).show();
+                }
+              });
+            
             
             return imgFile.getName();
             

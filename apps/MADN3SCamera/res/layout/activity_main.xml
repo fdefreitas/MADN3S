@@ -9,22 +9,55 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
+    
+    <RelativeLayout 
+        android:id="@+id/working_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:padding="16dp">
+        
+        <ProgressBar
+            android:id="@+id/working_progressBar"
+            style="?android:attr/progressBarStyleLarge"
+            android:indeterminate="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+             />
+        
+        <TextView 
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_below="@+id/working_progressBar"
+          android:layout_centerHorizontal="true"
+          android:text="@string/working_message"
+          android:textColor="@color/BC"
+          />
+
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/configs_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/connect_button"
+        android:layout_toRightOf="@+id/take_picture_imageView"
+        android:layout_alignTop="@+id/take_picture_imageView"
         android:layout_centerHorizontal="true"
-        android:text="@string/hello_world" />
+        android:text="@string/take_test_picture" />
 
-    <Button
+    <ImageView
+        android:id="@+id/take_picture_imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Connect"
-        android:id="@+id/connect_button"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true" />
+        android:layout_alignParentBottom="true"
+        android:padding="8dp"
+        android:layout_margin="8dp"
+        android:src="@drawable/ic_camera_white"
+        android:background="@drawable/selector_button" 
+        android:contentDescription="@string/take_test_picture"/>
 
 
 </RelativeLayout>
