@@ -1,0 +1,10 @@
+native/
+PointCloudStreaming/
+PointCloud/
+MouseViewer/
+MouseViewerActivity/
+CMakeBuild/
+Kiwi/
+build/*
+
+README.txt
