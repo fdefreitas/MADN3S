@@ -16,7 +16,13 @@ public class Main {
 	public static void main(String[] args) {
 		
 		Utils.printToScreen("Getting tunnel");
-		BluetoothTunnel bTunnel = BluetoothTunnel.getInstance();
+		BluetoothTunnel bTunnel = null;
+		try{
+			bTunnel = BluetoothTunnel.getInstance();
+		} catch (Exception e){
+			return;
+		}
+		
 		Utils.printToScreen("Done tunnel");
 		Utils.printToScreen("");
 //		
