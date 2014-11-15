@@ -32,7 +32,7 @@ public class MidgetOfSeville {
 	 * @param imgBitmap
 	 * @throws JSONException 
 	 */
-	public JSONArray shapeUp(Bitmap imgBitmap, JSONObject configs) throws JSONException {
+	public JSONObject shapeUp(Bitmap imgBitmap, JSONObject configs) throws JSONException {
 		String savePath;
 		int height = imgBitmap.getHeight();
 		int width = imgBitmap.getWidth();
@@ -177,32 +177,7 @@ public class MidgetOfSeville {
 		} else {
 			edgeAlgString = "Canny";
         	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
-		}
-		
-//	    switch (edgeDetectionsAlgorithm) {
-//	        case 0:
-//	        	edgeAlgString = "Canny";
-//	        	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
-//	            break;
-//	        case 1:  
-//	        	edgeAlgString = "Sobel";
-//	        	Imgproc.Sobel(mask, edgified, ddepth, dx, dy);
-//	            break;
-////	        case 2:  
-////	        	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
-////	            edgeAlgString = "Canny";
-////	            break;
-////	        case 3:  
-////	            edgeAlgString = "Canny";
-////	        	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
-////	            break;
-//	        default: 
-//	        	edgeAlgString = "Canny";
-//	        	Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold);
-//	            break;
-//	    }
-	                  
-//	    Imgproc.Canny(mask, edgified, iCannyLowerThreshold, iCannyUpperThreshold); 
+		} 
 	    
 	    Log.d(tag, edgeAlgString + " done,moving on");
 	    
@@ -217,16 +192,17 @@ public class MidgetOfSeville {
 	              
 	    Log.d(tag, "starting point printing for");
 	    JSONObject actual;
-	    JSONArray result = new JSONArray();
+	    JSONArray pointsJsonArray = new JSONArray();
 	    for (Point point : corners){
 	    	actual = new JSONObject();
 	    	actual.put("x", point.x);
 	    	actual.put("y", point.y);
-	    	result.put(actual);
+	    	pointsJsonArray.put(actual);
+	    	//TODO guardar imagen con y sin circulos
 			Core.circle(foreground, point, radius, color);
         }  
 	  
-	    Log.d(tag, "finished point printing, point count: " + result.length());
+	    Log.d(tag, "finished point printing, point count: " + pointsJsonArray.length());
 		
 //	    Log.d(tag, "result " + result.toString(1));
 	    
@@ -235,15 +211,20 @@ public class MidgetOfSeville {
 		savePath = MADN3SCamera.saveBitmapAsJpeg(maskBitmap, "mask");
 		Log.d(tag, "mask saved to " + savePath);
 		
+		Bitmap edgeBitmap = Bitmap.createBitmap(edgified.cols(), edgified.rows(), Bitmap.Config.RGB_565);
+		Utils.matToBitmap(edgified, edgeBitmap);
+		savePath = MADN3SCamera.saveBitmapAsJpeg(edgeBitmap, edgeAlgString);
+		Log.d(tag, edgeAlgString + " saved to " + savePath);
+		
 		Bitmap fgdBitmap = Bitmap.createBitmap(foreground.cols(), foreground.rows(), Bitmap.Config.RGB_565);
 		Utils.matToBitmap(foreground, fgdBitmap);
 		savePath = MADN3SCamera.saveBitmapAsJpeg(fgdBitmap, "fgd");
 		Log.d(tag, "foreground saved to " + savePath);
 		
-		Bitmap edgeBitmap = Bitmap.createBitmap(edgified.cols(), edgified.rows(), Bitmap.Config.RGB_565);
-		Utils.matToBitmap(edgified, edgeBitmap);
-		savePath = MADN3SCamera.saveBitmapAsJpeg(edgeBitmap, edgeAlgString);
-		Log.d(tag, edgeAlgString + " saved to " + savePath);
+		//TODO revisar
+		JSONObject resultJsonObject = new JSONObject();
+		resultJsonObject.put("filepath", savePath);
+		resultJsonObject.put("points", pointsJsonArray);
 		
 		imgMat.release();
 		mask.release();
@@ -259,15 +240,15 @@ public class MidgetOfSeville {
 		edgeBitmap.recycle();
 		
 		Log.d(tag, "grabCut done");
-		return result;
+		return resultJsonObject;
 	}
 	
-	public JSONArray shapeUp(String filePath) throws JSONException{
+	public JSONObject shapeUp(String filePath) throws JSONException{
 		Bitmap imgBitmap = loadBitmap(filePath);		
 		return shapeUp(imgBitmap, null);
 	}
 	
-	public JSONArray shapeUp(String filePath, JSONObject configs) throws JSONException{
+	public JSONObject shapeUp(String filePath, JSONObject configs) throws JSONException{
 		Bitmap imgBitmap = loadBitmap(filePath);
 		return shapeUp(imgBitmap, configs);
 	}

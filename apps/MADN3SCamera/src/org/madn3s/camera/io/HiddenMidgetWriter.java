@@ -1,9 +1,11 @@
 package org.madn3s.camera.io;
 
 import android.bluetooth.BluetoothSocket;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 
@@ -16,16 +18,18 @@ public class HiddenMidgetWriter extends AsyncTask<Void, Void, Void> {
     private static final String tag = "HiddenMidgetWriter";
 	private BluetoothSocket mSocket;
     private Exception e;
-    private String msg;
+    private byte[] msg;
     
-    public HiddenMidgetWriter(WeakReference<BluetoothSocket> mBluetoothSocketWeakReference, String msg){
+    public HiddenMidgetWriter(WeakReference<BluetoothSocket> mBluetoothSocketWeakReference, Object msg){
     	mSocket = mBluetoothSocketWeakReference.get();
-    	this.msg = msg;
-    }
-
-    @Override
-    protected void onPreExecute(){
-        Log.d(tag, "Iniciando task de BT y cosa");
+    	if(msg instanceof String){
+    		this.msg = ((String) msg).getBytes();
+    	} else if(msg instanceof Bitmap){
+    		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    		//TODO convertir a constante compressformat
+    		((Bitmap) msg).compress(Bitmap.CompressFormat.JPEG, 100, baos);
+    		this.msg = baos.toByteArray();
+    	}
     }
 
     @Override
@@ -33,7 +37,7 @@ public class HiddenMidgetWriter extends AsyncTask<Void, Void, Void> {
     	try{
     		OutputStream os = mSocket.getOutputStream();
     		os.flush();
-    		os.write(msg.getBytes());
+    		os.write(msg);
     		this.e = null;
         } catch (Exception e){
         	this.e = e;

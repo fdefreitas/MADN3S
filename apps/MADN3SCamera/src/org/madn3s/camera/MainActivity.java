@@ -13,7 +13,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.madn3s.camera.io.BTConnection;
 import org.madn3s.camera.io.BraveheartMidgetService;
 import org.madn3s.camera.io.HiddenMidgetReader;
 import org.madn3s.camera.io.UniversalComms;
@@ -26,6 +25,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -38,7 +38,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -282,11 +281,13 @@ public class MainActivity extends Activity {
 		                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
 		                String filePath = mediaStorageDir.getPath() + File.separator + position + "_" + timeStamp + ".jpg";
 		                
-		                out = new FileOutputStream(filePath);
-		                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
-		                Log.d(tag, "Saving as JPEG file: " + filePath);
-		                
-		                JSONArray resultSP = figaro.shapeUp(filePath, config);
+		                JSONObject resultJsonObject = figaro.shapeUp(filePath, config);
+		                JSONArray resultSP = resultJsonObject.getJSONArray("points");
+		                SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
+		        		SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
+		        		
+		        		sharedPreferencesEditor.putString("filepath", resultJsonObject.getString("filepath"));
+		        		sharedPreferencesEditor.commit();
 		                
 		                if(resultSP != null && resultSP.length() > 0){
 		                	result.put("error", false);
@@ -297,18 +298,18 @@ public class MainActivity extends Activity {
 		                Log.d(tag, "mPictureCalback. result: ");
 		                Log.d(tag, result.toString());
 		                
-		                filePath = String.format(mediaStorageDir.getPath() + File.separator + position + "grabCut" + "_" + timeStamp + ".jpg");
-		                out = new FileOutputStream(filePath);
+//		                filePath = String.format(mediaStorageDir.getPath() + File.separator + position + "grabCut" + "_" + timeStamp + ".jpg");
+//		                out = new FileOutputStream(filePath);
+//		                
+//		                Log.d(tag, "Saving as JPEG grabCut file: " + filePath);
+//		                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
+//		                if (bMapRotate != null) {
+//		                    bMapRotate.recycle();
+//		                    bMapRotate = null;
+//		                }
 		                
-		                Log.d(tag, "Saving as JPEG grabCut file: " + filePath);
-		                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
-		                if (bMapRotate != null) {
-		                    bMapRotate.recycle();
-		                    bMapRotate = null;
-		                }
-		                
-		            } catch (FileNotFoundException e) {
-		                e.printStackTrace();
+//		            } catch (FileNotFoundException e) {
+//		                e.printStackTrace();
 		            } catch (JSONException e) {
 						e.printStackTrace();
 					}

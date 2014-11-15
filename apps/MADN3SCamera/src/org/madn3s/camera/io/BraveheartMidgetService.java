@@ -1,7 +1,5 @@
 package org.madn3s.camera.io;
 
-import static org.madn3s.camera.MADN3SCamera.projectName;
-
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
@@ -10,20 +8,10 @@ import java.util.Vector;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.madn3s.camera.MADN3SCamera;
+import org.madn3s.camera.R;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
-import org.json.JSONArray;
-import org.madn3s.camera.MidgetOfSeville;
-
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.hardware.Camera;
 import android.os.Environment;
 import android.util.Log;
 import android.app.IntentService;
@@ -32,6 +20,9 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
@@ -155,9 +146,12 @@ public class BraveheartMidgetService extends IntentService {
 					Log.d(tag, "action: " + action);
 					if(action.equalsIgnoreCase("config")){
 						config = msg;
+						//TODO guardar en sharedPrefs
 						MADN3SCamera.isPictureTaken.set(true);
-					} else if(action.equalsIgnoreCase("photo")){
+					} else if(action.equalsIgnoreCase("take_picture")){
 						cameraCallback.callback(config);
+					} else if(action.equalsIgnoreCase("send_picture")) {
+						sendPicture();
 					} else if(action.equalsIgnoreCase("end_project")){
 						if(msg.has("clean") && msg.getBoolean("clean")){
 							cleanTakenPictures(projectName);
@@ -175,6 +169,7 @@ public class BraveheartMidgetService extends IntentService {
 			} else if (intent.hasExtra("result")) {
 				jsonString = intent.getExtras().getString("result");
 				result = new JSONObject(jsonString);
+				//TODO ordenar y arreglar
 				if(result.has("error")){
 					Log.d(tag, "recibido Error.");
 					sendResult();
@@ -184,6 +179,26 @@ public class BraveheartMidgetService extends IntentService {
 		} catch (JSONException e) {
 			Log.d(tag, "Could Not Parse JSON");
 			e.printStackTrace();
+		}
+	}
+
+	private void sendPicture() {
+		Log.d(tag, "mSocketWeakReference == null: " + (mSocketWeakReference == null));
+		//TODO buscar imagen guardada
+		SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
+		
+		String filepath = sharedPreferences.getString("filepath", null);
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inPreferredConfig = Bitmap.Config.RGB_565;
+		Bitmap bitmap = BitmapFactory.decodeFile(filepath, options);
+		if(filepath != null){
+			if(mSocketWeakReference != null){
+				HiddenMidgetWriter writerTask = new HiddenMidgetWriter(mSocketWeakReference, bitmap);
+		        Log.d(tag, "Ejecutando a HiddenMidgetWriter desde sendPicture");
+		        writerTask.execute();
+			}
+		} else {
+			Log.d(tag, "filepath : null");
 		}
 	}
 
@@ -203,10 +218,9 @@ public class BraveheartMidgetService extends IntentService {
 		Log.d(tag, "mSocketWeakReference == null: " + (mSocketWeakReference == null));
 		if(mSocketWeakReference != null){
 			HiddenMidgetWriter writerTask = new HiddenMidgetWriter(mSocketWeakReference, result.toString());
-	        Log.d(tag, "Ejecutando a HiddenMidgetWriter");
+	        Log.d(tag, "Ejecutando a HiddenMidgetWriter desde sendResult");
 	        writerTask.execute();
 		}
-		
 	}
 
 	private void cleanTakenPictures(String projectName) {

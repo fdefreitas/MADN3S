@@ -112,10 +112,10 @@ public class MADN3SCamera extends Application {
         return mediaFile;
     }
     
-    public static String saveBitmapAsJpeg(Bitmap bitmap, String tag){
+    public static String saveBitmapAsJpeg(Bitmap bitmap, String position){
     	FileOutputStream out;
         try {
-            final File imgFile = getOutputMediaFile(MEDIA_TYPE_IMAGE, projectName, tag);
+            final File imgFile = getOutputMediaFile(MEDIA_TYPE_IMAGE, projectName, position);
 
             out = new FileOutputStream(imgFile.getAbsoluteFile());
             bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
@@ -132,7 +132,7 @@ public class MADN3SCamera extends Application {
             
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            Log.d(tag, "saveBitmapAsJpeg: No se pudo guardar el Bitmap");
+            Log.d(position, "saveBitmapAsJpeg: No se pudo guardar el Bitmap");
             return null;
         }
     }
