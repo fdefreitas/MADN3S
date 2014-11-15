@@ -13,9 +13,10 @@ import lejos.nxt.comm.NXTConnection;
 public class BluetoothTunnel {
 	private static BluetoothTunnel me;
 	private NXTConnection connection;
+	private final int CONNECTION_TIMEOUT = 60000;
 	
 	public BluetoothTunnel() {
-		connection = Bluetooth.waitForConnection();
+		connection = Bluetooth.waitForConnection(CONNECTION_TIMEOUT, 0);
 		connection.setIOMode(NXTConnection.RAW);
 	}
 	
