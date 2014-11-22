@@ -65,15 +65,19 @@ public class BraveHeartMidgetService extends IntentService {
 	protected void onHandleIntent(Intent intent) {
 		String jsonString;
 		if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG)){
+			Log.d(tag, "EXTRA_CALLBACK_MSG");
 			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG);
 			processCameraAnswer(jsonString);
 		} else if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_PICTURE)){
+			Log.d(tag, "EXTRA_CALLBACK_PICTURE");
 			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_PICTURE);
 			processCameraPicture(jsonString);
 		} else if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND)){
+			Log.d(tag, "EXTRA_CALLBACK_SEND");
 			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_SEND);
 			sendMessageToCameras(jsonString, true, true);
 		} else if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE)){
+			Log.d(tag, "EXTRA_CALLBACK_NXT_MESSAGE");
 			jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE);
 			jsonString = jsonString.substring(0, jsonString.lastIndexOf("}")+1);
 			Bundle bundle = new Bundle();
@@ -115,6 +119,7 @@ public class BraveHeartMidgetService extends IntentService {
 	}
 	
 	public void sendMessageToCameras(String msgString, boolean left, boolean right){
+		Log.d(tag, "sendMessageToCameras. " + msgString);
 		try{
 			JSONObject msg = new JSONObject(msgString);
 			msg.put("iter", MADN3SController.sharedPrefsGetInt("iter"));
@@ -154,6 +159,7 @@ public class BraveHeartMidgetService extends IntentService {
 	}
 	
 	public void processCameraAnswer(String msgString){
+		Log.d(tag, "processCameraAnswer. " + msgString);
 		try {
 			JSONObject msg = new JSONObject(msgString);
 			boolean left = false;

@@ -324,6 +324,10 @@ public class DiscoveryFragment extends BaseFragment {
 	}
     
     private void unregisterBtReceiver() {
-    	getActivity().unregisterReceiver(mReceiver);
+    	try {
+    		getActivity().unregisterReceiver(mReceiver);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 }

@@ -55,7 +55,7 @@
     <LinearLayout
         android:id="@+id/nxt_devices_layout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/nxt_connection_textView"
         android:baselineAligned="false"
         android:orientation="horizontal" >
@@ -125,7 +125,7 @@
     <LinearLayout
         android:id="@+id/camera_devices_layout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="wrap_content"
         android:layout_below="@id/cameras_connection_textView"
         android:baselineAligned="false"
         android:focusableInTouchMode="false"

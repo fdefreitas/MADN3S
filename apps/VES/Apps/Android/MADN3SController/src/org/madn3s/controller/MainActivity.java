@@ -95,7 +95,7 @@ public class MainActivity extends Activity implements
     public void onObjectSelected(Object selected, BaseFragment fragment) {
     	Mode mode = (Mode) selected;
     	
-    	mFragmentManager.beginTransaction()
+    	getFragmentManager().beginTransaction()
     		.remove(fragment)
     		.commit();
     	//TODO revisar casos de switch
@@ -220,7 +220,7 @@ public class MainActivity extends Activity implements
     public void launchRemoteControlFragment(){
         Log.d(tag, "launchRemoteControlFragment");
         RemoteControlFragment remoteControlFragment = new RemoteControlFragment();
-        mFragmentManager.beginTransaction().replace(R.id.container, remoteControlFragment)
+        getFragmentManager().beginTransaction().replace(R.id.container, remoteControlFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(String.valueOf(remoteControlFragment.getClass()))
                 .commit();
@@ -232,7 +232,7 @@ public class MainActivity extends Activity implements
     public void launchConnectionFragment(){
         Log.d(tag, "launchConectionFragment");
         ConnectionFragment connectionFragment = new ConnectionFragment();
-        mFragmentManager.beginTransaction()
+        getFragmentManager().beginTransaction()
         		.replace(R.id.container, connectionFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
@@ -245,7 +245,7 @@ public class MainActivity extends Activity implements
     public void launchScannerFragment(){
         Log.d(tag, "launchScannerFragment");
         ScannerFragment scannerFragment = new ScannerFragment();
-        mFragmentManager.beginTransaction()
+        getFragmentManager().beginTransaction()
         		.replace(R.id.container, scannerFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
@@ -257,7 +257,7 @@ public class MainActivity extends Activity implements
      */
     public void launchSettingsFragment(){
         SettingsFragment settingsFragment = new SettingsFragment();
-        mFragmentManager.beginTransaction()
+        getFragmentManager().beginTransaction()
         		.replace(R.id.container, settingsFragment)
         		.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
