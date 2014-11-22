@@ -58,6 +58,8 @@ public class MADN3SCamera extends Application {
     	        }
     	    };
     	};
+    	
+    	Consts.init();
     }
     
     public static File getAppDirectory(){
@@ -122,7 +124,7 @@ public class MADN3SCamera extends Application {
                 }
               });
             
-            return imgFile.getName();
+            return imgFile.getPath();
             
         } catch (FileNotFoundException e) {
             Log.e(position, "saveBitmapAsJpeg: No se pudo guardar el Bitmap", e);

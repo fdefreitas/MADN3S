@@ -108,7 +108,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause();
-        releaseCamera();
+//        releaseCamera();
     }
     
     /**
@@ -269,17 +269,13 @@ public class MainActivity extends Activity {
 		                bMapRotate = Bitmap.createScaledBitmap(bMap, bMap.getWidth(), bMap.getHeight(), true);
 		            }
 		            
-		            FileOutputStream out;
 		            try {
-		                File mediaStorageDir = new File(MADN3SCamera.getAppDirectory(), projectName);
-		                if (!mediaStorageDir.exists()){
-		                    if (!mediaStorageDir.mkdirs()){
-		                        Log.d(tag, "Failed to create directory");
-		                        return null;
-		                    }
-		                }
-		                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-		                String filePath = mediaStorageDir.getPath() + File.separator + position + "_" + timeStamp + Consts.IMAGE_EXT;
+//		                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+//		                String filePath = mediaStorageDir.getPath() + File.separator + position + "_" + timeStamp + Consts.IMAGE_EXT;
+		                
+		            	String filePath = MADN3SCamera.saveBitmapAsJpeg(bMapRotate, position);
+		            	
+		            	Log.d(tag, "filePath desde MainActivity: " + filePath);
 		                
 		                JSONObject resultJsonObject = figaro.shapeUp(filePath, config);
 		                
