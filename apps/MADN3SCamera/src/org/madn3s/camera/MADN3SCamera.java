@@ -6,7 +6,7 @@ import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
-
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -31,6 +31,7 @@ public class MADN3SCamera extends Application {
 
     public static String projectName;
     public static String position;
+    private static File appDirectory;
     
     public static CameraPreview mPreview;
     
@@ -42,10 +43,13 @@ public class MADN3SCamera extends Application {
     
     private static Camera mCamera;
 
-    @Override
+    @SuppressLint("HandlerLeak")
+	@Override
     public void onCreate() {
         super.onCreate();
         appContext = super.getBaseContext();
+        appDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        		, appContext.getString(R.string.app_name));
         
         mBluetoothHandler = new Handler() {
     	    public void handleMessage(android.os.Message msg) {
@@ -55,41 +59,27 @@ public class MADN3SCamera extends Application {
     	    };
     	};
     }
+    
+    public static File getAppDirectory(){
+    	return appDirectory;
+    }
 
     public static Uri getOutputMediaFileUri(int type){
         return Uri.fromFile(getOutputMediaFile(type));
     }
-
-    public static File getOutputMediaFile(int type){
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), appContext.getString(R.string.app_name));
-
-        if (! mediaStorageDir.exists()){
-            if (! mediaStorageDir.mkdirs()){
-                Log.d(TAG, "failed to create directory");
-                return null;
-            }
-        }
-
-        // Create a media file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        File mediaFile;
-        if (type == MEDIA_TYPE_IMAGE){
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_"+ timeStamp + ".jpg");
-        } else if(type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "VID_"+ timeStamp + ".mp4");
-        } else {
-            return null;
-        }
-
-        return mediaFile;
-    }
-
+    
     public static Uri getOutputMediaFileUri(int type, String projectName, String position){
         return Uri.fromFile(getOutputMediaFile(type, projectName, position));
     }
 
-    public static File getOutputMediaFile(int type, String projectName, String position){
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)+"/"+appContext.getString(R.string.app_name), projectName);
+    @SuppressLint("SimpleDateFormat")
+	public static File getOutputMediaFile(int type){
+    	return getOutputMediaFile(type, projectName, position);
+    }
+
+    @SuppressLint("SimpleDateFormat")
+	public static File getOutputMediaFile(int type, String projectName, String iteration){
+        File mediaStorageDir = new File(getAppDirectory(), projectName);
 
         if (! mediaStorageDir.exists()){
             if (! mediaStorageDir.mkdirs()){
@@ -98,16 +88,21 @@ public class MADN3SCamera extends Application {
             }
         }
 
-        // Create a media file name
+        if(iteration == null){
+        	iteration = "";
+        }
+        
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String filename;
         File mediaFile;
+        
         if (type == MEDIA_TYPE_IMAGE){
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + position + "_" + timeStamp + ".jpg");
-        } else if(type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "VID_" + position + "_" + timeStamp + ".mp4");
+            filename = "IMG_" + iteration + "_" + timeStamp + Consts.IMAGE_EXT;
         } else {
             return null;
         }
+        
+        mediaFile = new File(mediaStorageDir.getPath(), filename);
 
         return mediaFile;
     }
@@ -118,7 +113,7 @@ public class MADN3SCamera extends Application {
             final File imgFile = getOutputMediaFile(MEDIA_TYPE_IMAGE, projectName, position);
 
             out = new FileOutputStream(imgFile.getAbsoluteFile());
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, out);
+            bitmap.compress(Consts.BITMAP_COMPRESS_FORMAT, Consts.COMPRESSION_QUALITY, out);
             
             new Handler(Looper.getMainLooper()).post(new Runnable() {             
                 @Override
@@ -127,12 +122,10 @@ public class MADN3SCamera extends Application {
                 }
               });
             
-            
             return imgFile.getName();
             
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Log.d(position, "saveBitmapAsJpeg: No se pudo guardar el Bitmap");
+            Log.e(position, "saveBitmapAsJpeg: No se pudo guardar el Bitmap", e);
             return null;
         }
     }

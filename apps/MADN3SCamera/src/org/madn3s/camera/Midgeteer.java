@@ -2,17 +2,15 @@ package org.madn3s.camera;
 
 import static org.madn3s.camera.MADN3SCamera.position;
 import static org.madn3s.camera.MADN3SCamera.projectName;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -47,7 +45,8 @@ public class Midgeteer extends Thread {
 
 	private final Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
 
-        @Override
+        @SuppressLint("SimpleDateFormat")
+		@Override
         public void onPictureTaken(byte[] data, Camera camera) {
         	MidgetOfSeville figaro = new MidgetOfSeville();
         	int orientation;
@@ -86,7 +85,8 @@ public class Midgeteer extends Thread {
                 out = new FileOutputStream(filePath);
                 bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
                 Toast.makeText(actualContext, "Imagen almacenada en " + filePath, Toast.LENGTH_SHORT).show();
-                result = figaro.shapeUp(filePath, params);
+                JSONObject resultJsonObject = figaro.shapeUp(filePath, params);
+                result = resultJsonObject.getJSONArray(Consts.KEY_POINTS);
                 out = new FileOutputStream(String.format(mediaStorageDir.getPath() + File.separator + position + "grabCut" + "_" + timeStamp + ".jpg"));
                 bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
                 if (bMapRotate != null) {

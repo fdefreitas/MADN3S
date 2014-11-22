@@ -23,16 +23,11 @@ import android.util.Log;
 
 public class MidgetOfSeville {
 
-	private static final String tag = "MidgetOfSeville";
+	private static final String tag = MidgetOfSeville.class.getSimpleName();
 	private static final Scalar ZERO_SCALAR = new Scalar(0);
 	private int iterCount = 1;
 
-	/**
-	 * <a href="http://hiankun.blogspot.com/2013/08/try-grabcut-using-opencv.html">Example Code</a> 
-	 * @param imgBitmap
-	 * @throws JSONException 
-	 */
-	public JSONObject shapeUp(Bitmap imgBitmap, JSONObject configs) throws JSONException {
+	public JSONObject shapeUp(Bitmap imgBitmap, JSONObject config) throws JSONException {
 		String savePath;
 		int height = imgBitmap.getHeight();
 		int width = imgBitmap.getWidth();
@@ -63,10 +58,10 @@ public class MidgetOfSeville {
         double r = 255, g = 0, b = 0;
         int radius = 10;
 		
-		if (configs != null) {
+		if (config != null) {
 			//grabCut
-			if (configs.has("grab_cut")) {
-				JSONObject grabCut = configs.getJSONObject("grab_cut");
+			if (config.has("grab_cut")) {
+				JSONObject grabCut = config.getJSONObject("grab_cut");
 				if (grabCut.has("rectangle")) {
 					JSONObject points = grabCut.getJSONObject("rectangle");
 					JSONObject point1 = points.getJSONObject("point_1");
@@ -82,22 +77,22 @@ public class MidgetOfSeville {
 			}
 			
 			//goodFeaturesToTrack
-			if (configs.has("good_features")) {
-				JSONObject goodFeaturesToTrack = configs.getJSONObject("good_features");
+			if (config.has("good_features")) {
+				JSONObject goodFeaturesToTrack = config.getJSONObject("good_features");
 				if (goodFeaturesToTrack.has("max_corners")) {
-					maxCorners = configs.getInt("max_corners");
+					maxCorners = config.getInt("max_corners");
 				}
 				if (goodFeaturesToTrack.has("quality_level")) {
-					qualityLevel = configs.getDouble("quality_level");
+					qualityLevel = config.getDouble("quality_level");
 				}
 				if (goodFeaturesToTrack.has("min_distance")) {
-					minDistance = configs.getInt("min_distance");
+					minDistance = config.getInt("min_distance");
 				}
 			}
 			
 			//edge detection
-			if (configs.has("edge_detection")) {
-				JSONObject edgeDetection = configs.getJSONObject("edge_detection");
+			if (config.has("edge_detection")) {
+				JSONObject edgeDetection = config.getJSONObject("edge_detection");
 				if (edgeDetection.has("algorithm")) {
 					edgeDetectionsAlgorithm = edgeDetection.getString("algorithm");
 					if (edgeDetectionsAlgorithm.equalsIgnoreCase("Canny")) {//Canny
@@ -109,7 +104,7 @@ public class MidgetOfSeville {
 							iCannyUpperThreshold = cannyConfig.getDouble("upper_threshold");
 						}
 					} else if (edgeDetectionsAlgorithm.equalsIgnoreCase("Sobel")) {//Sobel
-						JSONObject sobelConfig = configs.getJSONObject("sobel_config");
+						JSONObject sobelConfig = config.getJSONObject("sobel_config");
 						if (sobelConfig.has("d_depth")) {
 							ddepth = sobelConfig.getInt("d_depth");
 						}
@@ -126,8 +121,8 @@ public class MidgetOfSeville {
 			}
 			
 			//extras
-			if (configs.has("extras")) {
-				JSONObject extras = configs.getJSONObject("extras");
+			if (config.has("extras")) {
+				JSONObject extras = config.getJSONObject("extras");
 	        	if (extras.has("r")) {
 	        		r = extras.getDouble("r");
 	        		r = (r<0?0:(r>255?255:r));

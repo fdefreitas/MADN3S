@@ -15,7 +15,10 @@ import android.view.SurfaceView;
 import android.view.WindowManager;
 
 public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback {
-    private static final String tag = CameraPreview.class.getSimpleName();
+    protected static final String CAMERA_ORIENTATION_PORTRAIT = "portrait";
+	protected static final String CAMERA_ORIENTATION_LANDSCAPE = "landscape";
+	protected static final String CAMERA_PARAM_ORIENTATION = "orientation";
+	private static final String tag = CameraPreview.class.getSimpleName();
 	private SurfaceHolder mHolder;
     private Camera mCamera;
     private Context context;
@@ -104,21 +107,15 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         if(getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT){
        //     mCamera.setDisplayOrientation(90);
             Camera.Parameters p = mCamera.getParameters();
-            p.set("orientation", "portrait");
+            p.set(CAMERA_PARAM_ORIENTATION, CAMERA_ORIENTATION_PORTRAIT);
             mCamera.setParameters(p);
-//            mCamera.getParameters().set("orientation", "landscape");
-//            mCamera.getParameters().setRotation(270);
         }else{
             Log.d(MADN3SCamera.TAG, "Landscape " 
-            		+ (getResources().getConfiguration().orientation 
-            		== Configuration.ORIENTATION_LANDSCAPE));
-            mCamera.getParameters().set("orientation", "landscape");
+            		+ (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE));
+            mCamera.getParameters().set(CAMERA_PARAM_ORIENTATION, CAMERA_ORIENTATION_LANDSCAPE);
             mCamera.getParameters().setRotation(0);
         }
 
-//        Log.d(MADN3SCamera.TAG, "Rotation After: " + mCamera.getParameters().get("rotation"));
-
-        // start preview with new settings
         try {
             mCamera.setPreviewDisplay(mHolder);
             mCamera.startPreview();
