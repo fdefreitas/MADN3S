@@ -5,8 +5,11 @@ import java.util.UUID;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
+import android.util.Log;
 
 public class Consts {
+	
+	private static final String tag = Consts.class.getSimpleName();
 	
 	public static final String SERVICE_NAME ="MADN3S";
     public static final UUID APP_UUID = UUID.fromString("65da7fe0-8b80-11e3-baa8-0800200c9a66");
@@ -40,7 +43,8 @@ public class Consts {
 	public static final Bitmap.Config DEFAULT_IN_PREFERRED_CONFIG = Bitmap.Config.RGB_565;
 	public static BitmapFactory.Options bitmapFactoryOptions = new BitmapFactory.Options();
     
-	public void init(){
+	public static void init(){
+		Log.d(tag, "init()");
 		bitmapFactoryOptions.inSampleSize = 6;
 	    bitmapFactoryOptions.inDither = false;
 	    bitmapFactoryOptions.inPurgeable = true;

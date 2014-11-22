@@ -249,6 +249,7 @@ public class MidgetOfSeville {
 	}
 	
 	private Bitmap loadBitmap(String filePath){
+		Log.d(tag, "loadBitmap. filePath desde MidgetOfSeville: " + filePath);
 		Options options = new Options();
 		options.inPreferredConfig = Config.RGB_565;
 		options.inDither = true;
