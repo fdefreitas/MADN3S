@@ -245,6 +245,7 @@ public class ScannerFragment extends BaseFragment {
 	
 	@SuppressLint("SimpleDateFormat")
 	public void scan(String projectName){
+		//TODO FIX THIS SHIT!
 		try{
 			MADN3SController.sharedPrefsPutInt("iter", 0);
 			int points = MADN3SController.sharedPrefsGetInt("points");
@@ -254,7 +255,7 @@ public class ScannerFragment extends BaseFragment {
 //			}
 			
 			JSONObject json = new JSONObject();
-	        json.put("action", "photo");
+	        json.put("action", "take_picture");
 	        json.put("project_name", projectName);
 	        Log.d(tag, "enviando comando");
 	        bridge.callback(json.toString());
