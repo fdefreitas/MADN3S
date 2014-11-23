@@ -1,29 +1,42 @@
 package org.madn3s.controller;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.madn3s.controller.Consts;
 import org.madn3s.controller.components.NXTTalker;
 import org.madn3s.controller.ves.KiwiNative;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
+import android.widget.Toast;
 
 /**
  * Created by inaki on 1/11/14.
  */
 public class MADN3SController extends Application {
 	private static final String tag = "MADN3SController";
+	public static Context appContext;
 	public static final String MODEL_MESSAGE = "MODEL";
 	public static final String SERVICE_NAME = "MADN3S";
 	public static final UUID APP_UUID = UUID
@@ -31,6 +44,11 @@ public class MADN3SController extends Application {
 	
 	public static final String defaultJSONObjectString = "{}";
 	public static final String defaultJSONArrayString = "[]";
+	
+	public static final int MEDIA_TYPE_IMAGE = 1;
+    public static final int MEDIA_TYPE_VIDEO = 2;
+    
+    private static File appDirectory;
 
 	public static SharedPreferences sharedPreferences;
 	public static Editor sharedPreferencesEditor;
@@ -141,6 +159,7 @@ public class MADN3SController extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		appContext = super.getBaseContext();
 		setSharedPreferences();
 		Log.d(tag, "MADN3SController onCreate()");
 		
@@ -298,4 +317,75 @@ public class MADN3SController extends Application {
 			Log.e(tag, "generateModelButton.OnClick. Error composing points JSONObject");
 		}
 	}
+	
+	public static File getAppDirectory(){
+    	return appDirectory;
+    }
+
+    public static Uri getOutputMediaFileUri(int type, String position){
+        return Uri.fromFile(getOutputMediaFile(type, position));
+    }
+    
+    public static Uri getOutputMediaFileUri(int type, String projectName, String position){
+        return Uri.fromFile(getOutputMediaFile(type, projectName, position));
+    }
+
+    @SuppressLint("SimpleDateFormat")
+	public static File getOutputMediaFile(int type, String position){
+    	return getOutputMediaFile(type, sharedPrefsGetString("project_name"), position);
+    }
+
+    @SuppressLint("SimpleDateFormat")
+	public static File getOutputMediaFile(int type, String projectName, String side){
+        File mediaStorageDir = new File(getAppDirectory(), projectName);
+
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                Log.d(tag, "failed to create directory");
+                return null;
+            }
+        }
+
+        if(side == null){
+        	side = "";
+        }
+        
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String filename;
+        String iteration = String.valueOf(sharedPrefsGetInt("iter"));
+        File mediaFile;
+        
+        if (type == MEDIA_TYPE_IMAGE){
+            filename = "IMG_" + iteration + "_" + side + "_" + timeStamp + Consts.IMAGE_EXT;
+        } else {
+            return null;
+        }
+        
+        mediaFile = new File(mediaStorageDir.getPath(), filename);
+
+        return mediaFile;
+    }
+    
+    public static String saveBitmapAsJpeg(Bitmap bitmap, String position){
+    	FileOutputStream out;
+        try {
+            final File imgFile = getOutputMediaFile(MEDIA_TYPE_IMAGE, sharedPrefsGetString("project_name"), position);
+
+            out = new FileOutputStream(imgFile.getAbsoluteFile());
+            bitmap.compress(Consts.BITMAP_COMPRESS_FORMAT, Consts.COMPRESSION_QUALITY, out);
+            
+            new Handler(Looper.getMainLooper()).post(new Runnable() {             
+                @Override
+                public void run() { 
+                	Toast.makeText(appContext, imgFile.getName(), Toast.LENGTH_SHORT).show();
+                }
+              });
+            
+            return imgFile.getPath();
+            
+        } catch (FileNotFoundException e) {
+            Log.e(position, "saveBitmapAsJpeg: No se pudo guardar el Bitmap", e);
+            return null;
+        }
+    }
 }

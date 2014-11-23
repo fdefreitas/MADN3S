@@ -6,11 +6,15 @@ import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.json.JSONObject;
+import org.madn3s.controller.Consts;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.MADN3SController.Device;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
@@ -21,6 +25,7 @@ import android.util.Log;
 public class HiddenMidgetReader extends HandlerThread implements Callback {
 	public static UniversalComms bridge;
 	public static UniversalComms connectionFragmentBridge;
+	public static UniversalComms pictureBridge;
 	private final static String tag = "HiddenMidgetReader";
 	public final static String EXTRA_CALLBACK_MSG = "message";
 	public final static String EXTRA_CALLBACK_SEND = "send";
@@ -110,21 +115,42 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 						if(start == 0){
 							start = System.currentTimeMillis();
 						}
-						message = getMessage();
-						if(message != null && !message.isEmpty()){
-							JSONObject msg = new JSONObject(message);
-							if(msg.has("action")){
-								String action = msg.getString("action");
-								 if(action.equalsIgnoreCase("exit_app")){
-									break;
+						
+						JSONObject msg;
+						ByteArrayOutputStream bao = getMessage();
+						byte[] bytes = bao.toByteArray();
+						Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+						Log.d(tag, "side: " + side + "iter: " + MADN3SController.sharedPrefsGetInt("iter") + " bytes: " + bytes.length + ". bmp null:" + (bmp == null));
+						Log.d(tag, bytes.toString());
+						
+						if(bmp == null){
+							message = bao.toString();
+							
+							if(message != null && !message.isEmpty()){
+								msg = new JSONObject(message);
+								if(msg.has("action")){
+									String action = msg.getString("action");
+									 if(action.equalsIgnoreCase("exit_app")){
+										break;
+									}
 								}
+								msg.put("camera", mSocket.getRemoteDevice().getName());
+								msg.put("side", side);
+								msg.put("time", System.currentTimeMillis() - start);
+								bridge.callback(msg.toString());
+								start = 0;
+								read.set(false);
 							}
-							msg.put("camera", mSocket.getRemoteDevice().getName());
+						} else {
+							msg = new JSONObject();
+							msg.put("error", false);
 							msg.put("side", side);
-							msg.put("time", System.currentTimeMillis() - start);
-							bridge.callback(msg.toString());
-							start = 0;
-							read.set(false);
+							String filepath = MADN3SController.saveBitmapAsJpeg(bmp, side);
+							msg.put("file", filepath);
+							
+							Log.d(tag, msg.toString(1));
+							
+							pictureBridge.callback(msg.toString());
 						}
 					}
 				}
@@ -134,7 +160,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 		 }
 	}
 	
-	private String getMessage(){
+	private ByteArrayOutputStream getMessage(){
 		try{
         	int byteTemp = 0;
         	int threshold = 0;
@@ -159,7 +185,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
         			break;
         		}
         	}
-        	return bao != null ? bao.toString() : null;
+        	return bao;
         } catch (Exception e){
             Log.d(tag, "getMessage. Exception al leer Socket: " + e);
             e.printStackTrace();
