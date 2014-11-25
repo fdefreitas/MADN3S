@@ -22,6 +22,11 @@ public class Consts {
 	public static final String KEY_CLEAN = "clean";
 	public static final String KEY_ERROR = "error";
 	public static final String KEY_POINTS = "points";
+	public static final String KEY_STATE = "state";
+	public static final String KEY_DEVICE = "device";
+	public static final String KEY_CAMERA = "camera";
+	public static final String KEY_TIME = "time";
+	public static final String KEY_FILE_PATH = "filepath";
 	
 	public static final String ACTION_TAKE_PICTURE = "take_picture";
 	public static final String ACTION_SEND_PICTURE = "send_picture";

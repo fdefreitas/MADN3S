@@ -3,6 +3,7 @@ package org.madn3s.camera.io;
 import android.bluetooth.BluetoothSocket;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
+import android.util.Base64;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
@@ -32,10 +33,8 @@ public class HiddenMidgetWriter extends AsyncTask<Void, Void, Void> {
     		ByteArrayOutputStream baos = new ByteArrayOutputStream();
     		((Bitmap) msg).compress(Consts.BITMAP_COMPRESS_FORMAT, Consts.COMPRESSION_QUALITY, baos);
     		this.msg = baos.toByteArray();
-    		String tempBytes = new String(this.msg);
-    		this.msg = tempBytes.getBytes();
+    		this.msg = Base64.encode(this.msg, Base64.DEFAULT);
     		Log.d(tag, "msg length: " + this.msg.length);
-    		Log.d(tag, "msg bytes: " + tempBytes);
     	}
     }
 

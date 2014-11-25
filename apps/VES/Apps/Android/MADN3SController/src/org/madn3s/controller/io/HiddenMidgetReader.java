@@ -12,7 +12,6 @@ import org.madn3s.controller.MADN3SController.Device;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -20,17 +19,20 @@ import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.HandlerThread;
 import android.os.Message;
+import android.util.Base64;
 import android.util.Log;
 
 public class HiddenMidgetReader extends HandlerThread implements Callback {
+	
+	private static final String tag = "HiddenMidgetReader";
+	public static final String EXTRA_CALLBACK_MSG = "message";
+	public static final String EXTRA_CALLBACK_SEND = "send";
+	public static final String EXTRA_CALLBACK_NXT_MESSAGE = "nxt_message";
+	public static final String EXTRA_CALLBACK_PICTURE = "picture";
+	public static final String VALUE_DEFAULT_SIDE = "default";
 	public static UniversalComms bridge;
 	public static UniversalComms connectionFragmentBridge;
 	public static UniversalComms pictureBridge;
-	private final static String tag = "HiddenMidgetReader";
-	public final static String EXTRA_CALLBACK_MSG = "message";
-	public final static String EXTRA_CALLBACK_SEND = "send";
-	public final static String EXTRA_CALLBACK_NXT_MESSAGE = "nxt_message";
-	public static final String EXTRA_CALLBACK_PICTURE = "picture";
 	private Handler handler, callback;
 	private WeakReference<BluetoothSocket> mBluetoothSocketWeakReference;
     private BluetoothSocket mSocket;
@@ -40,7 +42,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 	public HiddenMidgetReader(String name, WeakReference<BluetoothSocket> mBluetoothSocketWeakReference) {
 		super(name);
 		this.mBluetoothSocketWeakReference = mBluetoothSocketWeakReference;
-		this.side = "DEFAULT";
+		this.side = VALUE_DEFAULT_SIDE;
 	}
 	
 	public HiddenMidgetReader(String name, WeakReference<BluetoothSocket> mBluetoothSocketWeakReference, AtomicBoolean read, String side) {
@@ -83,18 +85,18 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 			if(isConnected){
 				switch (bondState){
 		            case BluetoothDevice.BOND_BONDED:
-		            	state = org.madn3s.controller.MADN3SController.State.CONNECTED.getState();
+		            	state = MADN3SController.State.CONNECTED.getState();
 		                break;
 		            case BluetoothDevice.BOND_BONDING:
-		            	state = org.madn3s.controller.MADN3SController.State.CONNECTING.getState();
+		            	state = MADN3SController.State.CONNECTING.getState();
 		                break;
 		            default:
 		            case BluetoothDevice.BOND_NONE:
-		            	state = org.madn3s.controller.MADN3SController.State.FAILED.getState();
+		            	state = MADN3SController.State.FAILED.getState();
 		                break;
 		        }
 			} else {
-				state = org.madn3s.controller.MADN3SController.State.FAILED.getState();
+				state = MADN3SController.State.FAILED.getState();
 			}
 			
 			if(MADN3SController.isRightCamera(mSocket.getRemoteDevice().getAddress())){
@@ -105,11 +107,11 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 	        	device = Device.NXT.getValue();
 	        }
 
-			bundle.putInt("state", state);
-			bundle.putInt("device", device);
+			bundle.putInt(Consts.KEY_STATE, state);
+			bundle.putInt(Consts.KEY_DEVICE, device);
 			long start = 0;
 			connectionFragmentBridge.callback(bundle);
-			if(state == org.madn3s.controller.MADN3SController.State.CONNECTED.getState()){
+			if(state == MADN3SController.State.CONNECTED.getState()){
 				while(MADN3SController.isRunning.get()){
 					if(read.get()){
 						if(start == 0){
@@ -117,17 +119,14 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 						}
 						
 						JSONObject msg;
-//						this.msg = baos.toByteArray();
-//			    		String tempBytes = new String(this.msg);
-//			    		this.msg = tempBytes.getBytes();
 						ByteArrayOutputStream bao = getMessage();
 						
 						message = bao.toString();
-						byte[] bytes = bao.toByteArray();
-						String tempBytes = new String(bytes);
-						bytes = tempBytes.getBytes();
+						byte[] bytes = Base64.decode(bao.toByteArray(), Base64.DEFAULT);
 						Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, Consts.bitmapFactoryOptions);
-						Log.d(tag, "side: " + side + " iter: " + MADN3SController.sharedPrefsGetInt("iter") + " bytes: " + bytes.length + ". bmp null:" + (bmp == null));
+						Log.d(tag, "side: " + side 
+								+ " iter: " + MADN3SController.sharedPrefsGetInt("iter") 
+								+ " bytes: " + bytes.length + ". bmp null:" + (bmp == null));
 						Log.d(tag, bytes.toString());
 						
 						if(bmp == null){
@@ -135,15 +134,15 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 							
 							if(message != null && !message.isEmpty()){
 								msg = new JSONObject(message);
-								if(msg.has("action")){
-									String action = msg.getString("action");
-									 if(action.equalsIgnoreCase("exit_app")){
+								if(msg.has(Consts.KEY_ACTION)){
+									String action = msg.getString(Consts.KEY_ACTION);
+									 if(action.equalsIgnoreCase(Consts.ACTION_EXIT_APP)){
 										break;
 									}
 								}
-								msg.put("camera", mSocket.getRemoteDevice().getName());
-								msg.put("side", side);
-								msg.put("time", System.currentTimeMillis() - start);
+								msg.put(Consts.KEY_CAMERA, mSocket.getRemoteDevice().getName());
+								msg.put(Consts.KEY_SIDE, side);
+								msg.put(Consts.KEY_TIME, System.currentTimeMillis() - start);
 								bridge.callback(msg.toString());
 								start = 0;
 								read.set(false);
@@ -151,10 +150,10 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 						} else {					
 							Log.d(tag, message);
 							msg = new JSONObject();
-							msg.put("error", false);
-							msg.put("side", side);
+							msg.put(Consts.KEY_ERROR, false);
+							msg.put(Consts.KEY_SIDE, side);
 							String filepath = MADN3SController.saveBitmapAsJpeg(bmp, side);
-							msg.put("file", filepath);
+							msg.put(Consts.KEY_FILE_PATH, filepath);
 							
 							Log.d(tag, msg.toString(1));
 							
@@ -195,8 +194,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
         	}
         	return bao;
         } catch (Exception e){
-            Log.d(tag, "getMessage. Exception al leer Socket: " + e);
-            e.printStackTrace();
+            Log.e(tag, "getMessage. Exception al leer Socket: ", e);
             return null;
         }
 	}
