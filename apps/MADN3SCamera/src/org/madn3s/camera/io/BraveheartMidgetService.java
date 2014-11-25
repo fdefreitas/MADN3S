@@ -1,6 +1,5 @@
 package org.madn3s.camera.io;
 
-import java.io.Console;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
@@ -14,7 +13,6 @@ import org.madn3s.camera.R;
 
 import java.io.File;
 
-import android.os.Environment;
 import android.util.Log;
 import android.app.IntentService;
 import android.bluetooth.BluetoothAdapter;

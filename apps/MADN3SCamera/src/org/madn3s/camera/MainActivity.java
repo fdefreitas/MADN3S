@@ -3,11 +3,6 @@ package org.madn3s.camera;
 import static org.madn3s.camera.MADN3SCamera.position;
 import static org.madn3s.camera.MADN3SCamera.projectName;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.json.JSONArray;
@@ -32,7 +27,6 @@ import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;

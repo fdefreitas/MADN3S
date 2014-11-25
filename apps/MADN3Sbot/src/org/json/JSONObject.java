@@ -86,6 +86,7 @@ import org.json.util.StringUtil;
  * @author JSON.org
  * @version 2
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class JSONObject {
     
 //#if CLDC=="1.0"
@@ -147,7 +148,7 @@ public class JSONObject {
     /**
      * Construct an empty JSONObject.
      */
-    public JSONObject() {
+	public JSONObject() {
         this.myHashMap = new SimpleListsMap();
     }
 
@@ -542,7 +543,7 @@ public class JSONObject {
      * @param key   A key string.
      * @return      true if the key exists in the JSONObject.
      */
-    public boolean has(String key) {
+	public boolean has(String key) {
         return this.myHashMap.containsKey(key);
     }
 
@@ -564,7 +565,7 @@ public class JSONObject {
      *
      * @return An iterator of the keys.
      */
-    public Enumeration keys() {
+	public Enumeration keys() {
         return this.myHashMap.keysEnum();
     }
 
@@ -630,7 +631,8 @@ public class JSONObject {
      * @param key   A key string.
      * @return      An object which is the value, or null if there is no value.
      */
-    public Object opt(String key) {
+    
+	public Object opt(String key) {
         return key == null ? null : this.myHashMap.get(key);
     }
 
@@ -924,7 +926,7 @@ public class JSONObject {
      * @throws JSONException If the value is non-finite number
      *  or if the key is null.
      */
-    public JSONObject put(String key, Object value) throws JSONException {
+	public JSONObject put(String key, Object value) throws JSONException {
         if (key == null) {
             throw new JSONException("Null key.");
         }

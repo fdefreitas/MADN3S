@@ -78,6 +78,7 @@ import java.util.Vector;
  * @author JSON.org
  * @version 2
  */
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class JSONArray {
 
 
@@ -149,7 +150,7 @@ public class JSONArray {
      * Construct a JSONArray from a Collection.
      * @param collection     A Collection.
      */
-    public JSONArray(Vector collection) {
+	public JSONArray(Vector collection) {
         if (collection == null) {
             this.myArrayList = new Vector();
         } else {
@@ -621,7 +622,7 @@ public class JSONArray {
      *  JSONObject.NULL object.
      * @return this.
      */
-    public JSONArray put(Object value) {
+	public JSONArray put(Object value) {
         this.myArrayList.addElement(value);
         return this;
     }

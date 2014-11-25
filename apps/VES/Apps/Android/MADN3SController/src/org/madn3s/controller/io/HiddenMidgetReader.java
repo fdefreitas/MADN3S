@@ -117,10 +117,17 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 						}
 						
 						JSONObject msg;
+//						this.msg = baos.toByteArray();
+//			    		String tempBytes = new String(this.msg);
+//			    		this.msg = tempBytes.getBytes();
 						ByteArrayOutputStream bao = getMessage();
+						
+						message = bao.toString();
 						byte[] bytes = bao.toByteArray();
-						Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-						Log.d(tag, "side: " + side + "iter: " + MADN3SController.sharedPrefsGetInt("iter") + " bytes: " + bytes.length + ". bmp null:" + (bmp == null));
+						String tempBytes = new String(bytes);
+						bytes = tempBytes.getBytes();
+						Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, Consts.bitmapFactoryOptions);
+						Log.d(tag, "side: " + side + " iter: " + MADN3SController.sharedPrefsGetInt("iter") + " bytes: " + bytes.length + ". bmp null:" + (bmp == null));
 						Log.d(tag, bytes.toString());
 						
 						if(bmp == null){
@@ -141,7 +148,8 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 								start = 0;
 								read.set(false);
 							}
-						} else {
+						} else {					
+							Log.d(tag, message);
 							msg = new JSONObject();
 							msg.put("error", false);
 							msg.put("side", side);

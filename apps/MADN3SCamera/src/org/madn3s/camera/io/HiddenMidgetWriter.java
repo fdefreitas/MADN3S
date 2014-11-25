@@ -2,7 +2,6 @@ package org.madn3s.camera.io;
 
 import android.bluetooth.BluetoothSocket;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -11,7 +10,6 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 
 import org.madn3s.camera.Consts;
-import org.madn3s.camera.MADN3SCamera;
 
 
 /**
@@ -34,10 +32,10 @@ public class HiddenMidgetWriter extends AsyncTask<Void, Void, Void> {
     		ByteArrayOutputStream baos = new ByteArrayOutputStream();
     		((Bitmap) msg).compress(Consts.BITMAP_COMPRESS_FORMAT, Consts.COMPRESSION_QUALITY, baos);
     		this.msg = baos.toByteArray();
+    		String tempBytes = new String(this.msg);
+    		this.msg = tempBytes.getBytes();
     		Log.d(tag, "msg length: " + this.msg.length);
-    		Log.d(tag, "msg bytes: " + this.msg.toString());
-    		Bitmap byteMap = BitmapFactory.decodeByteArray(this.msg, 0, this.msg.length);
-    		MADN3SCamera.saveBitmapAsJpeg(byteMap, String.valueOf(System.currentTimeMillis()));
+    		Log.d(tag, "msg bytes: " + tempBytes);
     	}
     }
 

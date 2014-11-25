@@ -22,7 +22,8 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 	
 	private final static String tag = HiddenMidgetReader.class.getSimpleName();
 	public static UniversalComms bridge;
-	private Handler handler, callback;
+	@SuppressWarnings("unused")
+	private Handler handler;
 	private WeakReference<BluetoothSocket> mBluetoothSocketWeakReference;
     private BluetoothSocket mSocket;
 

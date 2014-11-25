@@ -32,6 +32,7 @@ public class LFJfedor {
 		Button.ESCAPE.waitForPressAndRelease();
 	}
 
+	@SuppressWarnings("unused")
 	private int getThreshold() {
 		int value = LFUtils.getAvgColorValue();
 		LCD.drawInt(value, 4, 0, 3);

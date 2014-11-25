@@ -3,7 +3,6 @@ package org.madn3s.robot.common;
 import org.json.JSONObject;
 import org.madn3s.io.BluetoothTunnel;
 
-import lejos.nxt.Button;
 import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.navigation.OmniPilot;
 
@@ -21,7 +20,6 @@ public class Scanner {
 	private boolean last;
 	private boolean move;
 	private boolean finish = false;
-	private boolean firstTime = true;
 	private BluetoothTunnel bTunnel;
 	private UltrasonicSensor uSensor;
 	
