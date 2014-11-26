@@ -4,6 +4,8 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static org.madn3s.controller.Consts.*; 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +39,7 @@ import android.widget.Toast;
 @SuppressWarnings("unused")
 public class ScannerFragment extends BaseFragment {
 
-	public static final String tag = "ScannerFragment";
+	public static final String tag = ScannerFragment.class.getSimpleName();
 	public static UniversalComms bridge;
 	
 	private ScannerFragment mFragment;
@@ -63,10 +65,10 @@ public class ScannerFragment extends BaseFragment {
 			@Override
 			public void callback(Object msg) {
 				Bundle bundle = (Bundle) msg;
-				final Device device = Device.setDevice(bundle.getInt("device"));
-				final State state = State.setState(bundle.getInt("state"));
-				int iter = MADN3SController.sharedPrefsGetInt("iter");
-				final boolean scan_finished = bundle.containsKey("scan_finished");
+				final Device device = Device.setDevice(bundle.getInt(KEY_DEVICE));
+				final State state = State.setState(bundle.getInt(KEY_STATE));
+				int iter = MADN3SController.sharedPrefsGetInt(KEY_ITERATION);
+				final boolean scan_finished = bundle.containsKey(KEY_SCAN_FINISHED);
 				Log.d(tag, device + " " + state + " " + iter);
 				mFragment.getView().post(
 					new Runnable() { 
@@ -134,9 +136,10 @@ public class ScannerFragment extends BaseFragment {
 				String projectName = projectNameEditText.getText().toString();
 				if(projectName != null && !projectName.isEmpty()){
 					projectNameEditText.setEnabled(false);
-					MADN3SController.sharedPrefsPutString("project_name", projectName);
+					MADN3SController.sharedPrefsPutString(KEY_PROJECT_NAME, projectName);
 					scan(projectName);
 				} else {
+					//TODO extract String resource
 					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "Falta el nombre del proyecto", Toast.LENGTH_LONG);
 					missingName.show();
 				}
@@ -198,18 +201,18 @@ public class ScannerFragment extends BaseFragment {
 		generateModelButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				int points = MADN3SController.sharedPrefsGetInt("points");
+				int points = MADN3SController.sharedPrefsGetInt(KEY_POINTS);
 				JSONArray framesJson = new JSONArray();
 				JSONObject pointsJson = new JSONObject();
 				for(int i = 0; i < points; i++){
-					JSONObject frame = MADN3SController.sharedPrefsGetJSONObject("frame-"+i);
+					JSONObject frame = MADN3SController.sharedPrefsGetJSONObject(FRAME_PREFIX + i);
 					framesJson.put(frame);
-					Log.d(tag, "frame-"+i + " = " + frame.toString());
+					Log.d(tag, FRAME_PREFIX + i + " = " + frame.toString());
 				}
 				
 				try {
-					pointsJson.put("name", MADN3SController.sharedPrefsGetString("project_name"));
-					pointsJson.put("pictures", framesJson);
+					pointsJson.put(KEY_NAME, MADN3SController.sharedPrefsGetString(KEY_PROJECT_NAME));
+					pointsJson.put(KEY_PICTURES, framesJson);
 					Log.d(tag, "generateModelButton.OnClick. pointsJson: " + pointsJson.toString(1));
 					KiwiNative.doProcess(pointsJson.toString());
 				} catch (JSONException e) {
@@ -224,7 +227,8 @@ public class ScannerFragment extends BaseFragment {
 		viewModelButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				String fileName = Environment.getExternalStorageDirectory().getPath() + "/MADN3S/models/" + projectNameEditText.getText().toString() + ".off";
+				//TODO fix hardcoded path
+				String fileName = Environment.getExternalStorageDirectory().getPath() + "/MADN3S/models/" + projectNameEditText.getText().toString() + MODEL_EXT;
 				File file = new File(fileName);
 				if(file.exists()){
 					Intent intent = new Intent(getActivity().getBaseContext(), ModelDisplayActivity.class);
@@ -247,16 +251,16 @@ public class ScannerFragment extends BaseFragment {
 	public void scan(String projectName){
 		//TODO FIX THIS SHIT!
 		try{
-			MADN3SController.sharedPrefsPutInt("iter", 0);
-			int points = MADN3SController.sharedPrefsGetInt("points");
+			MADN3SController.sharedPrefsPutInt(KEY_ITERATION, 0);
+			int points = MADN3SController.sharedPrefsGetInt(KEY_POINTS);
 			//TODO permtir borrar contenedor para no hacer for
 //			for(int i = 0; i < points; ++i){
 //				MADN3SController.removeKeyFromSharedPreferences("frame-"+i);
 //			}
 			
 			JSONObject json = new JSONObject();
-	        json.put("action", "take_picture");
-	        json.put("project_name", projectName);
+	        json.put(KEY_ACTION, ACTION_TAKE_PICTURE);
+	        json.put(KEY_PROJECT_NAME, projectName);
 	        Log.d(tag, "enviando comando");
 	        bridge.callback(json.toString());
 		} catch (Exception e) {

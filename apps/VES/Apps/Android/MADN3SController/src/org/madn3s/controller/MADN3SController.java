@@ -9,12 +9,21 @@ import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static org.madn3s.controller.Consts.*; 
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.madn3s.controller.Consts;
 import org.madn3s.controller.components.NXTTalker;
+import org.madn3s.controller.fragments.ScannerFragment;
+import org.madn3s.controller.fragments.SettingsFragment;
+import org.madn3s.controller.io.BraveHeartMidgetService;
+import org.madn3s.controller.io.HiddenMidgetReader;
+import org.madn3s.controller.io.UniversalComms;
 import org.madn3s.controller.ves.KiwiNative;
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -22,12 +31,14 @@ import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -35,7 +46,7 @@ import android.widget.Toast;
  * Created by inaki on 1/11/14.
  */
 public class MADN3SController extends Application {
-	private static final String tag = "MADN3SController";
+	private static final String tag = MADN3SController.class.getSimpleName();
 	public static Context appContext;
 	public static final String MODEL_MESSAGE = "MODEL";
 	public static final String SERVICE_NAME = "MADN3S";
@@ -161,7 +172,8 @@ public class MADN3SController extends Application {
 		super.onCreate();
 		appContext = super.getBaseContext();
 		setSharedPreferences();
-		Log.d(tag, "MADN3SController onCreate()");
+		setUpBridges();
+		Log.d(tag, "onCreate. ");
 		
 		MADN3SController.isPictureTaken = new AtomicBoolean(true);
         MADN3SController.isRunning = new AtomicBoolean(true);
@@ -169,7 +181,7 @@ public class MADN3SController extends Application {
         MADN3SController.readLeftCamera = new AtomicBoolean(false);
 		
 		mBluetoothHandler = new Handler() {
-			public void handleMessage(android.os.Message msg) {
+			public void handleMessage(Message msg) {
 				if (mBluetoothHandlerCallback != null) {
 					mBluetoothHandlerCallback.handleMessage(msg);
 				}
@@ -177,6 +189,71 @@ public class MADN3SController extends Application {
 		};
 	}
 	
+	/**
+	 * Sets up OpenCV Init Callback and all <code>UniversalComms</code> Bridges and Callbacks
+	 */
+	private void setUpBridges() {
+		
+		MainActivity.mLoaderCallback = new BaseLoaderCallback(getBaseContext()) {
+		       @Override
+		       public void onManagerConnected(int status) {
+		           switch (status) {
+		               case LoaderCallbackInterface.SUCCESS:
+		                   Log.i(tag, "OpenCV loaded successfully");
+		                   MADN3SController.isOpenCvLoaded = true;
+		                   break;
+		               default:
+		                   super.onManagerConnected(status);
+		                   break;
+		           }
+		       }
+		   };
+		
+		HiddenMidgetReader.bridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
+				williamWallaceIntent.putExtra(EXTRA_CALLBACK_MSG, (String)msg);
+				startService(williamWallaceIntent);
+			}
+		};
+		
+		HiddenMidgetReader.pictureBridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
+				williamWallaceIntent.putExtra(EXTRA_CALLBACK_PICTURE, (String)msg);
+				startService(williamWallaceIntent);
+			}
+		};
+		
+		ScannerFragment.bridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
+				williamWallaceIntent.putExtra(EXTRA_CALLBACK_SEND, (String)msg);
+				startService(williamWallaceIntent);
+			}
+		};
+		
+		NXTTalker.bridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
+				williamWallaceIntent.putExtra(EXTRA_CALLBACK_NXT_MESSAGE, (String)msg);
+				startService(williamWallaceIntent);
+			}
+		};
+		
+		SettingsFragment.bridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
+				williamWallaceIntent.putExtra(EXTRA_CALLBACK_SEND, (String)msg);
+				startService(williamWallaceIntent);
+			}
+		};
+	}
 	
 	/**
 	 * Sets SharedPreferences and SharedPreferences Editor for later use with methods defined further
@@ -318,6 +395,9 @@ public class MADN3SController extends Application {
 		}
 	}
 	
+	/**
+	 * Returns Public App folder
+	 */
 	public static File getAppDirectory(){
     	return appDirectory;
     }
@@ -332,14 +412,14 @@ public class MADN3SController extends Application {
 
     @SuppressLint("SimpleDateFormat")
 	public static File getOutputMediaFile(int type, String position){
-    	return getOutputMediaFile(type, sharedPrefsGetString("project_name"), position);
+    	return getOutputMediaFile(type, sharedPrefsGetString(KEY_PROJECT_NAME), position);
     }
 
     @SuppressLint("SimpleDateFormat")
 	public static File getOutputMediaFile(int type, String projectName, String side){
         File mediaStorageDir = new File(getAppDirectory(), projectName);
 
-        if (! mediaStorageDir.exists()){
+        if (!mediaStorageDir.exists()){
             if (! mediaStorageDir.mkdirs()){
                 Log.d(tag, "failed to create directory");
                 return null;
@@ -352,7 +432,7 @@ public class MADN3SController extends Application {
         
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String filename;
-        String iteration = String.valueOf(sharedPrefsGetInt("iter"));
+        String iteration = String.valueOf(sharedPrefsGetInt(KEY_ITERATION));
         File mediaFile;
         
         if (type == MEDIA_TYPE_IMAGE){
@@ -369,7 +449,7 @@ public class MADN3SController extends Application {
     public static String saveBitmapAsJpeg(Bitmap bitmap, String position){
     	FileOutputStream out;
         try {
-            final File imgFile = getOutputMediaFile(MEDIA_TYPE_IMAGE, sharedPrefsGetString("project_name"), position);
+            final File imgFile = getOutputMediaFile(MEDIA_TYPE_IMAGE, sharedPrefsGetString(KEY_PROJECT_NAME), position);
 
             out = new FileOutputStream(imgFile.getAbsoluteFile());
             bitmap.compress(Consts.BITMAP_COMPRESS_FORMAT, Consts.COMPRESSION_QUALITY, out);

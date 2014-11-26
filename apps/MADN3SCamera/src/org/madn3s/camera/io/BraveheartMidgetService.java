@@ -173,15 +173,11 @@ public class BraveheartMidgetService extends IntentService {
 	}
 
 	private void sendPicture() {
-		Log.d(tag, "mSocketWeakReference == null: " + (mSocketWeakReference == null));
-		//TODO buscar imagen guardada
+		Log.d(tag, "mSocketWeakReference null: " + (mSocketWeakReference == null));
+		
 		SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
-		
-		String filepath = sharedPreferences.getString("filepath", null);
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inPreferredConfig = Consts.DEFAULT_IN_PREFERRED_CONFIG;
-		
-		Bitmap bitmap = BitmapFactory.decodeFile(filepath, options);
+		String filepath = sharedPreferences.getString(Consts.KEY_FILE_PATH, null);
+		Bitmap bitmap = BitmapFactory.decodeFile(filepath, Consts.bitmapFactoryOptions);
 		
 		if(filepath != null){
 			if(mSocketWeakReference != null){

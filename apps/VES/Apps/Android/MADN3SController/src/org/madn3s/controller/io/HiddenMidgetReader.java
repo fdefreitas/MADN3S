@@ -24,12 +24,7 @@ import android.util.Log;
 
 public class HiddenMidgetReader extends HandlerThread implements Callback {
 	
-	private static final String tag = "HiddenMidgetReader";
-	public static final String EXTRA_CALLBACK_MSG = "message";
-	public static final String EXTRA_CALLBACK_SEND = "send";
-	public static final String EXTRA_CALLBACK_NXT_MESSAGE = "nxt_message";
-	public static final String EXTRA_CALLBACK_PICTURE = "picture";
-	public static final String VALUE_DEFAULT_SIDE = "default";
+	private static final String tag = HiddenMidgetReader.class.getSimpleName();
 	public static UniversalComms bridge;
 	public static UniversalComms connectionFragmentBridge;
 	public static UniversalComms pictureBridge;
@@ -42,7 +37,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 	public HiddenMidgetReader(String name, WeakReference<BluetoothSocket> mBluetoothSocketWeakReference) {
 		super(name);
 		this.mBluetoothSocketWeakReference = mBluetoothSocketWeakReference;
-		this.side = VALUE_DEFAULT_SIDE;
+		this.side = Consts.VALUE_DEFAULT_SIDE;
 	}
 	
 	public HiddenMidgetReader(String name, WeakReference<BluetoothSocket> mBluetoothSocketWeakReference, AtomicBoolean read, String side) {
@@ -125,7 +120,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 						byte[] bytes = Base64.decode(bao.toByteArray(), Base64.DEFAULT);
 						Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, Consts.bitmapFactoryOptions);
 						Log.d(tag, "side: " + side 
-								+ " iter: " + MADN3SController.sharedPrefsGetInt("iter") 
+								+ " iter: " + MADN3SController.sharedPrefsGetInt(Consts.KEY_ITERATION) 
 								+ " bytes: " + bytes.length + ". bmp null:" + (bmp == null));
 						Log.d(tag, bytes.toString());
 						

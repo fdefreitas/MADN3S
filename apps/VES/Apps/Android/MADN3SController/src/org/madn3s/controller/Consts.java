@@ -27,20 +27,45 @@ public class Consts {
 	public static final String KEY_CAMERA = "camera";
 	public static final String KEY_TIME = "time";
 	public static final String KEY_FILE_PATH = "filepath";
+	public static final String KEY_MESSAGE = "message";
+	public static final String KEY_ITERATION = "iter";
+	public static final String KEY_CAMERA_NAME = "camera_name";
+	public static final String KEY_SCAN_FINISHED = "scan_finished";
+	public static final String KEY_NAME = "name";
+	public static final String KEY_PICTURES = "pictures";
+	public static final String KEY_FILE = "file";
 	
+	public static final String COMMAND_ABORT = "abort";
+	public static final String COMMAND_SCANNER = "scanner";
+	
+	public static final String ACTION_ABORT = "abort";
+	public static final String ACTION_MOVE = "move";
+	public static final String ACTION_FINISH = "finish";
 	public static final String ACTION_TAKE_PICTURE = "take_picture";
 	public static final String ACTION_SEND_PICTURE = "send_picture";
 	public static final String ACTION_END_PROJECT = "end_project";
 	public static final String ACTION_CALIBRATE = "calibrate";
 	public static final String ACTION_EXIT_APP = "exit_app";
 	
+	public static final String MESSAGE_PICTURE = "picture";
+	public static final String MESSAGE_FINISH = "finish";
+	
+	public static final String SIDE_RIGHT = "right";
+	public static final String SIDE_LEFT = "left";
+	
 	public final static String EXTRA_CALLBACK_MSG = "message";
+	public static final String EXTRA_CALLBACK_SEND = "send";
+	public static final String EXTRA_CALLBACK_NXT_MESSAGE = "nxt_message";
+	public static final String EXTRA_CALLBACK_PICTURE = "picture";
 	public static final String EXTRA_RESULT = "result";
+	public static final String EXTRA_STOP_SERVICE = "stopservice";
 	
 	public static final String VALUE_CLEAN = "clean";
 	public static final String VALUE_DEFAULT_PROJECT_NAME = "default";
-	public static final String VALUE_DEFAULT_POSITION = "default";
+	public static final String VALUE_DEFAULT_SIDE = "default";
+	public static final String FRAME_PREFIX = "frame-";
 	public static final String IMAGE_EXT = ".jpg";
+	public static final String MODEL_EXT = ".off";
 	public static final String EMPTY_JSON_OBJECT_STRING = "{}";  
 
 	public static final CompressFormat BITMAP_COMPRESS_FORMAT = Bitmap.CompressFormat.JPEG;
