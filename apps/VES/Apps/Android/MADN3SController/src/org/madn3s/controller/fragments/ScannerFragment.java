@@ -1,10 +1,19 @@
 package org.madn3s.controller.fragments;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import static org.madn3s.controller.Consts.ACTION_TAKE_PICTURE;
+import static org.madn3s.controller.Consts.FRAME_PREFIX;
+import static org.madn3s.controller.Consts.KEY_ACTION;
+import static org.madn3s.controller.Consts.KEY_DEVICE;
+import static org.madn3s.controller.Consts.KEY_ITERATION;
+import static org.madn3s.controller.Consts.KEY_NAME;
+import static org.madn3s.controller.Consts.KEY_PICTURES;
+import static org.madn3s.controller.Consts.KEY_POINTS;
+import static org.madn3s.controller.Consts.KEY_PROJECT_NAME;
+import static org.madn3s.controller.Consts.KEY_SCAN_FINISHED;
+import static org.madn3s.controller.Consts.KEY_STATE;
+import static org.madn3s.controller.Consts.MODEL_EXT;
 
-import static org.madn3s.controller.Consts.*; 
+import java.io.File;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,7 +27,6 @@ import org.madn3s.controller.io.UniversalComms;
 import org.madn3s.controller.models.ScanStepViewHolder;
 import org.madn3s.controller.models.StatusViewHolder;
 import org.madn3s.controller.ves.KiwiNative;
-import org.madn3s.controller.viewer.models.files.FileComparator;
 import org.madn3s.controller.viewer.opengl.ModelDisplayActivity;
 
 import android.annotation.SuppressLint;
@@ -31,7 +39,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewDebug.IntToString;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
