@@ -3,9 +3,13 @@ package org.madn3s.camera;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
@@ -130,6 +134,23 @@ public class MADN3SCamera extends Application {
             Log.e(position, "saveBitmapAsJpeg: No se pudo guardar el Bitmap", e);
             return null;
         }
+    }
+    
+    public static String getMD5EncryptedString(byte[] bytes){
+        MessageDigest mdEnc = null;
+        try {
+            mdEnc = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("Exception while encrypting to md5");
+            e.printStackTrace();
+        }
+        
+        mdEnc.update(bytes, 0, bytes.length);
+        String md5 = new BigInteger(1, mdEnc.digest()).toString(16);
+        while ( md5.length() < 32 ) {
+            md5 = "0"+md5;
+        }
+        return md5;
     }
     
     public static Camera getCameraInstance(){

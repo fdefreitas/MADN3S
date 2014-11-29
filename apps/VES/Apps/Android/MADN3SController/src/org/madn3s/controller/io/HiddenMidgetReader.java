@@ -74,7 +74,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 			
 			int bondState = mSocket.getRemoteDevice().getBondState();
 			boolean isConnected = mSocket.isConnected();
-			int state, device;
+			int state, deviceIntValue;
 			Bundle bundle = new Bundle();
 			
 			if(isConnected){
@@ -95,15 +95,35 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 			}
 			
 			if(MADN3SController.isRightCamera(mSocket.getRemoteDevice().getAddress())){
-	        	device = Device.RIGHT_CAMERA.getValue();
+	        	deviceIntValue = Device.RIGHT_CAMERA.getValue();
+	        	
+	        	//TODO hacer settter en Application
+	        	if(MADN3SController.leftCamera == null){
+	        		Log.d(tag, "leftCamera null. Trying to recover.");
+	        		MADN3SController.leftCamera = mSocket.getRemoteDevice();
+	        	}
+	        	if(MADN3SController.leftCameraWeakReference == null){
+	        		Log.d(tag, "leftCameraWeakReference null. Trying to recover.");
+	        		MADN3SController.leftCameraWeakReference = new WeakReference<BluetoothSocket>(mSocket);
+	        	}
 	        } else if(MADN3SController.isLeftCamera(mSocket.getRemoteDevice().getAddress())){
-	        	device = Device.LEFT_CAMERA.getValue();
+	        	deviceIntValue = Device.LEFT_CAMERA.getValue();
+	        	
+	        	//TODO hacer settter en Application
+	        	if(MADN3SController.rightCamera == null){
+	        		Log.d(tag, "rightCamera null. Trying to recover.");
+	        		MADN3SController.rightCamera = mSocket.getRemoteDevice();
+	        	}
+	        	if(MADN3SController.rightCameraWeakReference == null){
+	        		Log.d(tag, "rightCamera null. Trying to recover.");
+	        		MADN3SController.rightCameraWeakReference = new WeakReference<BluetoothSocket>(mSocket);
+	        	}
 	        } else {
-	        	device = Device.NXT.getValue();
+	        	deviceIntValue = Device.NXT.getValue();
 	        }
 
 			bundle.putInt(Consts.KEY_STATE, state);
-			bundle.putInt(Consts.KEY_DEVICE, device);
+			bundle.putInt(Consts.KEY_DEVICE, deviceIntValue);
 			long start = 0;
 			connectionFragmentBridge.callback(bundle);
 			if(state == MADN3SController.State.CONNECTED.getState()){
@@ -113,46 +133,54 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 							start = System.currentTimeMillis();
 						}
 						
+//						Log.d(tag, "Escuchando. " + mSocket.getRemoteDevice().getName());
+						
 						JSONObject msg;
 						ByteArrayOutputStream bao = getMessage();
+						byte[] bytes = bao.toByteArray();
 						
-						message = bao.toString();
-						byte[] bytes = Base64.decode(bao.toByteArray(), Base64.DEFAULT);
-						Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, Consts.bitmapFactoryOptions);
-						Log.d(tag, "side: " + side 
-								+ " iter: " + MADN3SController.sharedPrefsGetInt(Consts.KEY_ITERATION) 
-								+ " bytes: " + bytes.length + ". bmp null:" + (bmp == null));
-						Log.d(tag, bytes.toString());
-						
-						if(bmp == null){
-							message = bao.toString();
+						if(bytes.length > 0){
 							
-							if(message != null && !message.isEmpty()){
-								msg = new JSONObject(message);
-								if(msg.has(Consts.KEY_ACTION)){
-									String action = msg.getString(Consts.KEY_ACTION);
-									 if(action.equalsIgnoreCase(Consts.ACTION_EXIT_APP)){
-										break;
+							bytes = Base64.decode(bytes, Base64.DEFAULT);
+							Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, Consts.bitmapFactoryOptions);
+							message = new String(bytes);
+							String md5Hex = new String(MADN3SController.getMD5EncryptedString(bytes));
+							Log.d(tag, "device: " + mSocket.getRemoteDevice().getName()
+									+ " side: " + side
+									+ " iter: " + MADN3SController.sharedPrefsGetInt(Consts.KEY_ITERATION) 
+									+ " MD5: " + md5Hex);
+							
+							if(bmp == null){
+								Log.d(tag, "instancef String");
+								Log.d(tag, "Received String: " + message);
+								
+								if(message != null && !message.isEmpty()){
+									msg = new JSONObject(message);
+									if(msg.has(Consts.KEY_ACTION)){
+										String action = msg.getString(Consts.KEY_ACTION);
+										 if(action.equalsIgnoreCase(Consts.ACTION_EXIT_APP)){
+											break;
+										}
 									}
+									msg.put(Consts.KEY_CAMERA, mSocket.getRemoteDevice().getName());
+									msg.put(Consts.KEY_SIDE, side);
+									msg.put(Consts.KEY_TIME, System.currentTimeMillis() - start);
+									bridge.callback(msg.toString());
+									start = 0;
+									read.set(false);
 								}
-								msg.put(Consts.KEY_CAMERA, mSocket.getRemoteDevice().getName());
+							} else {					
+								Log.d(tag, "instancef Bitmap");
+								msg = new JSONObject();
+								msg.put(Consts.KEY_ERROR, false);
 								msg.put(Consts.KEY_SIDE, side);
-								msg.put(Consts.KEY_TIME, System.currentTimeMillis() - start);
-								bridge.callback(msg.toString());
+								String filepath = MADN3SController.saveBitmapAsJpeg(bmp, side);
+								msg.put(Consts.KEY_FILE_PATH, filepath);
+								
+								pictureBridge.callback(msg.toString());
 								start = 0;
 								read.set(false);
 							}
-						} else {					
-							Log.d(tag, message);
-							msg = new JSONObject();
-							msg.put(Consts.KEY_ERROR, false);
-							msg.put(Consts.KEY_SIDE, side);
-							String filepath = MADN3SController.saveBitmapAsJpeg(bmp, side);
-							msg.put(Consts.KEY_FILE_PATH, filepath);
-							
-							Log.d(tag, msg.toString(1));
-							
-							pictureBridge.callback(msg.toString());
 						}
 					}
 				}

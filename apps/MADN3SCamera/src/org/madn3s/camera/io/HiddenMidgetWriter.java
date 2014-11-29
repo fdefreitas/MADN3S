@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 
 import org.madn3s.camera.Consts;
+import org.madn3s.camera.MADN3SCamera;
 
 
 /**
@@ -33,9 +34,11 @@ public class HiddenMidgetWriter extends AsyncTask<Void, Void, Void> {
     		ByteArrayOutputStream baos = new ByteArrayOutputStream();
     		((Bitmap) msg).compress(Consts.BITMAP_COMPRESS_FORMAT, Consts.COMPRESSION_QUALITY, baos);
     		this.msg = baos.toByteArray();
-    		this.msg = Base64.encode(this.msg, Base64.DEFAULT);
-    		Log.d(tag, "msg length: " + this.msg.length);
     	}
+    	
+    	this.msg = Base64.encode(this.msg, Base64.DEFAULT);
+    	String md5HexBase64 = new String(MADN3SCamera.getMD5EncryptedString(this.msg));
+		Log.d(tag, "MD5 Base64: " + md5HexBase64);
     }
 
     @Override
@@ -55,7 +58,7 @@ public class HiddenMidgetWriter extends AsyncTask<Void, Void, Void> {
     @Override
     protected void onPostExecute(Void result){
         if(e == null){
-        	Log.d(tag, "Mensaje: " + msg + " enviado a " + mSocket.getRemoteDevice().getName());
+        	Log.d(tag, "Mensaje: " + msg.toString() + " enviado a " + mSocket.getRemoteDevice().getName());
         } else {
         	Log.d(tag, "Ocurrio un error enviando mensaje: " + msg + " a " + mSocket.getRemoteDevice().getName());
         }

@@ -2,6 +2,7 @@ package org.madn3s.camera;
 
 import static org.madn3s.camera.MADN3SCamera.position;
 import static org.madn3s.camera.MADN3SCamera.projectName;
+import static org.madn3s.camera.Consts.*;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -246,7 +247,8 @@ public class MainActivity extends Activity {
 					Log.d(tag, "onPicureTaken. doInBackground.");
 		        	MidgetOfSeville figaro = new MidgetOfSeville();
 		        	int orientation;
-		            Bitmap bMap = BitmapFactory.decodeByteArray(mData, 0, mData.length, Consts.bitmapFactoryOptions);
+		            Bitmap bMap = BitmapFactory.decodeByteArray(mData, 0, mData.length
+		            		, Consts.bitmapFactoryOptions);
 		            
 		            if(bMap.getHeight() < bMap.getWidth()){
 		                orientation = 90;
@@ -258,36 +260,36 @@ public class MainActivity extends Activity {
 		            if (orientation != 0) {
 		                Matrix matrix = new Matrix();
 		                matrix.postRotate(orientation);
-		                bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(), bMap.getHeight(), matrix, true);
+		                bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(), bMap.getHeight()
+		                		, matrix, true);
 		            } else {
 		                bMapRotate = Bitmap.createScaledBitmap(bMap, bMap.getWidth(), bMap.getHeight(), true);
 		            }
 		            
 		            try {
-//		                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-//		                String filePath = mediaStorageDir.getPath() + File.separator + position + "_" + timeStamp + Consts.IMAGE_EXT;
-		                
 		            	String filePath = MADN3SCamera.saveBitmapAsJpeg(bMapRotate, position);
 		            	
 		            	Log.d(tag, "filePath desde MainActivity: " + filePath);
 		                
 		                JSONObject resultJsonObject = figaro.shapeUp(filePath, config);
 		                
-		                JSONArray resultSP = resultJsonObject.getJSONArray(Consts.KEY_POINTS);
-		                SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
+		                JSONArray pointsJson = resultJsonObject.getJSONArray(KEY_POINTS);
+		                
+		                SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name)
+		                		, MODE_PRIVATE);
 		        		SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-		        		
-		        		sharedPreferencesEditor.putString("filepath", resultJsonObject.getString("filepath"));
+		        		sharedPreferencesEditor.putString(KEY_FILE_PATH, resultJsonObject.getString(KEY_FILE_PATH));
 		        		sharedPreferencesEditor.commit();
 		                
-		                if(resultSP != null && resultSP.length() > 0){
+		                if(pointsJson != null && pointsJson.length() > 0){
+		                	result.put(KEY_MD5, resultJsonObject.get(KEY_MD5));
 		                	result.put(Consts.KEY_ERROR, false);
-		                	result.put(Consts.KEY_POINTS, resultSP);
+		                	result.put(Consts.KEY_POINTS, pointsJson);
 		                } else {
+		                	Log.d(tag, "pointsJson: " + pointsJson.toString(1));
 		                	result.put(Consts.KEY_ERROR, true);
 		                }
-		                Log.d(tag, "mPictureCalback. result: ");
-		                Log.d(tag, result.toString());
+		                Log.d(tag, "mPictureCalback. result: " + result.toString(1));
 		                
 		            } catch (JSONException e) {
 						e.printStackTrace();

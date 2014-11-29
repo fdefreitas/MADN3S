@@ -23,6 +23,8 @@ public class Consts {
 	public static final String KEY_ERROR = "error";
 	public static final String KEY_POINTS = "points";
 	public static final String KEY_FILE_PATH = "filepath";
+	public static final String KEY_MD5 = "md5";
+	public static final String KEY_MD5_BASE_64 = "md5_base64";
 	
 	public static final String ACTION_TAKE_PICTURE = "take_picture";
 	public static final String ACTION_SEND_PICTURE = "send_picture";

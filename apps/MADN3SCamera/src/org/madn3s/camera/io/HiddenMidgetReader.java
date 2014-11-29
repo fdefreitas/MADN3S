@@ -59,10 +59,10 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 				
 				while(MADN3SCamera.isRunning.get()){
 					if(MADN3SCamera.isPictureTaken.get()){
-						Log.d(tag, "Esperando mensaje.");
+//						Log.d(tag, "Esperando mensaje.");
 						message = getMessage();
 						if(message != null && !message.isEmpty()){
-							Log.d(tag, "Mensaje Recibido: " + message);
+//							Log.d(tag, "Mensaje Recibido: " + message);
 							JSONObject msg = new JSONObject(message);
 							if(msg.has(Consts.KEY_ACTION)){
 								String action = msg.getString(Consts.KEY_ACTION);
@@ -71,7 +71,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 								}
 							}	
 							bridge.callback(message);
-							Log.d(tag, "Iniciando wait().");
+//							Log.d(tag, "Iniciando wait().");
 							MADN3SCamera.isPictureTaken.set(false);
 						}
 					}

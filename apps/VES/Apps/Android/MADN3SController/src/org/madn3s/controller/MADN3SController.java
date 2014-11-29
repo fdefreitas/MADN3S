@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
+import java.math.BigInteger;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
@@ -36,6 +39,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -171,6 +175,8 @@ public class MADN3SController extends Application {
 	public void onCreate() {
 		super.onCreate();
 		appContext = super.getBaseContext();
+		appDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+				, appContext.getString(R.string.app_name));
 		setSharedPreferences();
 		setUpBridges();
 		Log.d(tag, "onCreate. ");
@@ -212,6 +218,7 @@ public class MADN3SController extends Application {
 		HiddenMidgetReader.bridge = new UniversalComms() {
 			@Override
 			public void callback(Object msg) {
+				Log.d(tag, "HiddenMidgetReader.bridge. EXTRA_CALLBACK_MSG");
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
 				williamWallaceIntent.putExtra(EXTRA_CALLBACK_MSG, (String)msg);
 				startService(williamWallaceIntent);
@@ -221,8 +228,9 @@ public class MADN3SController extends Application {
 		HiddenMidgetReader.pictureBridge = new UniversalComms() {
 			@Override
 			public void callback(Object msg) {
+				Log.d(tag, "HiddenMidgetReader.pictureBridge. EXTRA_CALLBACK_PICTURE");
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
-				williamWallaceIntent.putExtra(EXTRA_CALLBACK_PICTURE, (String)msg);
+				williamWallaceIntent.putExtra(EXTRA_CALLBACK_PICTURE, (String) msg);
 				startService(williamWallaceIntent);
 			}
 		};
@@ -230,6 +238,7 @@ public class MADN3SController extends Application {
 		ScannerFragment.bridge = new UniversalComms() {
 			@Override
 			public void callback(Object msg) {
+				Log.d(tag, "ScannerFragment.bridge. EXTRA_CALLBACK_SEND");
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
 				williamWallaceIntent.putExtra(EXTRA_CALLBACK_SEND, (String)msg);
 				startService(williamWallaceIntent);
@@ -239,6 +248,7 @@ public class MADN3SController extends Application {
 		NXTTalker.bridge = new UniversalComms() {
 			@Override
 			public void callback(Object msg) {
+				Log.d(tag, "NXTTalker.bridge. EXTRA_CALLBACK_NXT_MESSAGE");
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
 				williamWallaceIntent.putExtra(EXTRA_CALLBACK_NXT_MESSAGE, (String)msg);
 				startService(williamWallaceIntent);
@@ -248,6 +258,7 @@ public class MADN3SController extends Application {
 		SettingsFragment.bridge = new UniversalComms() {
 			@Override
 			public void callback(Object msg) {
+				Log.d(tag, "SettingsFragment.bridge. EXTRA_CALLBACK_SEND");
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
 				williamWallaceIntent.putExtra(EXTRA_CALLBACK_SEND, (String)msg);
 				startService(williamWallaceIntent);
@@ -417,11 +428,12 @@ public class MADN3SController extends Application {
 
     @SuppressLint("SimpleDateFormat")
 	public static File getOutputMediaFile(int type, String projectName, String side){
+    	Log.d(tag, "getOutputMediaFile. projectName: " + projectName + " side: " + side);
         File mediaStorageDir = new File(getAppDirectory(), projectName);
 
         if (!mediaStorageDir.exists()){
             if (! mediaStorageDir.mkdirs()){
-                Log.d(tag, "failed to create directory");
+                Log.d(tag, "getOutputMediaFile. failed to create directory");
                 return null;
             }
         }
@@ -467,5 +479,22 @@ public class MADN3SController extends Application {
             Log.e(position, "saveBitmapAsJpeg: No se pudo guardar el Bitmap", e);
             return null;
         }
+    }
+    
+    public static String getMD5EncryptedString(byte[] bytes){
+        MessageDigest mdEnc = null;
+        try {
+            mdEnc = MessageDigest.getInstance("MD5");
+        } catch (NoSuchAlgorithmException e) {
+            System.out.println("Exception while encrypting to md5");
+            e.printStackTrace();
+        }
+        
+        mdEnc.update(bytes, 0, bytes.length);
+        String md5 = new BigInteger(1, mdEnc.digest()).toString(16);
+        while ( md5.length() < 32 ) {
+            md5 = "0"+md5;
+        }
+        return md5;
     }
 }

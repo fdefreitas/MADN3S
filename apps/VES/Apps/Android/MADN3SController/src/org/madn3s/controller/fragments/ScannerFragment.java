@@ -25,6 +25,8 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +38,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-@SuppressWarnings("unused")
 public class ScannerFragment extends BaseFragment {
 
 	public static final String tag = ScannerFragment.class.getSimpleName();
@@ -64,23 +65,35 @@ public class ScannerFragment extends BaseFragment {
 		BraveHeartMidgetService.scannerBridge = new UniversalComms() {
 			@Override
 			public void callback(Object msg) {
+				Log.d(tag, "scannerFragment. Update UI on Scanner Fragment.");
 				Bundle bundle = (Bundle) msg;
 				final Device device = Device.setDevice(bundle.getInt(KEY_DEVICE));
 				final State state = State.setState(bundle.getInt(KEY_STATE));
 				int iter = MADN3SController.sharedPrefsGetInt(KEY_ITERATION);
 				final boolean scan_finished = bundle.containsKey(KEY_SCAN_FINISHED);
-				Log.d(tag, device + " " + state + " " + iter);
-				mFragment.getView().post(
-					new Runnable() { 
-						public void run() {
-							//update UI
-							setDeviceActionState(device, state);
-							if(scan_finished){
-								generateModelButton.setEnabled(true);
-							}
-						} 
-					}
-				); 
+				Log.d(tag, "Device: " + device.toString() + " State: " + state.toString() + " " + iter);
+//				mFragment.getView().post(
+//					new Runnable() { 
+//						public void run() {
+//							setDeviceActionState(device, state);
+//							if(scan_finished){
+//								generateModelButton.setEnabled(true);
+//								globalProgressBar.setVisibility(View.INVISIBLE);
+//							}
+//						} 
+//					}
+//				); 
+				
+				new Handler(Looper.getMainLooper()).post(new Runnable() {             
+	                @Override
+	                public void run() { 
+	                	setDeviceActionState(device, state);
+						if(scan_finished){
+							generateModelButton.setEnabled(true);
+							globalProgressBar.setVisibility(View.INVISIBLE);
+						}
+	                }
+				});
 			}
 		};
 	}

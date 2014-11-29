@@ -139,24 +139,30 @@ public class BraveheartMidgetService extends IntentService {
 						//TODO guardar en sharedPrefs
 						MADN3SCamera.isPictureTaken.set(true);
 					} else if(action.equalsIgnoreCase(Consts.ACTION_TAKE_PICTURE)){
+						Log.d(tag, "ACTION_TAKE_PICTURE");
 						cameraCallback.callback(config);
 					} else if(action.equalsIgnoreCase(Consts.ACTION_SEND_PICTURE)) {
+						Log.d(tag, "ACTION_SEND_PICTURE");
 						sendPicture();
 					} else if(action.equalsIgnoreCase(Consts.ACTION_END_PROJECT)){
+						Log.d(tag, "ACTION_END_PROJECT");
 						if(msg.has(Consts.KEY_CLEAN) && msg.getBoolean(Consts.VALUE_CLEAN)){
 							cleanTakenPictures(projectName);
 						}
 						projectName = null;
 					} else if(action.equalsIgnoreCase(Consts.ACTION_CALIBRATE)){
+						Log.d(tag, "ACTION_CALIBRATE");
 						calibrate();
 						sendResult();
 					} else if(action.equalsIgnoreCase(Consts.ACTION_EXIT_APP)){
+						Log.d(tag, "ACTION_EXIT_APP");
 						Log.d(tag, "onHandleIntent: action: " + Consts.ACTION_EXIT_APP);	
 					} else {
 						Log.d(tag, "onHandleIntent: unhandled action: " + action);	
 					}
 				}
 			} else if (intent.hasExtra(Consts.EXTRA_RESULT)) {
+				Log.d(tag, "EXTRA_RESULT");
 				jsonString = intent.getExtras().getString(Consts.EXTRA_RESULT);
 				result = new JSONObject(jsonString);
 
@@ -173,6 +179,7 @@ public class BraveheartMidgetService extends IntentService {
 	}
 
 	private void sendPicture() {
+		Log.d(tag, "sendPicture");
 		Log.d(tag, "mSocketWeakReference null: " + (mSocketWeakReference == null));
 		
 		SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);

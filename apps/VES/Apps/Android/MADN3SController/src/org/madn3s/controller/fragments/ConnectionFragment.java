@@ -1,9 +1,7 @@
 package org.madn3s.controller.fragments;
 
 import static org.madn3s.controller.MADN3SController.rightCamera;
-import static org.madn3s.controller.MADN3SController.rightCameraWeakReference;
 import static org.madn3s.controller.MADN3SController.leftCamera;
-import static org.madn3s.controller.MADN3SController.leftCameraWeakReference;
 
 import java.util.ArrayList;
 
@@ -21,8 +19,6 @@ import org.madn3s.controller.models.StatusViewHolder;
 import org.madn3s.controller.viewer.models.files.ModelPickerActivity;
 
 import android.annotation.SuppressLint;
-import android.bluetooth.BluetoothDevice;
-import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -40,16 +36,14 @@ import android.widget.Toast;
  */
 public class ConnectionFragment extends BaseFragment {
 	
+	private static final String TAG = ConnectionFragment.class.getSimpleName();
+	
 	public static final int REQUEST_PICK_FILE = 1;
     public static final int MESSAGE_STATE_CHANGE = 2;
     public static final int MESSAGE_TOAST = 1;
     public static final String TOAST = "toast";
-    private static final String TAG = "ConnectionFragment";
     
-    private ArrayList<BluetoothDevice> devices;
-    private NXTTalker talker;
     private int mState;
-    private BroadcastReceiver mReceiver;
     private Handler mHandler;
     private ConnectionFragment mFragment;
 
@@ -175,13 +169,13 @@ public class ConnectionFragment extends BaseFragment {
         
         
         if(!rightCameraStatus){
-        	HiddenMidgetConnector rightCameraConnector = new HiddenMidgetConnector(rightCamera, rightCameraWeakReference, MADN3SController.readRightCamera, "right");
+        	HiddenMidgetConnector rightCameraConnector = new HiddenMidgetConnector(rightCamera, MADN3SController.readRightCamera);
             rightCameraConnector.execute();
             Log.d(TAG, "Iniciando conexion con Right Camera: " + rightCamera.getName());
         }
         
         if(!leftCameraStatus){
-        	HiddenMidgetConnector leftCameraConnector = new HiddenMidgetConnector(leftCamera, leftCameraWeakReference, MADN3SController.readLeftCamera, "left");
+        	HiddenMidgetConnector leftCameraConnector = new HiddenMidgetConnector(leftCamera, MADN3SController.readLeftCamera);
             leftCameraConnector.execute();
             Log.d(TAG, "Iniciando conexion con Left Camera: " + leftCamera.getName());
         }
