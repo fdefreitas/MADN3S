@@ -141,7 +141,7 @@ public class ConnectionFragment extends BaseFragment {
                         	        nxtJson.put("command", "scanner");
                         	        nxtJson.put("action", "config");
                         	        nxtJson.put("points", MADN3SController.sharedPrefsGetInt("points"));
-                        	        nxtJson.put("circumference_radius", MADN3SController.sharedPrefsGetFloat("radius"));
+                        	        nxtJson.put("radius", MADN3SController.sharedPrefsGetFloat("radius"));
                         	        nxtJson.put("speed", MADN3SController.sharedPrefsGetInt("speed"));
                         	        MADN3SController.talker.write(nxtJson.toString().getBytes());
                         	    } catch (Exception e) {

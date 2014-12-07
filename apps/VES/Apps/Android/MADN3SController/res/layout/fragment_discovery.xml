@@ -34,12 +34,19 @@
         android:layout_toRightOf="@+id/button_separator"
         android:layout_alignTop="@+id/button_separator"
         android:text="@string/connect" />
+    
+    <Button
+        android:id="@+id/tests_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/connect_button"
+        android:text="Big Ass Titties!!!" />
 
     <ProgressBar
         android:id="@+id/discovery_progressBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/button_separator"
+        android:layout_below="@+id/tests_button"
         android:layout_margin="8dp"
         android:indeterminate="true"
         android:visibility="visible" />
