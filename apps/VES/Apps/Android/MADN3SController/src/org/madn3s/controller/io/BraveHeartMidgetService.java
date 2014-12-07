@@ -7,7 +7,6 @@ import static org.madn3s.controller.MADN3SController.rightCamera;
 import static org.madn3s.controller.MADN3SController.rightCameraWeakReference;
 
 import java.util.Iterator;
-import java.util.Set;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,7 +73,7 @@ public class BraveHeartMidgetService extends IntentService {
 		StringBuilder keyString = new StringBuilder();
 		keyString.append("onHandleIntent. extras: ");
 		while(extraIt.hasNext()){
-			keyString.append(",").append(extraIt.next());  
+			keyString.append(",").append(extraIt.next());
 		}
 		Log.d(tag, keyString.toString());
 		
@@ -243,19 +242,18 @@ public class BraveHeartMidgetService extends IntentService {
 						device = Device.LEFT_CAMERA.getValue();
 					}
 					
-					Log.d(tag, "processCameraPicture. post side if.");
-					
 					Bundle bundle = new Bundle();
 					bundle.putInt(KEY_STATE, State.CONNECTED.getState());
 					bundle.putInt(KEY_DEVICE, device);
 					
 					//Updates UI
-					Log.d(tag, "processCameraPicture. updating UI");
 					scannerBridge.callback(bundle);
-					Log.d(tag, "processCameraPicture. finished updating UI");
 					
 					MADN3SController.sharedPrefsPutJSONObject(FRAME_PREFIX + iter, frame);
-					if(frame.has(SIDE_RIGHT) && frame.has(SIDE_LEFT)){
+					Log.d(tag, "processCameraPicture. " + FRAME_PREFIX + iter + ": " +  getPrintableFrame());
+					
+					if(frame.has(SIDE_RIGHT) && frame.getJSONObject(SIDE_RIGHT).has(KEY_FILE_PATH)
+							&& frame.has(SIDE_LEFT) && frame.getJSONObject(SIDE_LEFT).has(KEY_FILE_PATH)){
 						iter++;
 						int points = MADN3SController.sharedPrefsGetInt(KEY_POINTS);
 						MADN3SController.sharedPrefsPutInt(KEY_ITERATION, iter);
@@ -269,13 +267,35 @@ public class BraveHeartMidgetService extends IntentService {
 							Log.d(tag, "processCameraPicture. notify scan finished");
 							notifyScanFinished();
 						}
-						Log.d(tag, "iter = " + iter + " points = " + points);
+						Log.d(tag, "processCameraPicture. iter = " + iter + " points = " + points);
 					}
 				}
 			}
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+	}
+
+	private String getPrintableFrame() {
+		int iter = MADN3SController.sharedPrefsGetInt(KEY_ITERATION);
+		JSONObject frame = MADN3SController.sharedPrefsGetJSONObject(FRAME_PREFIX + iter);
+		try{
+			
+			if(frame.has(SIDE_RIGHT)){
+				frame.getJSONObject(SIDE_RIGHT).remove(KEY_POINTS);
+			}
+			
+			if(frame.has(SIDE_LEFT)){
+				frame.getJSONObject(SIDE_LEFT).remove(KEY_POINTS);
+			}
+			
+			return frame.toString(1);
+		} catch (Exception e){
+			Log.e(tag, "getPrintableFrame. Couldn't parse frame", e);
+			return "{}";
+		}
+		
+		
 	}
 
 	/**

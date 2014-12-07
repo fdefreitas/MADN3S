@@ -29,6 +29,7 @@ public class Consts {
 	public static final String KEY_FILE_PATH = "filepath";
 	public static final String KEY_MESSAGE = "message";
 	public static final String KEY_ITERATION = "iter";
+	public static final String KEY_ITERATIONS = "iterations";
 	public static final String KEY_CAMERA_NAME = "camera_name";
 	public static final String KEY_SCAN_FINISHED = "scan_finished";
 	public static final String KEY_NAME = "name";

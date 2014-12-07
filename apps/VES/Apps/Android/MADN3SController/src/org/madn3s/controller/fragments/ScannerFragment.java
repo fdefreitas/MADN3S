@@ -1,23 +1,13 @@
 package org.madn3s.controller.fragments;
 
-import static org.madn3s.controller.Consts.ACTION_TAKE_PICTURE;
-import static org.madn3s.controller.Consts.FRAME_PREFIX;
-import static org.madn3s.controller.Consts.KEY_ACTION;
-import static org.madn3s.controller.Consts.KEY_DEVICE;
-import static org.madn3s.controller.Consts.KEY_ITERATION;
-import static org.madn3s.controller.Consts.KEY_NAME;
-import static org.madn3s.controller.Consts.KEY_PICTURES;
-import static org.madn3s.controller.Consts.KEY_POINTS;
-import static org.madn3s.controller.Consts.KEY_PROJECT_NAME;
-import static org.madn3s.controller.Consts.KEY_SCAN_FINISHED;
-import static org.madn3s.controller.Consts.KEY_STATE;
-import static org.madn3s.controller.Consts.MODEL_EXT;
+import static org.madn3s.controller.Consts.*;
 
 import java.io.File;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.madn3s.controller.Consts;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.MADN3SController.Device;
 import org.madn3s.controller.MADN3SController.State;
@@ -50,7 +40,6 @@ public class ScannerFragment extends BaseFragment {
 	public static final String tag = ScannerFragment.class.getSimpleName();
 	public static UniversalComms bridge;
 	
-	private ScannerFragment mFragment;
 	private ScanStepViewHolder calibrationViewHolder;
 	private ScanStepViewHolder nxtActionViewHolder;
 	private ScanStepViewHolder camera1ActionViewHolder;
@@ -68,7 +57,6 @@ public class ScannerFragment extends BaseFragment {
 	private TextView scanStepTotalTextView;
 	
 	public ScannerFragment() {
-		mFragment = this;
 		BraveHeartMidgetService.scannerBridge = new UniversalComms() {
 			@Override
 			public void callback(Object msg) {
@@ -76,7 +64,7 @@ public class ScannerFragment extends BaseFragment {
 				Bundle bundle = (Bundle) msg;
 				final Device device = Device.setDevice(bundle.getInt(KEY_DEVICE));
 				final State state = State.setState(bundle.getInt(KEY_STATE));
-				int iter = MADN3SController.sharedPrefsGetInt(KEY_ITERATION);
+				final int iter = MADN3SController.sharedPrefsGetInt(KEY_ITERATION);
 				final boolean scan_finished = bundle.containsKey(KEY_SCAN_FINISHED);
 				Log.d(tag, "Device: " + device.toString() + " State: " + state.toString() + " " + iter);
 //				mFragment.getView().post(
@@ -95,6 +83,7 @@ public class ScannerFragment extends BaseFragment {
 	                @Override
 	                public void run() { 
 	                	setDeviceActionState(device, state);
+	                	setCurrentScanStep(iter + 1);
 						if(scan_finished){
 							generateModelButton.setEnabled(true);
 							globalProgressBar.setVisibility(View.INVISIBLE);
@@ -216,6 +205,7 @@ public class ScannerFragment extends BaseFragment {
 		step3ViewHolder.hide();
 		
 		generateModelProgressBar = (ProgressBar) getView().findViewById(R.id.model_generation_progressBar);
+		generateModelProgressBar.setVisibility(View.INVISIBLE);
 		generateModelButton = (Button) view.findViewById(R.id.model_generation_button);
 		generateModelButton.setEnabled(true);
 		generateModelButton.setOnClickListener(new View.OnClickListener() {
@@ -269,14 +259,17 @@ public class ScannerFragment extends BaseFragment {
 	
 	@SuppressLint("SimpleDateFormat")
 	public void scan(String projectName){
-		//TODO FIX THIS SHIT!
+		//TODO FIX THIS SHIT! Ponerle modo debug para pruebas nativas
 		try{
 			MADN3SController.sharedPrefsPutInt(KEY_ITERATION, 0);
 			int points = MADN3SController.sharedPrefsGetInt(KEY_POINTS);
 			//TODO permtir borrar contenedor para no hacer for
-//			for(int i = 0; i < points; ++i){
-//				MADN3SController.removeKeyFromSharedPreferences("frame-"+i);
-//			}
+			for(int i = 0; i < points; ++i){
+				MADN3SController.removeKeyFromSharedPreferences("frame-"+i);
+			}
+			
+			int iterations = MADN3SController.sharedPrefsGetInt(Consts.KEY_POINTS);
+			setTotalScanSteps(iterations);
 			
 			JSONObject json = new JSONObject();
 	        json.put(KEY_ACTION, ACTION_TAKE_PICTURE);

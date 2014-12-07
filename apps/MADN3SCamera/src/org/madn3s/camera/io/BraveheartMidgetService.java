@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 import java.util.Vector;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -191,6 +192,7 @@ public class BraveheartMidgetService extends IntentService {
 				HiddenMidgetWriter writerTask = new HiddenMidgetWriter(mSocketWeakReference, bitmap);
 		        Log.d(tag, "Ejecutando a HiddenMidgetWriter desde sendPicture");
 		        writerTask.execute();
+		        MADN3SCamera.isPictureTaken.set(true);
 			}
 		} else {
 			Log.d(tag, "filepath : null");
