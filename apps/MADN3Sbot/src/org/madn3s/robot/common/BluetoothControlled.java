@@ -9,7 +9,9 @@ import org.madn3s.io.BluetoothTunnel;
 public class BluetoothControlled {
 	
 	private OmniPilot omniPilot;
+	@SuppressWarnings("unused")
 	private BluetoothTunnel bTunnel;
+	@SuppressWarnings("unused")
 	private UltrasonicSensor uSensor;
 	
 	public BluetoothControlled(OmniPilot omniPilot, UltrasonicSensor uSensor) {

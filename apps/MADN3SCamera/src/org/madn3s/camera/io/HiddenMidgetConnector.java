@@ -1,25 +1,20 @@
 package org.madn3s.camera.io;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.ref.WeakReference;
-
-import org.json.JSONObject;
 
 /**
  * Created by ninja_midget on 2/1/14.
  */
 public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
 
-    private static final String tag = "HiddenMidgetConnector";
+    private static final String tag = HiddenMidgetConnector.class.getSimpleName();
 	private BluetoothServerSocket mBluetoothServerSocket;
 	private WeakReference<BluetoothServerSocket> mBluetoothServerSocketWeakReference;
 	private WeakReference<BluetoothSocket> mSocketWeakReference;
@@ -80,6 +75,7 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
                         Log.d(tag, "Default");
                 }
                                 
+                //TODO Revisar
                 BraveheartMidgetService.mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);//this is cheating
                 mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
                 Log.d(tag, "mSocketWeakReference.get(): " + mSocketWeakReference.get().toString());

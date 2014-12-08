@@ -1,6 +1,5 @@
 package org.madn3s.sandbox;
 
-import lejos.nxt.Button;
 import lejos.nxt.LightSensor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.TouchSensor;

@@ -7,7 +7,6 @@ import lejos.nxt.LCD;
 import lejos.nxt.Motor;
 import lejos.nxt.MotorPort;
 import lejos.nxt.NXTMotor;
-import lejos.nxt.Sound;
 import lejos.robotics.Color;
 import lejos.util.Delay;
 
@@ -29,6 +28,7 @@ public class Cruiser extends Thread {
 	public Cruiser() {
 	}
 
+	@SuppressWarnings("deprecation")
 	public void run() {
 
 		LCD.clear();

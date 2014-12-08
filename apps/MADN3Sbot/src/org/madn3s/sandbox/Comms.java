@@ -1,10 +1,5 @@
 package org.madn3s.sandbox;
 
-import java.util.ArrayList;
-
-import javax.bluetooth.DeviceClass;
-import javax.bluetooth.RemoteDevice;
-
 import org.madn3s.robot.common.Utils;
 
 import lejos.nxt.Button;

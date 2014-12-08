@@ -6,6 +6,7 @@ import static org.madn3s.controller.MADN3SController.rightCamera;
 import static org.madn3s.controller.MADN3SController.rightCameraWeakReference;
 
 import org.json.JSONObject;
+import org.madn3s.controller.Consts;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.R;
 import org.madn3s.controller.io.HiddenMidgetWriter;
@@ -194,7 +195,7 @@ public class SettingsFragment extends BaseFragment {
 		}
 		
 		if(!iterationsEditText.getText().toString().isEmpty()){
-			MADN3SController.sharedPrefsPutInt("iterations", Integer.parseInt(iterationsEditText.getText().toString()));
+			MADN3SController.sharedPrefsPutInt(Consts.KEY_ITERATIONS, Integer.parseInt(iterationsEditText.getText().toString()));
 		}
 		
 		if(!maxCornersEditText.getText().toString().isEmpty()){
@@ -234,7 +235,7 @@ public class SettingsFragment extends BaseFragment {
 		MADN3SController.sharedPrefsPutString("algorithm", selectedAlgorithmRadioButton.getText().toString());
 		MADN3SController.sharedPrefsPutInt("algorithmIndex", algortihmRadioGroup.getCheckedRadioButtonId());
 		
-		MADN3SController.sharedPrefsPutBoolean("clean", cleanImagesCheckBox.isChecked());
+		MADN3SController.sharedPrefsPutBoolean(Consts.KEY_CLEAN, cleanImagesCheckBox.isChecked());
 	}
 
 	/**
@@ -312,7 +313,7 @@ public class SettingsFragment extends BaseFragment {
 		        nxtJson.put("command", "scanner");
 		        nxtJson.put("action", "config");
 		        nxtJson.put("points", MADN3SController.sharedPrefsGetInt("points"));
-		        nxtJson.put("circumference_radius", MADN3SController.sharedPrefsGetFloat("radius"));
+		        nxtJson.put("radius", MADN3SController.sharedPrefsGetFloat("radius"));
 		        nxtJson.put("speed", MADN3SController.sharedPrefsGetInt("speed"));
 		        MADN3SController.talker.write(nxtJson.toString().getBytes());
 			} catch (Exception e) {

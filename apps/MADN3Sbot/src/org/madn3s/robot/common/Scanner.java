@@ -3,7 +3,6 @@ package org.madn3s.robot.common;
 import org.json.JSONObject;
 import org.madn3s.io.BluetoothTunnel;
 
-import lejos.nxt.Button;
 import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.navigation.OmniPilot;
 
@@ -21,7 +20,6 @@ public class Scanner {
 	private boolean last;
 	private boolean move;
 	private boolean finish = false;
-	private boolean firstTime = true;
 	private BluetoothTunnel bTunnel;
 	private UltrasonicSensor uSensor;
 	
@@ -102,7 +100,7 @@ public class Scanner {
 				move = true;
 			} else if(action.equalsIgnoreCase("wait")){
 				move = false;
-			} else if(action.equalsIgnoreCase("FINISH")){
+			} else if(action.equalsIgnoreCase("finish")){
 				finish = true;
 			} else if(action.equalsIgnoreCase("config")){
 //				circumferenceRadius = uSensor.getDistance();
@@ -144,7 +142,7 @@ public class Scanner {
 				} else {
 					JSONObject response = new JSONObject();
 					response.put("error", false);
-					response.put("message", "FINISH");
+					response.put("message", "finish");
 					bTunnel.writeMessage(response.toString());
 				}
 				move = false;
@@ -152,7 +150,7 @@ public class Scanner {
 			if(finish){
 				JSONObject response = new JSONObject();
 				response.put("error", false);
-				response.put("message", "FINISH");
+				response.put("message", "finish");
 				bTunnel.writeMessage(response.toString());
 				finish = false;
 			}
@@ -163,59 +161,13 @@ public class Scanner {
 	}
 	
 	private boolean moveToNextPoint(String msg) {
-		if(msg.equalsIgnoreCase("FINISH")){
+		if(msg.equalsIgnoreCase("finish")){
 			return true;
 		}
 		//TODO: medimos y con el radio en 9 funciona casi perfecto, debe haber un pequeño error en la medicion
 		omniPilot.travelArc(circumferenceRadius, distance, 90);
 		return false;
 	}
-	
-//	private static void moveByColor() {
-//	long start = System.currentTimeMillis();
-//	HTSensors inst = HTSensors.getInstance();
-//	while(true){
-//		int cColor = inst.getCentralColor();
-//		switch (cColor) {
-//			case Color.BLACK:
-//				Motor.A.backward();
-//				Motor.B.forward();
-//				//move
-//				break;
-//			case Color.WHITE:
-//				Motor.A.forward();
-//		    	Motor.B.backward();
-//				//return to black
-//		    	//usando c???
-//				break;
-//			case Color.RED: 
-//				Motor.A.stop();
-//		    	Motor.B.stop();
-//				//check alignement
-//				//send pic signal
-//				break;
-//			case Color.GREEN: 
-//				Motor.A.stop();
-//		    	Motor.B.stop();
-//				//final??
-//				break;
-//			default:
-//				Motor.A.stop();
-//		    	Motor.B.stop();
-//				//where am i????
-//		    	//return to black
-//				break;
-//		}
-//		inst.printValues();
-//		Utils.printToScreen("time = " + (System.currentTimeMillis() - start), 0,4, false);
-//		if((System.currentTimeMillis() - start) > 100000){
-//			Motor.A.stop();
-//	    	Motor.B.stop();
-//			break;
-//		}
-//		//deberiamos poner un break ante una señal de stop recibida desde la tablet
-//	}
-//}
 	
 
 }

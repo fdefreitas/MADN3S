@@ -1,5 +1,10 @@
 package org.madn3s.controller.fragments;
 
+import static org.madn3s.controller.Consts.FRAME_PREFIX;
+import static org.madn3s.controller.Consts.KEY_NAME;
+import static org.madn3s.controller.Consts.KEY_PICTURES;
+import static org.madn3s.controller.Consts.KEY_POINTS;
+import static org.madn3s.controller.Consts.KEY_PROJECT_NAME;
 import static org.madn3s.controller.MADN3SController.isCameraDevice;
 import static org.madn3s.controller.MADN3SController.isToyDevice;
 import static org.madn3s.controller.MADN3SController.nxt;
@@ -8,12 +13,17 @@ import static org.madn3s.controller.MADN3SController.rightCamera;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
+import org.madn3s.controller.MidgetOfSeville;
 import org.madn3s.controller.MADN3SController.Mode;
 import org.madn3s.controller.R;
 import org.madn3s.controller.components.CameraSelectionDialogFragment;
 import org.madn3s.controller.models.NewDevicesAdapter;
 import org.madn3s.controller.models.PairedDevicesAdapter;
+import org.madn3s.controller.ves.KiwiNative;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -57,6 +67,7 @@ public class DiscoveryFragment extends BaseFragment {
 	private int cams;
 	private DiscoveryFragment mFragment;
 	private CameraSelectionDialogFragment cameraSelectionDialogFragment;
+	private Button testsButton;
 	
 	public DiscoveryFragment() {
 		mFragment = this;
@@ -119,6 +130,37 @@ public class DiscoveryFragment extends BaseFragment {
 					Toast.makeText(getActivity(), "Debe seleccionar un dispositivo NXT y 2 Cámaras"
 							, Toast.LENGTH_LONG).show();
 				}
+			}
+		});
+		
+		testsButton = (Button) getView().findViewById(R.id.tests_button);
+		testsButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				int points = MADN3SController.sharedPrefsGetInt(KEY_POINTS);
+				JSONArray framesJson = new JSONArray();
+				JSONObject pointsJson = new JSONObject();
+				for(int i = 0; i < points; i++){
+					JSONObject frame = MADN3SController.sharedPrefsGetJSONObject(FRAME_PREFIX + i);
+					framesJson.put(frame);
+//					Log.d(tag, FRAME_PREFIX + i + " = " + frame.toString());
+				}
+				
+				try {
+					MidgetOfSeville.calculateFrameOpticalFlow(framesJson.getJSONObject(0));
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				
+//				try {
+//					pointsJson.put(KEY_NAME, MADN3SController.sharedPrefsGetString(KEY_PROJECT_NAME));
+//					pointsJson.put(KEY_PICTURES, framesJson);
+//					Log.d(tag, "generateModelButton.OnClick. pointsJson: " + pointsJson.toString(1));
+//					KiwiNative.doProcess(pointsJson.toString());
+//				} catch (JSONException e) {
+//					e.printStackTrace();
+//					Log.e(tag, "generateModelButton.OnClick. Error composing points JSONObject");
+//				}
 			}
 		});
 	}
@@ -324,6 +366,10 @@ public class DiscoveryFragment extends BaseFragment {
 	}
     
     private void unregisterBtReceiver() {
-    	getActivity().unregisterReceiver(mReceiver);
+    	try {
+    		getActivity().unregisterReceiver(mReceiver);
+		} catch (Exception e) {
+			Log.d(tag, "unregisterBtReceiver. " + e.getMessage());
+		}
     }
 }

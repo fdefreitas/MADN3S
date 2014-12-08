@@ -1,13 +1,10 @@
 package org.madn3s.camera;
 
 import static org.madn3s.camera.MADN3SCamera.position;
+import static org.madn3s.camera.MADN3SCamera.iteration;
 import static org.madn3s.camera.MADN3SCamera.projectName;
+import static org.madn3s.camera.Consts.*;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.json.JSONArray;
@@ -32,7 +29,6 @@ import android.graphics.Matrix;
 import android.hardware.Camera;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -49,6 +45,7 @@ public class MainActivity extends Activity {
 	private static final String tag = MainActivity.class.getSimpleName();
     private Camera mCamera;
     private CameraPreview mPreview;
+    private FrameLayout cameraPreview;
     private Context mContext;
     private TextView configTextView;
     private RelativeLayout workingLayout;
@@ -65,24 +62,12 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		mActivity = this;
 		mContext = this;
-		mCamera = MADN3SCamera.getCameraInstance();
 		
-		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
-		startActivity(discoverableIntent);
+		setDiscoverableBt();
+		setUpBridges();
 		
 		Intent williamWallaceIntent = new Intent(this, BraveheartMidgetService.class);
 		startService(williamWallaceIntent);
-		
-		setUpBridges();
-		
-	    cameraPreview = (FrameLayout) findViewById(R.id.camera_frameLayout);
-	    mPreview = new CameraPreview(this, mCamera);
-	    cameraPreview.addView(mPreview);
-	    
-	    MADN3SCamera.mPreview = mPreview;
-		MADN3SCamera.isPictureTaken = new AtomicBoolean(true);
-		MADN3SCamera.isRunning = new AtomicBoolean(true);
 		
 		workingLayout = (RelativeLayout) findViewById(R.id.working_layout);
 		workingLayout.setVisibility(View.GONE);
@@ -94,11 +79,79 @@ public class MainActivity extends Activity {
 				if(mCamera != null){
 					mCamera.takePicture(null, null, mPictureCallback);
 				} else {
-					Toast.makeText(v.getContext(), "mCamera null", Toast.LENGTH_SHORT).show();
+					Toast.makeText(v.getContext(), "onClick. mCamera null", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
+				
+		
+		cameraPreview = (FrameLayout) findViewById(R.id.camera_frameLayout);
+		MADN3SCamera.isPictureTaken = new AtomicBoolean(true);
+		MADN3SCamera.isRunning = new AtomicBoolean(true);
     }
+
+	@Override
+    public void onResume(){
+        super.onResume();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        if(! MADN3SCamera.isOpenCvLoaded) {
+        	OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_5, this, mLoaderCallback);
+        }
+        
+        startCamera();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+//        releaseCamera();
+    }
+    
+    /**
+     * Sets up {@link Camera} instance and the {@link CameraPreview} associated with it
+     */
+    protected void startCamera() {
+		mCamera = MADN3SCamera.getCameraInstance();
+        mPreview = new CameraPreview(this, mCamera);
+        cameraPreview.removeAllViews();
+        cameraPreview.addView(mPreview);
+        mCamera.startPreview();
+	}
+    
+    /**
+     * Releases {@link Camera} instance
+     */
+    protected void releaseCamera(){
+        if (mCamera != null){
+        	mCamera.stopPreview();
+            mCamera.release();
+            mCamera = null;
+        }
+    }
+    
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    
+    /**
+     * Relaunch activity with request to set Device discoverable over Bluetooth
+     */
+	private void setDiscoverableBt() {
+		Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
+		discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, MADN3SCamera.DISCOVERABLE_TIME);
+		startActivity(discoverableIntent);
+	}
     
     /**
 	 * Sets up OpenCV Init Callback <code>UniversalComms</code> Bridges and Camera Callbacks
@@ -121,20 +174,19 @@ public class MainActivity extends Activity {
             }
         };
     	
+        //Received Message Callback
     	HiddenMidgetReader.bridge = new UniversalComms() {	
 			@Override
 			public void callback(Object msg) {
-				final String msgFinal =(String) msg;
+				final String msgFinal = (String) msg;
 				mActivity.getWindow().getDecorView().post(
 					new Runnable() { 
 						public void run() {
 							configTextView.setText(msgFinal);
 						} 
 					});
-				
-//				Log.d("UniversalComms", "Callback. msg: " + (String)msg + ".-");
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveheartMidgetService.class);
-				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG, (String)msg);
+				williamWallaceIntent.putExtra(Consts.EXTRA_CALLBACK_MSG, (String) msg);
 				startService(williamWallaceIntent);
 			}
 		};
@@ -153,7 +205,8 @@ public class MainActivity extends Activity {
 		    		Log.d(tag, "takePhoto. mCamera == null.");
 		    		result = new JSONObject();
 		    		try {
-						result.put("error", 1);
+		    			//TODO revisar por que int y no bool
+						result.put(Consts.KEY_ERROR, 1);
 						Log.d(tag, "takePhoto. result: " + result.toString(1));
 					} catch (JSONException e) {
 						e.printStackTrace();
@@ -162,52 +215,6 @@ public class MainActivity extends Activity {
 			}
 		};
 	}
-
-	@Override
-    public void onResume(){
-        super.onResume();
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-        if(! MADN3SCamera.isOpenCvLoaded) {
-        	OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_5, this, mLoaderCallback);
-        }
-//        MADN3SCamera.isPictureTaken.set(true);
-    }
-    
-    @Override
-	protected void onDestroy() {
-		super.onDestroy();
-//		MADN3SCamera.isRunning.set(false);
-	}
-    
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-//        releaseCamera();
-//        MADN3SCamera.isPictureTaken.set(false);
-    }
-//
-//    private void releaseCamera(){
-//        if (mCamera != null){
-//            mCamera.release();
-//            mCamera = null;
-//        }
-//    }
-    
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_settings:
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
     
     private final Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
 		@SuppressLint("SimpleDateFormat")
@@ -221,9 +228,7 @@ public class MainActivity extends Activity {
 				
 				@Override
 				protected void onPreExecute() {
-					Log.d(tag, "onPicureTaken. onPreExecute.");
 					setWorking();
-					Log.d(tag, "onPicureTaken. onPreExecute.Done");
 				}
 				
 				@Override
@@ -232,26 +237,19 @@ public class MainActivity extends Activity {
 					Log.d(tag, "onPicureTaken. doInBackground.");
 					try {
 						Log.d(tag, "onPicureTaken. config: " + config.toString());
-						position = config.getString("side");
-						projectName = config.getString("project_name");
+						position = config.getString(Consts.KEY_SIDE);
+						projectName = config.getString(Consts.KEY_PROJECT_NAME);
 					} catch (Exception e) {
-						position ="default";
-						projectName ="default";
-						Log.d(tag, "onPicureTaken. Error parsing JSONObject. Fallback to default config");
-						e.printStackTrace();
+						position = Consts.VALUE_DEFAULT_POSITION;
+						projectName = Consts.VALUE_DEFAULT_PROJECT_NAME;
+						Log.e(tag, "onPicureTaken. Error parsing JSONObject. Fallback to default config", e);
 					}
 					
 					Log.d(tag, "onPicureTaken. doInBackground.");
 		        	MidgetOfSeville figaro = new MidgetOfSeville();
 		        	int orientation;
-		            BitmapFactory.Options options = new BitmapFactory.Options();
-		            options.inSampleSize = 6;
-		            options.inDither = false;
-		            options.inPurgeable = true;
-		            options.inInputShareable = true;
-		            options.inTempStorage = new byte[32 * 1024];
-		            options.inPreferredConfig = Bitmap.Config.RGB_565;
-		            Bitmap bMap = BitmapFactory.decodeByteArray(mData, 0, mData.length, options);
+		            Bitmap bMap = BitmapFactory.decodeByteArray(mData, 0, mData.length
+		            		, Consts.bitmapFactoryOptions);
 		            
 		            if(bMap.getHeight() < bMap.getWidth()){
 		                orientation = 90;
@@ -263,53 +261,37 @@ public class MainActivity extends Activity {
 		            if (orientation != 0) {
 		                Matrix matrix = new Matrix();
 		                matrix.postRotate(orientation);
-		                bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(), bMap.getHeight(), matrix, true);
+		                bMapRotate = Bitmap.createBitmap(bMap, 0, 0, bMap.getWidth(), bMap.getHeight()
+		                		, matrix, true);
 		            } else {
 		                bMapRotate = Bitmap.createScaledBitmap(bMap, bMap.getWidth(), bMap.getHeight(), true);
 		            }
 		            
-		            FileOutputStream out;
 		            try {
-		                File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) 
-		                		+ "/MADN3SCamera", projectName);
-		                if (!mediaStorageDir.exists()){
-		                    if (!mediaStorageDir.mkdirs()){
-		                        Log.d(tag, "Failed to create directory");
-		                        return null;
-		                    }
-		                }
-		                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-		                String filePath = mediaStorageDir.getPath() + File.separator + position + "_" + timeStamp + ".jpg";
+		            	String filePath = MADN3SCamera.saveBitmapAsJpeg(bMapRotate, position, iteration);
+		            	
+		            	Log.d(tag, "filePath desde MainActivity: " + filePath);
 		                
 		                JSONObject resultJsonObject = figaro.shapeUp(filePath, config);
-		                JSONArray resultSP = resultJsonObject.getJSONArray("points");
-		                SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
+		                
+		                JSONArray pointsJson = resultJsonObject.getJSONArray(KEY_POINTS);
+		                
+		                SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name)
+		                		, MODE_PRIVATE);
 		        		SharedPreferences.Editor sharedPreferencesEditor = sharedPreferences.edit();
-		        		
-		        		sharedPreferencesEditor.putString("filepath", resultJsonObject.getString("filepath"));
+		        		sharedPreferencesEditor.putString(KEY_FILE_PATH, resultJsonObject.getString(KEY_FILE_PATH));
 		        		sharedPreferencesEditor.commit();
 		                
-		                if(resultSP != null && resultSP.length() > 0){
-		                	result.put("error", false);
-		                	result.put("points", resultSP);
+		                if(pointsJson != null && pointsJson.length() > 0){
+		                	result.put(KEY_MD5, resultJsonObject.get(KEY_MD5));
+		                	result.put(Consts.KEY_ERROR, false);
+		                	result.put(Consts.KEY_POINTS, pointsJson);
 		                } else {
-		                	result.put("error", true);
+		                	Log.d(tag, "pointsJson: " + pointsJson.toString(1));
+		                	result.put(Consts.KEY_ERROR, true);
 		                }
-		                Log.d(tag, "mPictureCalback. result: ");
-		                Log.d(tag, result.toString());
+		                Log.d(tag, "mPictureCalback. result: " + result.toString(1));
 		                
-//		                filePath = String.format(mediaStorageDir.getPath() + File.separator + position + "grabCut" + "_" + timeStamp + ".jpg");
-//		                out = new FileOutputStream(filePath);
-//		                
-//		                Log.d(tag, "Saving as JPEG grabCut file: " + filePath);
-//		                bMapRotate.compress(Bitmap.CompressFormat.JPEG, 90, out);
-//		                if (bMapRotate != null) {
-//		                    bMapRotate.recycle();
-//		                    bMapRotate = null;
-//		                }
-		                
-//		            } catch (FileNotFoundException e) {
-//		                e.printStackTrace();
 		            } catch (JSONException e) {
 						e.printStackTrace();
 					}
@@ -320,21 +302,20 @@ public class MainActivity extends Activity {
 				@Override
 				protected void onPostExecute(JSONObject result) {
 					mCamera.startPreview();
-					Log.d(tag, "onPicureTaken. Call to onStartCommand() with result inside intent");
 					if(result != null){
-						Log.d(tag, "onPicureTaken. onPostExecute. result null");
 						Intent williamWallaceIntent = new Intent(mContext, BraveheartMidgetService.class);
-						williamWallaceIntent.putExtra("result", result.toString());
+						williamWallaceIntent.putExtra(Consts.EXTRA_RESULT, result.toString());
 						startService(williamWallaceIntent);
 					}
 					unsetWorking();
 				}
 			}.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-			Log.d(tag, "onPicureTaken. after Execute.");
         }
 	};
-	private FrameLayout cameraPreview;
 
+	/**
+	 * Updates layout to reflect the application is working on processing the picture
+	 */
 	private void setWorking(){
 		takePictureImageView.setClickable(false);
 		takePictureImageView.setEnabled(false);
@@ -342,6 +323,9 @@ public class MainActivity extends Activity {
 		workingLayout.setVisibility(View.VISIBLE);
 	}
 	
+	/**
+	 * Updates layout to reflect the application is done working on processing the picture
+	 */
 	private void unsetWorking(){
 		takePictureImageView.setClickable(true);
 		takePictureImageView.setEnabled(true);

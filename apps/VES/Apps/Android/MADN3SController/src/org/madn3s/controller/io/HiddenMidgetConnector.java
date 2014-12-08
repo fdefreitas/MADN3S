@@ -1,7 +1,7 @@
 package org.madn3s.controller.io;
 
-import static org.madn3s.controller.MADN3SController.rightCamera;
-import static org.madn3s.controller.MADN3SController.rightCameraWeakReference;
+import static org.madn3s.controller.Consts.*;
+
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
@@ -17,39 +17,25 @@ import android.util.Log;
 
 public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
 	
-	private static final String tag = "HiddenMidgetConnector";
+	private static final String tag = HiddenMidgetConnector.class.getSimpleName();
 	private WeakReference<BluetoothSocket> mSocketWeakReference;
     private BluetoothSocket mSocket;
     private Exception e;
     private AtomicBoolean read;
-    private String side;
     
-    public HiddenMidgetConnector(BluetoothDevice mBluetoothDevice, WeakReference<BluetoothSocket> mSocketWeakReference){
-    	this.mSocketWeakReference = mSocketWeakReference;
-    	try {
-            mSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(MADN3SController.APP_UUID);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    	this.read = new AtomicBoolean(false);
-    	this.side = "DEFAULT";
-    }
-    
-    public HiddenMidgetConnector(BluetoothDevice mBluetoothDevice, WeakReference<BluetoothSocket> mSocketWeakReference, AtomicBoolean read, String side){
-    	this.mSocketWeakReference = mSocketWeakReference;
+    public HiddenMidgetConnector(BluetoothDevice mBluetoothDevice, AtomicBoolean read){
     	try {
             mSocket = mBluetoothDevice.createRfcommSocketToServiceRecord(MADN3SController.APP_UUID);
         } catch (IOException e) {
             e.printStackTrace();
         }
     	this.read = read;
-    	this.side = side;
     }
 
 	@Override
 	protected Void doInBackground(Void... params) {
 		 try {
-            Log.d(tag, ""+mSocket.isConnected() + " - " + mSocket.getRemoteDevice().getName());
+            Log.d(tag, "isConnected: " + mSocket.isConnected() + " - " + mSocket.getRemoteDevice().getName());
             mSocket.connect();
         } catch (Exception e) {
             this.e = e;
@@ -64,48 +50,57 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
 	
 	@Override
     protected void onPostExecute(Void result){
-        if (e!= null) e.printStackTrace();
-        Log.d(tag, mSocket.getRemoteDevice().getName() + " " + mSocket.toString());
+		String deviceName = mSocket.getRemoteDevice().getName();
+    	String deviceAddress = mSocket.getRemoteDevice().getAddress();
+    	
+        if (e!= null) {
+        	e.printStackTrace();
+        }
+        
+        Log.d(tag, deviceName + " " + mSocket.toString());
         if(mSocket.isConnected()){
-            Log.d(tag, "Conexion levantada " + mSocket.getRemoteDevice().getName());
+            Log.d(tag, "Conexion levantada " + deviceName);
         }else{
-            Log.d(tag, "Conexion fallida " + mSocket.getRemoteDevice().getName());
+            Log.d(tag, "Conexion fallida " + deviceName);
 		}
-
-        if (mSocket.getRemoteDevice()!= null){
-            Log.d(tag, mSocket.getRemoteDevice().getName());
+    	
+    	if (mSocket.getRemoteDevice()!= null){
+            Log.d(tag, deviceName);
         }
         
         switch (mSocket.getRemoteDevice().getBondState()){
-            case BluetoothDevice.BOND_BONDED:
-                Log.d(tag, "BOND_BONDED - " + mSocket.getRemoteDevice().getName());
-                WeakReference<BluetoothSocket> mSocketWeakReference = new WeakReference<BluetoothSocket>(mSocket);
-                String side = "left";
-                if(MADN3SController.isRightCamera(mSocket.getRemoteDevice().getAddress())){
-                	side = "left";
-                	MADN3SController.rightCameraWeakReference = mSocketWeakReference;
-                } else if(MADN3SController.isLeftCamera(mSocket.getRemoteDevice().getAddress())){
-                	side = "right";
-                	MADN3SController.leftCameraWeakReference = mSocketWeakReference;
+            case BluetoothDevice.BOND_BONDED: 
+                Log.d(tag, "BOND_BONDED - " + deviceName);
+                String side;
+                if(MADN3SController.isRightCamera(deviceAddress)){
+                	side = SIDE_RIGHT;
+                	mSocketWeakReference = MADN3SController.rightCameraWeakReference = new WeakReference<BluetoothSocket>(mSocket);
+                	
+                } else if(MADN3SController.isLeftCamera(deviceAddress)){
+                	side = SIDE_LEFT;
+                	mSocketWeakReference = MADN3SController.leftCameraWeakReference = new WeakReference<BluetoothSocket>(mSocket);
+                	
                 } else {
-                	Log.d(tag, "WHUT?!");
+                	side = VALUE_DEFAULT_SIDE;
+                	Log.wtf(tag, "WHUT?!");
                 }
-                HiddenMidgetReader readerHandlerThread = new HiddenMidgetReader("readerTask-" + side + "-" + mSocket.getRemoteDevice().getName(), mSocketWeakReference, read, side);
+                
+                HiddenMidgetReader readerHandlerThread = new HiddenMidgetReader("readerTask-" + side 
+                		+ "-" + deviceName, mSocketWeakReference, read, side);
                 readerHandlerThread.start();
-                sendConfigs(mSocketWeakReference, side, mSocket.getRemoteDevice().getName());
+                sendConfigs(mSocketWeakReference, side, deviceName);
                 Log.d(tag, "Ejecutando a HiddenMidgetReader");
                 break;
+                
             case BluetoothDevice.BOND_BONDING:
-                Log.d(tag, "BOND_BONDING - " + mSocket.getRemoteDevice().getName());
+                Log.d(tag, "BOND_BONDING - " + deviceName);
                 break;
             case BluetoothDevice.BOND_NONE:
-                Log.d(tag, "BOND_NONE - " + mSocket.getRemoteDevice().getName());
+                Log.d(tag, "BOND_NONE - " + deviceName);
                 break;
             default:
-                Log.d(tag, "Default - " + mSocket.getRemoteDevice().getName());
+                Log.d(tag, "Default - " + deviceName);
         }
-       
-        
     }
 
     @Override
@@ -121,8 +116,8 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
     private void sendConfigs(WeakReference<BluetoothSocket> cameraWeakReference, String side, String name) {
 		try{
 			JSONObject json = new JSONObject();
-	        json.put("action", "config");
-	        json.put("clean", MADN3SController.sharedPrefsGetBoolean("clean"));
+	        json.put(KEY_ACTION, "config");
+	        json.put(KEY_CLEAN, MADN3SController.sharedPrefsGetBoolean("clean"));
 	        json.put("side", side);
 	        json.put("camera_name", name);
 	        JSONObject grabCut = new JSONObject();
@@ -158,6 +153,7 @@ public class HiddenMidgetConnector extends AsyncTask<Void, Void, Void> {
 	        sobel.put("d_y", MADN3SController.sharedPrefsGetInt("dY"));
 	        edgeDetection.put("sobel_config", sobel);
 	        json.put("edge_detection", edgeDetection);
+	        
 	        HiddenMidgetWriter sendCamera = new HiddenMidgetWriter(cameraWeakReference, json.toString());
 	        sendCamera.execute();
 	    } catch (Exception e) {

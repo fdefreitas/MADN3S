@@ -3,17 +3,13 @@ package org.madn3s.controller.io;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.madn3s.controller.MADN3SController;
-
 import android.bluetooth.BluetoothSocket;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class HiddenMidgetWriter extends AsyncTask<Void, Void, Void> {
 
-	private static final String tag = "HiddenMidgetWriter";
+	private static final String tag = HiddenMidgetWriter.class.getSimpleName();
 	private BluetoothSocket mSocket;
     private Exception e;
     private String msg;
@@ -23,11 +19,6 @@ public class HiddenMidgetWriter extends AsyncTask<Void, Void, Void> {
     	mSocket = mBluetoothSocketWeakReference.get();
     	this.msg = msg;
     	e = null;
-    }
-
-    @Override
-    protected void onPreExecute(){
-//        Log.d(tag, "Iniciando task de BT y cosa");
     }
 
     @Override

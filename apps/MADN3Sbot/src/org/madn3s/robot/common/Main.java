@@ -1,12 +1,10 @@
 package org.madn3s.robot.common;
 
-import lejos.nxt.Button;
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
 import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.navigation.OmniPilot;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.madn3s.io.BluetoothTunnel;
 

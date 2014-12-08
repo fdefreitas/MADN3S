@@ -2,7 +2,6 @@ package org.madn3s.controller;
 
 import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController.Mode;
-import org.madn3s.controller.components.NXTTalker;
 import org.madn3s.controller.components.CameraSelectionDialogFragment;
 import org.madn3s.controller.fragments.BaseFragment;
 import org.madn3s.controller.fragments.ConnectionFragment;
@@ -11,21 +10,18 @@ import org.madn3s.controller.fragments.DiscoveryFragment;
 import org.madn3s.controller.fragments.ScannerFragment;
 import org.madn3s.controller.fragments.SettingsFragment;
 import org.madn3s.controller.io.BraveHeartMidgetService;
-import org.madn3s.controller.io.HiddenMidgetReader;
 import org.madn3s.controller.io.HiddenMidgetWriter;
-import org.madn3s.controller.io.UniversalComms;
 import org.opencv.android.BaseLoaderCallback;
-import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.DialogFragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
 
@@ -35,10 +31,9 @@ public class MainActivity extends Activity implements
 
 	private static final String tag = MainActivity.class.getSimpleName();
     private CharSequence mTitle;
-	private FragmentManager mFragmentManager;
 	private DiscoveryFragment mDiscoveryFragment;
 	
-	private BaseLoaderCallback mLoaderCallback;
+	public static BaseLoaderCallback mLoaderCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +48,11 @@ public class MainActivity extends Activity implements
         }
 
         initializeSharedPrefs();
-        setUpBridges();
 		
 		Intent williamWallaceIntent = new Intent(this, BraveHeartMidgetService.class);
 		startService(williamWallaceIntent);
         
-        MADN3SController.pointsTest();
+//        MADN3SController.pointsTest();
     }
     
     @Override
@@ -78,6 +72,12 @@ public class MainActivity extends Activity implements
     }
 
     @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.global, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         switch (id) {
@@ -95,7 +95,7 @@ public class MainActivity extends Activity implements
     public void onObjectSelected(Object selected, BaseFragment fragment) {
     	Mode mode = (Mode) selected;
     	
-    	mFragmentManager.beginTransaction()
+    	getFragmentManager().beginTransaction()
     		.remove(fragment)
     		.commit();
     	//TODO revisar casos de switch
@@ -122,63 +122,6 @@ public class MainActivity extends Activity implements
 		finishCommunications();
 		super.onDestroy();
 	}
-    
-    /**
-	 * Sets up OpenCV Init Callback and all <code>UniversalComms</code> Bridges and Callbacks
-	 */
-	private void setUpBridges() {
-		
-		mLoaderCallback = new BaseLoaderCallback(this) {
-		       @Override
-		       public void onManagerConnected(int status) {
-		           switch (status) {
-		               case LoaderCallbackInterface.SUCCESS:
-		                   Log.i(tag, "OpenCV loaded successfully");
-		                   MADN3SController.isOpenCvLoaded = true;
-		                   break;
-		               default:
-		                   super.onManagerConnected(status);
-		                   break;
-		           }
-		       }
-		   };
-		
-		HiddenMidgetReader.bridge = new UniversalComms() {
-			@Override
-			public void callback(Object msg) {
-				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
-				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG, (String)msg);
-				startService(williamWallaceIntent);
-			}
-		};
-		
-		ScannerFragment.bridge = new UniversalComms() {
-			@Override
-			public void callback(Object msg) {
-				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
-				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND, (String)msg);
-				startService(williamWallaceIntent);
-			}
-		};
-		
-		NXTTalker.bridge = new UniversalComms() {
-			@Override
-			public void callback(Object msg) {
-				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
-				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_NXT_MESSAGE, (String)msg);
-				startService(williamWallaceIntent);
-			}
-		};
-		
-		SettingsFragment.bridge = new UniversalComms() {
-			@Override
-			public void callback(Object msg) {
-				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveHeartMidgetService.class);
-				williamWallaceIntent.putExtra(HiddenMidgetReader.EXTRA_CALLBACK_SEND, (String)msg);
-				startService(williamWallaceIntent);
-			}
-		};
-	}
 
 	/**
 	 * Sends <code>abort</code> signal to cameras and robot and 
@@ -187,20 +130,20 @@ public class MainActivity extends Activity implements
 	private void finishCommunications() {
 		try {
 			JSONObject nxtJson = new JSONObject();
-	        nxtJson.put("command", "abort");
-	        nxtJson.put("action", "abort");
+	        nxtJson.put(Consts.KEY_COMMAND, Consts.COMMAND_ABORT);
+	        nxtJson.put(Consts.KEY_ACTION, Consts.ACTION_ABORT);
 			
 	        MADN3SController.talker.write(nxtJson.toString().getBytes());
 			
 			JSONObject json = new JSONObject();
-	        json.put("action", "exit_app");
-	        json.put("side", "left");
+	        json.put(Consts.KEY_ACTION, Consts.ACTION_EXIT_APP);
+	        json.put(Consts.KEY_SIDE, Consts.SIDE_LEFT);
 	        
 	        HiddenMidgetWriter sendRightCamera = new HiddenMidgetWriter(
 	        		MADN3SController.rightCameraWeakReference, json.toString());
 	        sendRightCamera.execute();
 	        
-	        json.put("side", "right");
+	        json.put(Consts.KEY_SIDE, Consts.SIDE_RIGHT);
 	        
 	        HiddenMidgetWriter sendLeftCamera = new HiddenMidgetWriter(
 	        		MADN3SController.leftCameraWeakReference, json.toString());
@@ -220,7 +163,7 @@ public class MainActivity extends Activity implements
     public void launchRemoteControlFragment(){
         Log.d(tag, "launchRemoteControlFragment");
         RemoteControlFragment remoteControlFragment = new RemoteControlFragment();
-        mFragmentManager.beginTransaction().replace(R.id.container, remoteControlFragment)
+        getFragmentManager().beginTransaction().replace(R.id.container, remoteControlFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(String.valueOf(remoteControlFragment.getClass()))
                 .commit();
@@ -232,7 +175,7 @@ public class MainActivity extends Activity implements
     public void launchConnectionFragment(){
         Log.d(tag, "launchConectionFragment");
         ConnectionFragment connectionFragment = new ConnectionFragment();
-        mFragmentManager.beginTransaction()
+        getFragmentManager().beginTransaction()
         		.replace(R.id.container, connectionFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
@@ -245,7 +188,7 @@ public class MainActivity extends Activity implements
     public void launchScannerFragment(){
         Log.d(tag, "launchScannerFragment");
         ScannerFragment scannerFragment = new ScannerFragment();
-        mFragmentManager.beginTransaction()
+        getFragmentManager().beginTransaction()
         		.replace(R.id.container, scannerFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)
@@ -257,7 +200,7 @@ public class MainActivity extends Activity implements
      */
     public void launchSettingsFragment(){
         SettingsFragment settingsFragment = new SettingsFragment();
-        mFragmentManager.beginTransaction()
+        getFragmentManager().beginTransaction()
         		.replace(R.id.container, settingsFragment)
         		.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .addToBackStack(null)

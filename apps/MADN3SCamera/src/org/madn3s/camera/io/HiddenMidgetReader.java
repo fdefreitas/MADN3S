@@ -3,28 +3,27 @@ package org.madn3s.camera.io;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
-import java.net.ServerSocket;
 
 import org.json.JSONObject;
+import org.madn3s.camera.Consts;
 import org.madn3s.camera.MADN3SCamera;
 
 import android.bluetooth.BluetoothSocket;
-import android.content.Intent;
-import android.os.Handler.Callback;
 import android.os.Handler;
+import android.os.Handler.Callback;
 import android.os.HandlerThread;
 import android.os.Message;
-import android.text.StaticLayout;
 import android.util.Log;
 
 /**
  * Created by ninja_midget on 2/1/14.
  */
 public class HiddenMidgetReader extends HandlerThread implements Callback {
+	
+	private final static String tag = HiddenMidgetReader.class.getSimpleName();
 	public static UniversalComms bridge;
-	private final static String tag = "HiddenMidgetReader";
-	public final static String EXTRA_CALLBACK_MSG = "message";
-	private Handler handler, callback;
+	@SuppressWarnings("unused")
+	private Handler handler;
 	private WeakReference<BluetoothSocket> mBluetoothSocketWeakReference;
     private BluetoothSocket mSocket;
 
@@ -63,16 +62,16 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 						Log.d(tag, "Esperando mensaje.");
 						message = getMessage();
 						if(message != null && !message.isEmpty()){
-							Log.d(tag, "Llego " + message);
+//							Log.d(tag, "Mensaje Recibido: " + message);
 							JSONObject msg = new JSONObject(message);
-							if(msg.has("action")){
-								String action = msg.getString("action");
-								 if(action.equalsIgnoreCase("exit_app")){
+							if(msg.has(Consts.KEY_ACTION)){
+								String action = msg.getString(Consts.KEY_ACTION);
+								 if(action.equalsIgnoreCase(Consts.ACTION_EXIT_APP)){
 									break;
 								}
 							}	
 							bridge.callback(message);
-							Log.d(tag, "Iniciando wait().");
+//							Log.d(tag, "Iniciando wait().");
 							MADN3SCamera.isPictureTaken.set(false);
 						}
 					}
@@ -109,8 +108,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
         	}
         	return bao != null ? bao.toString() : null;
         } catch (Exception e){
-            Log.d(tag, "getMessage. Exception al leer Socket: " + e);
-            e.printStackTrace();
+            Log.e(tag, "getMessage. Exception al leer Socket", e);
             return null;
         }
 	}

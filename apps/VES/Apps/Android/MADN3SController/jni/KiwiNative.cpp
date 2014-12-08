@@ -158,6 +158,37 @@ bool doProcess(const std::string& pointsJsonStr){
 	vtkSmartPointer<vtkIterativeClosestPointTransform> icp =
 	      vtkSmartPointer<vtkIterativeClosestPointTransform>::New();
 	LOGI("Native doProcess. el todopoderoso ICP nos perdonó la vida.");
+
+//	Mat rightImgMat;
+//	Mat leftImgMat;
+//	LOGI("Native doProcess. obteniendo filepaths de left y right.");
+//	std::string rightFilepath = right.get("filepath", NULL).asString();
+//	std::string leftFilepath = left.get("filepath", NULL).asString();
+//
+//	if(rightPicture != NULL && leftPicture != NULL){
+//		LOGI("Native doProcess. filepaths, left: %s, right: %s.", leftFilepath, rightFilepath);
+//		rightImgMat = imread(rightFilepath, CV_LOAD_IMAGE_GRAYSCALE);
+//		leftImgMat = imread(leftFilepath, CV_LOAD_IMAGE_GRAYSCALE);
+//	} else {
+//		LOGI("Native doProcess. Algo salio mal.");
+//	}
+
+//	Size img_sz = imgA.size();
+//	Mat imgC(img_sz,1);
+//
+//	int win_size = 15;
+//	int maxCorners = 20;
+//	double qualityLevel = 0.05;
+//	double minDistance = 5.0;
+//	int blockSize = 3;
+//	double k = 0.04;
+//	std::vector<cv::Point2f> cornersA;
+//	cornersA.reserve(maxCorners);
+//	std::vector<cv::Point2f> cornersB;
+//	cornersB.reserve(maxCorners);
+//
+//	calcOpticalFlowPyrLK
+
 	return icp != NULL;
 }
 

@@ -1,18 +1,19 @@
 package org.madn3s.camera.io;
 
+import static org.madn3s.camera.Consts.*;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 import java.util.Vector;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.madn3s.camera.Consts;
 import org.madn3s.camera.MADN3SCamera;
 import org.madn3s.camera.R;
 
 import java.io.File;
 
-import android.os.Environment;
 import android.util.Log;
 import android.app.IntentService;
 import android.bluetooth.BluetoothAdapter;
@@ -30,12 +31,11 @@ import android.os.IBinder;
 
 public class BraveheartMidgetService extends IntentService {
 	
-	
+	private static final String tag = BraveheartMidgetService.class.getSimpleName();
 	public static String projectName;
 	public static String side;
 	private JSONObject result;
 	public static final String BT_DEVICE = "btdevice";
-	private static final String tag = "BraveheartMidgetService";
 	
 	public static final String SERVICE_NAME ="MADN3S";
 	public static final UUID APP_UUID = UUID.fromString("65da7fe0-8b80-11e3-baa8-0800200c9a66");
@@ -65,14 +65,6 @@ public class BraveheartMidgetService extends IntentService {
 	public static UniversalComms cameraCallback;
     
     private JSONObject config;
-    
-    
-	
-    @Override
-	public void onDestroy() {
-		super.onDestroy();
-//		releaseCamera();
-	}
 
 	public BraveheartMidgetService() {
 		super(tag);
@@ -81,8 +73,6 @@ public class BraveheartMidgetService extends IntentService {
     @Override
     public IBinder onBind(Intent intent) {
         mHandler = ((MADN3SCamera) getApplication()).getBluetoothHandler();
-        Log.d(tag, "mHandler "+ mHandler == null ? "NULL" : mHandler.toString());
-        Log.d(tag, "mBinder "+ mBinder == null ? "NULL" : mBinder.toString());
         return mBinder;
     }
 
@@ -96,14 +86,14 @@ public class BraveheartMidgetService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-    	if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG) || intent.hasExtra("result")){
+    	if(intent.hasExtra(Consts.EXTRA_CALLBACK_MSG) || intent.hasExtra("result")){
     		Log.d(tag, "Onstart Command. Llamando a onHandleIntent.");
     		return super.onStartCommand(intent,flags,startId);
     	} else {
 	        Log.d(tag, "Onstart Command");
 	        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 	        try {
-	            mBluetoothServerSocket = mBluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(BTConnection.SERVICE_NAME, BTConnection.APP_UUID);
+	            mBluetoothServerSocket = mBluetoothAdapter.listenUsingInsecureRfcommWithServiceRecord(Consts.SERVICE_NAME, Consts.APP_UUID);
 	            mBluetoothServerSocketWeakReference = new WeakReference<BluetoothServerSocket>(mBluetoothServerSocket);
 	            
 	            mSocket = null;
@@ -114,8 +104,7 @@ public class BraveheartMidgetService extends IntentService {
 	            connectorTask.execute();
 	            
 	        } catch (IOException e) {
-	        	Log.d(tag, "No se pudo inicializar mBluetoothServerSocket.");
-	            e.printStackTrace();
+	        	Log.e(tag, "No se pudo inicializar mBluetoothServerSocket.", e);
 	        }
 	        
 	        String stopservice = intent.getStringExtra("stopservice");
@@ -129,76 +118,84 @@ public class BraveheartMidgetService extends IntentService {
 	@Override
 	protected void onHandleIntent(Intent intent) {
 		try {
-			String jsonString = "{}";
+			String jsonString;
 			JSONObject msg;
-			if(intent.hasExtra(HiddenMidgetReader.EXTRA_CALLBACK_MSG)){
-				jsonString = intent.getExtras().getString(HiddenMidgetReader.EXTRA_CALLBACK_MSG);
+			if(intent.hasExtra(Consts.EXTRA_CALLBACK_MSG)){
+				jsonString = intent.getExtras().getString(Consts.EXTRA_CALLBACK_MSG, Consts.EMPTY_JSON_OBJECT_STRING);
 				msg = new JSONObject(jsonString);
-				if(msg.has("action")){
-					String action = msg.getString("action");
-					side = msg.getString("side");
-					if(msg.has("project_name")){
-						projectName = msg.getString("project_name");
+				if(msg.has(KEY_ITERATION)){
+					MADN3SCamera.iteration = msg.getInt(KEY_ITERATION);
+				}
+				if(msg.has(Consts.KEY_ACTION)){
+					String action = msg.getString(Consts.KEY_ACTION);
+					if(msg.has(Consts.KEY_SIDE)){
+						side = msg.getString(Consts.KEY_SIDE);
+					}
+					if(msg.has(Consts.KEY_PROJECT_NAME)){
+						projectName = msg.getString(Consts.KEY_PROJECT_NAME);
 					}
 					if(config == null){//kind of cheating...
 						config = msg;
 					}
 					Log.d(tag, "action: " + action);
-					if(action.equalsIgnoreCase("config")){
+					if(action.equalsIgnoreCase(Consts.KEY_CONFIG)){
 						config = msg;
 						//TODO guardar en sharedPrefs
 						MADN3SCamera.isPictureTaken.set(true);
-					} else if(action.equalsIgnoreCase("take_picture")){
+					} else if(action.equalsIgnoreCase(Consts.ACTION_TAKE_PICTURE)){
+						Log.d(tag, "ACTION_TAKE_PICTURE");
 						cameraCallback.callback(config);
-					} else if(action.equalsIgnoreCase("send_picture")) {
+					} else if(action.equalsIgnoreCase(Consts.ACTION_SEND_PICTURE)) {
+						Log.d(tag, "ACTION_SEND_PICTURE");
 						sendPicture();
-					} else if(action.equalsIgnoreCase("end_project")){
-						if(msg.has("clean") && msg.getBoolean("clean")){
+					} else if(action.equalsIgnoreCase(Consts.ACTION_END_PROJECT)){
+						Log.d(tag, "ACTION_END_PROJECT");
+						if(msg.has(Consts.KEY_CLEAN) && msg.getBoolean(Consts.VALUE_CLEAN)){
 							cleanTakenPictures(projectName);
 						}
 						projectName = null;
-					} else if(action.equalsIgnoreCase("calibrate")){
+					} else if(action.equalsIgnoreCase(Consts.ACTION_CALIBRATE)){
+						Log.d(tag, "ACTION_CALIBRATE");
 						calibrate();
 						sendResult();
-					} else if(action.equalsIgnoreCase("exit_app")){
-						Log.d(tag, "onHandleIntent: NO LLEGA");	
+					} else if(action.equalsIgnoreCase(Consts.ACTION_EXIT_APP)){
+						Log.d(tag, "ACTION_EXIT_APP");
+						Log.d(tag, "onHandleIntent: action: " + Consts.ACTION_EXIT_APP);	
 					} else {
-						Log.d(tag, "onHandleIntent: QUE MIERDA ES ESTO? " + action);	
+						Log.d(tag, "onHandleIntent: unhandled action: " + action);	
 					}
 				}
-			} else if (intent.hasExtra("result")) {
-				jsonString = intent.getExtras().getString("result");
+			} else if (intent.hasExtra(Consts.EXTRA_RESULT)) {
+				Log.d(tag, "EXTRA_RESULT");
+				jsonString = intent.getExtras().getString(Consts.EXTRA_RESULT);
 				result = new JSONObject(jsonString);
-				//TODO ordenar y arreglar
-				if(result.has("error")){
-					Log.d(tag, "recibido Error.");
+
+				if(result.has(Consts.KEY_ERROR)){
 					sendResult();
 					MADN3SCamera.isPictureTaken.set(true);
+				} else {
+					Log.d(tag, "Malformed result JSONObject. error key not found");
 				}
 			}
 		} catch (JSONException e) {
-			Log.d(tag, "Could Not Parse JSON");
-			e.printStackTrace();
+			Log.e(tag, "Could Not Parse JSON", e);
 		}
 	}
 
 	private void sendPicture() {
-		Log.d(tag, "mSocketWeakReference == null: " + (mSocketWeakReference == null));
-		//TODO buscar imagen guardada
+		Log.d(tag, "sendPicture");
+		Log.d(tag, "mSocketWeakReference null: " + (mSocketWeakReference == null));
+		
 		SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
-		
-		String filepath = sharedPreferences.getString("filepath", null);
-		//TODO over options a constante junto con las del callback de camara
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inPreferredConfig = Bitmap.Config.RGB_565;
-		
-		Bitmap bitmap = BitmapFactory.decodeFile(filepath, options);
+		String filepath = sharedPreferences.getString(Consts.KEY_FILE_PATH, null);
+		Bitmap bitmap = BitmapFactory.decodeFile(filepath, Consts.bitmapFactoryOptions);
 		
 		if(filepath != null){
 			if(mSocketWeakReference != null){
 				HiddenMidgetWriter writerTask = new HiddenMidgetWriter(mSocketWeakReference, bitmap);
 		        Log.d(tag, "Ejecutando a HiddenMidgetWriter desde sendPicture");
 		        writerTask.execute();
+		        MADN3SCamera.isPictureTaken.set(true);
 			}
 		} else {
 			Log.d(tag, "filepath : null");
@@ -207,13 +204,11 @@ public class BraveheartMidgetService extends IntentService {
 
 	private void calibrate() throws JSONException {
 		try {
-			result.put("error", false);
-	    	if(result.has("points")){
-	    		result.remove("points");
-	    	} 
+			result.put(Consts.KEY_ERROR, false);
+    		result.remove(Consts.KEY_POINTS);
 		} catch (Exception e) {
 			e.printStackTrace();
-			result.put("error", true);
+			result.put(Consts.KEY_ERROR, true);
 		}
 	}
 
@@ -226,14 +221,18 @@ public class BraveheartMidgetService extends IntentService {
 		}
 	}
 
+	/**
+	 * Deletes all <code>projectName</code> files and it's folder 
+	 * @param projectName - The project's name
+	 */
 	private void cleanTakenPictures(String projectName) {
-		Log.d(tag, "Limpiando " + projectName);
-		File projectMediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) +"/MADN3SCamera", projectName);
+		Log.d(tag, "Cleaning project " + projectName);
+		File projectMediaStorageDir = new File(MADN3SCamera.getAppDirectory(), projectName);
 		if (projectMediaStorageDir.exists()){
 			String[] files = projectMediaStorageDir.list();
 			if(files != null){
 				for (int i = 0; i < files.length; i++) {
-					Log.d(tag, "Limpiando " + files[i]);
+					Log.d(tag, "Cleaning " + files[i]);
 		            new File(projectMediaStorageDir, files[i]).delete();
 		        }
 			}
