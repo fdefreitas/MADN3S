@@ -174,7 +174,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 								msg = new JSONObject();
 								msg.put(Consts.KEY_ERROR, false);
 								msg.put(Consts.KEY_SIDE, side);
-								String filepath = MADN3SController.saveBitmapAsJpeg(bmp, side);
+								String filepath = MADN3SController.saveBitmapAsPng(bmp, side);
 								msg.put(Consts.KEY_FILE_PATH, filepath);
 								
 								pictureBridge.callback(msg.toString());

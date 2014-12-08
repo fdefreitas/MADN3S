@@ -6,8 +6,6 @@ import java.io.FileOutputStream;
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import android.annotation.SuppressLint;
@@ -35,6 +33,7 @@ public class MADN3SCamera extends Application {
 
     public static String projectName;
     public static String position;
+    public static int iteration;
     private static File appDirectory;
     
     public static CameraPreview mPreview;
@@ -74,17 +73,17 @@ public class MADN3SCamera extends Application {
         return Uri.fromFile(getOutputMediaFile(type));
     }
     
-    public static Uri getOutputMediaFileUri(int type, String projectName, String position){
-        return Uri.fromFile(getOutputMediaFile(type, projectName, position));
+    public static Uri getOutputMediaFileUri(int type, String projectName, String position, int iteration){
+        return Uri.fromFile(getOutputMediaFile(type, projectName, position, iteration));
     }
 
     @SuppressLint("SimpleDateFormat")
 	public static File getOutputMediaFile(int type){
-    	return getOutputMediaFile(type, projectName, position);
+    	return getOutputMediaFile(type, projectName, position, iteration);
     }
 
     @SuppressLint("SimpleDateFormat")
-	public static File getOutputMediaFile(int type, String projectName, String iteration){
+	public static File getOutputMediaFile(int type, String projectName, String position, int iteration){
         File mediaStorageDir = new File(getAppDirectory(), projectName);
 
         if (! mediaStorageDir.exists()){
@@ -94,16 +93,15 @@ public class MADN3SCamera extends Application {
             }
         }
 
-        if(iteration == null){
-        	iteration = "";
+        if(position == null){
+        	position = "";
         }
         
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String filename;
         File mediaFile;
         
         if (type == MEDIA_TYPE_IMAGE){
-            filename = "IMG_" + iteration + "_" + timeStamp + Consts.IMAGE_EXT;
+            filename = "IMG_" + position + "_" + iteration + Consts.IMAGE_EXT;
         } else {
             return null;
         }
@@ -114,9 +112,13 @@ public class MADN3SCamera extends Application {
     }
     
     public static String saveBitmapAsJpeg(Bitmap bitmap, String position){
+    	return saveBitmapAsJpeg(bitmap, position, iteration);
+    }
+    
+    public static String saveBitmapAsJpeg(Bitmap bitmap, String position, int iteration){
     	FileOutputStream out;
         try {
-            final File imgFile = getOutputMediaFile(MEDIA_TYPE_IMAGE, projectName, position);
+            final File imgFile = getOutputMediaFile(MEDIA_TYPE_IMAGE, projectName, position, iteration);
 
             out = new FileOutputStream(imgFile.getAbsoluteFile());
             bitmap.compress(Consts.BITMAP_COMPRESS_FORMAT, Consts.COMPRESSION_QUALITY, out);

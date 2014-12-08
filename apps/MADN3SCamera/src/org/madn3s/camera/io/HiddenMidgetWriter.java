@@ -2,6 +2,7 @@ package org.madn3s.camera.io;
 
 import android.bluetooth.BluetoothSocket;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.util.Base64;
 import android.util.Log;

@@ -64,7 +64,7 @@ public class MidgetOfSeville {
 				Log.d(tag, "calculateFrameOpticalFlow. rightMat: " + (rightMat == null));
 				Bitmap rightGrayBitmap = Bitmap.createBitmap(rightMat.cols(), rightMat.rows(), Bitmap.Config.RGB_565);
 				Utils.matToBitmap(rightMat, rightGrayBitmap);
-				MADN3SController.saveBitmapAsJpeg(rightGrayBitmap, "rightGray");
+				MADN3SController.saveBitmapAsPng(rightGrayBitmap, "rightGray");
 			}
 			
 			if(leftFilepath != null){
@@ -80,7 +80,7 @@ public class MidgetOfSeville {
 				Log.d(tag, "calculateFrameOpticalFlow. leftMat: " + (leftMat == null));
 				Bitmap leftGrayBitmap = Bitmap.createBitmap(leftMat.cols(), leftMat.rows(), Bitmap.Config.RGB_565);
 				Utils.matToBitmap(leftMat, leftGrayBitmap);
-				MADN3SController.saveBitmapAsJpeg(leftGrayBitmap, "letfGray");
+				MADN3SController.saveBitmapAsPng(leftGrayBitmap, "letfGray");
 			}
 	
 			JSONObject pointJson;

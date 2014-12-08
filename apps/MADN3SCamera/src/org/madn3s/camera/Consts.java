@@ -25,6 +25,7 @@ public class Consts {
 	public static final String KEY_FILE_PATH = "filepath";
 	public static final String KEY_MD5 = "md5";
 	public static final String KEY_MD5_BASE_64 = "md5_base64";
+	public static final String KEY_ITERATION = "iter";
 	
 	public static final String ACTION_TAKE_PICTURE = "take_picture";
 	public static final String ACTION_SEND_PICTURE = "send_picture";
@@ -38,17 +39,17 @@ public class Consts {
 	public static final String VALUE_CLEAN = "clean";
 	public static final String VALUE_DEFAULT_PROJECT_NAME = "default";
 	public static final String VALUE_DEFAULT_POSITION = "default";
-	public static final String IMAGE_EXT = ".jpg";
+	public static final String IMAGE_EXT = ".png";
 	public static final String EMPTY_JSON_OBJECT_STRING = "{}";  
 
-	public static final CompressFormat BITMAP_COMPRESS_FORMAT = Bitmap.CompressFormat.JPEG;
+	public static final CompressFormat BITMAP_COMPRESS_FORMAT = Bitmap.CompressFormat.PNG;
 	public static final int COMPRESSION_QUALITY = 100;
 	public static final Bitmap.Config DEFAULT_IN_PREFERRED_CONFIG = Bitmap.Config.RGB_565;
 	public static BitmapFactory.Options bitmapFactoryOptions = new BitmapFactory.Options();
     
 	public static void init(){
 		Log.d(tag, "init()");
-		bitmapFactoryOptions.inSampleSize = 6;
+		bitmapFactoryOptions.inSampleSize = 4;
 	    bitmapFactoryOptions.inDither = false;
 	    bitmapFactoryOptions.inPurgeable = true;
 	    bitmapFactoryOptions.inInputShareable = true;

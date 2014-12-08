@@ -458,7 +458,7 @@ public class MADN3SController extends Application {
         return mediaFile;
     }
     
-    public static String saveBitmapAsJpeg(Bitmap bitmap, String position){
+    public static String saveBitmapAsPng(Bitmap bitmap, String position){
     	FileOutputStream out;
         try {
             final File imgFile = getOutputMediaFile(MEDIA_TYPE_IMAGE, sharedPrefsGetString(KEY_PROJECT_NAME), position);
@@ -476,7 +476,7 @@ public class MADN3SController extends Application {
             return imgFile.getPath();
             
         } catch (FileNotFoundException e) {
-            Log.e(position, "saveBitmapAsJpeg: No se pudo guardar el Bitmap", e);
+            Log.e(position, "saveBitmapAsPng: No se pudo guardar el Bitmap", e);
             return null;
         }
     }

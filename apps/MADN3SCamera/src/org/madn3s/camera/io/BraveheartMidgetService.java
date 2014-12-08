@@ -1,11 +1,11 @@
 package org.madn3s.camera.io;
 
+import static org.madn3s.camera.Consts.*;
+
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 import java.util.Vector;
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.madn3s.camera.Consts;
@@ -123,6 +123,9 @@ public class BraveheartMidgetService extends IntentService {
 			if(intent.hasExtra(Consts.EXTRA_CALLBACK_MSG)){
 				jsonString = intent.getExtras().getString(Consts.EXTRA_CALLBACK_MSG, Consts.EMPTY_JSON_OBJECT_STRING);
 				msg = new JSONObject(jsonString);
+				if(msg.has(KEY_ITERATION)){
+					MADN3SCamera.iteration = msg.getInt(KEY_ITERATION);
+				}
 				if(msg.has(Consts.KEY_ACTION)){
 					String action = msg.getString(Consts.KEY_ACTION);
 					if(msg.has(Consts.KEY_SIDE)){

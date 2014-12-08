@@ -1,6 +1,7 @@
 package org.madn3s.camera;
 
 import static org.madn3s.camera.MADN3SCamera.position;
+import static org.madn3s.camera.MADN3SCamera.iteration;
 import static org.madn3s.camera.MADN3SCamera.projectName;
 import static org.madn3s.camera.Consts.*;
 
@@ -267,7 +268,7 @@ public class MainActivity extends Activity {
 		            }
 		            
 		            try {
-		            	String filePath = MADN3SCamera.saveBitmapAsJpeg(bMapRotate, position);
+		            	String filePath = MADN3SCamera.saveBitmapAsJpeg(bMapRotate, position, iteration);
 		            	
 		            	Log.d(tag, "filePath desde MainActivity: " + filePath);
 		                
