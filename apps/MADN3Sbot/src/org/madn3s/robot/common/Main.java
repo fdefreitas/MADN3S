@@ -55,9 +55,10 @@ public class Main {
 				message = bTunnel.readMessage();
 				if(message != null && !message.isEmpty()){
 					try{
-						Utils.printToScreen(message, 0,1, true);
+						
 						JSONObject msg = new JSONObject(message);
 						String command = msg.getString("command");
+						Utils.printToScreen("command : " + command, 0,1, true);
 						if(command.equalsIgnoreCase("scanner")){
 							scanner.processMsg(msg);
 						} if(command.equalsIgnoreCase("rc")){

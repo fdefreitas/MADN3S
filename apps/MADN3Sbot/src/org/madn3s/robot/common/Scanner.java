@@ -96,7 +96,8 @@ public class Scanner {
 		boolean result = false;
 		try{
 			String action =  message.getString("action");
-			Utils.printToScreen(action, 0, 1, false);
+			Utils.printToScreen("action : " + action, 0,2, false);
+//			Utils.printToScreen(action, 0, 1, false);
 			if(action.equalsIgnoreCase("move")){
 				move = true;
 			} else if(action.equalsIgnoreCase("wait")){
@@ -104,7 +105,8 @@ public class Scanner {
 			} else if(action.equalsIgnoreCase("FINISH")){
 				finish = true;
 			} else if(action.equalsIgnoreCase("config")){
-				circumferenceRadius = uSensor.getDistance();
+//				circumferenceRadius = uSensor.getDistance();
+				circumferenceRadius = message.getDouble("radius");
 				move = finish = false;
 				boolean calculate = false;
 				if(message.has("points")){
@@ -122,9 +124,14 @@ public class Scanner {
 					omniPilot.setTravelSpeed(travelSpeed);
 				}
 				
-				if(calculate){
+//				if(calculate){
 					distance =  Math.floor(2 * circumferenceRadius * Math.sin(Math.PI / points)) - bias;
-				}
+//				}
+				Utils.printToScreen("radius : " + circumferenceRadius, 0,3, false);
+				Utils.printToScreen("bias : " + bias, 0,4, false);
+				Utils.printToScreen("points : " + points, 0,5, false);
+				Utils.printToScreen("speed : " + travelSpeed, 0,6, false);
+				Utils.printToScreen("distance : " + distance, 0,7, false);
 			}
 			
 			if(move){
