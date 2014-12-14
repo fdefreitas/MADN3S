@@ -188,7 +188,7 @@ public class BraveheartMidgetService extends IntentService {
 		
 		SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
 		String filepath = sharedPreferences.getString(Consts.KEY_FILE_PATH, null);
-		Bitmap bitmap = BitmapFactory.decodeFile(filepath, Consts.bitmapFactoryOptions);
+		Bitmap bitmap = BitmapFactory.decodeFile(filepath, Consts.bitmapFactoryOptionsOnSend);
 		
 		if(filepath != null){
 			if(mSocketWeakReference != null){

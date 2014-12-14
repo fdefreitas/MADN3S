@@ -46,6 +46,7 @@ public class Consts {
 	public static final int COMPRESSION_QUALITY = 100;
 	public static final Bitmap.Config DEFAULT_IN_PREFERRED_CONFIG = Bitmap.Config.RGB_565;
 	public static BitmapFactory.Options bitmapFactoryOptions = new BitmapFactory.Options();
+	public static BitmapFactory.Options bitmapFactoryOptionsOnSend = new BitmapFactory.Options();
     
 	public static void init(){
 		Log.d(tag, "init()");
@@ -55,5 +56,12 @@ public class Consts {
 	    bitmapFactoryOptions.inInputShareable = true;
 	    bitmapFactoryOptions.inTempStorage = new byte[32 * 1024];
 	    bitmapFactoryOptions.inPreferredConfig = DEFAULT_IN_PREFERRED_CONFIG;
+	    
+	    bitmapFactoryOptionsOnSend.inSampleSize = 1;
+	    bitmapFactoryOptionsOnSend.inDither = false;
+	    bitmapFactoryOptionsOnSend.inPurgeable = true;
+	    bitmapFactoryOptionsOnSend.inInputShareable = true;
+	    bitmapFactoryOptionsOnSend.inTempStorage = new byte[32 * 1024];
+	    bitmapFactoryOptionsOnSend.inPreferredConfig = DEFAULT_IN_PREFERRED_CONFIG;
 	}
 }

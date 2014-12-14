@@ -2,6 +2,7 @@ package org.madn3s.robot.common;
 
 import lejos.nxt.Motor;
 import lejos.nxt.SensorPort;
+import lejos.nxt.Sound;
 import lejos.nxt.UltrasonicSensor;
 import lejos.robotics.navigation.OmniPilot;
 
@@ -53,7 +54,7 @@ public class Main {
 				message = bTunnel.readMessage();
 				if(message != null && !message.isEmpty()){
 					try{
-						
+						Sound.twoBeeps();
 						JSONObject msg = new JSONObject(message);
 						String command = msg.getString("command");
 						Utils.printToScreen("command : " + command, 0,1, true);

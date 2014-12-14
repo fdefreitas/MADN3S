@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import org.madn3s.robot.common.Utils;
 
+import lejos.nxt.Sound;
 import lejos.nxt.comm.Bluetooth;
 import lejos.nxt.comm.NXTConnection;
 
@@ -17,6 +18,7 @@ public class BluetoothTunnel {
 	
 	public BluetoothTunnel() {
 		connection = Bluetooth.waitForConnection(CONNECTION_TIMEOUT, 0);
+		Sound.beep();
 		connection.setIOMode(NXTConnection.RAW);
 	}
 	
