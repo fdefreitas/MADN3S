@@ -271,6 +271,13 @@ public class MainActivity extends Activity {
 		            	String filePath = MADN3SCamera.saveBitmapAsJpeg(bMapRotate, position, iteration);
 		            	
 		            	Log.d(tag, "filePath desde MainActivity: " + filePath);
+		            	
+		            	try {
+			            	CameraCalibrator calibrator = new CameraCalibrator(filePath);
+			            	calibrator.calibrate();
+		            	} catch (Exception e) {
+							e.printStackTrace();
+						}
 		                
 		                JSONObject resultJsonObject = figaro.shapeUp(filePath, config);
 		                
