@@ -45,6 +45,8 @@ public class MADN3SCamera extends Application {
     private Handler.Callback mBluetoothHandlerCallback = null;
     
     private static Camera mCamera;
+    public static boolean hasInvokedCalibration = false;
+    public static boolean hasReceivedCalibration = false;
 
     @SuppressLint("HandlerLeak")
 	@Override

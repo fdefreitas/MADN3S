@@ -38,6 +38,16 @@
 
     </RelativeLayout>
 
+    <Chronometer
+        android:id="@+id/elapsed_chronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toLeftOf="@+id/take_picture_imageView"
+        android:layout_alignTop="@+id/take_picture_imageView"
+        android:format="%s"
+        android:textSize="24sp"
+        android:gravity="center_vertical" />
+    
     <TextView
         android:id="@+id/configs_text_view"
         android:layout_width="wrap_content"

@@ -39,10 +39,10 @@ public class Consts {
 	public static final String VALUE_CLEAN = "clean";
 	public static final String VALUE_DEFAULT_PROJECT_NAME = "default";
 	public static final String VALUE_DEFAULT_POSITION = "default";
-	public static final String IMAGE_EXT = ".png";
+	public static final String IMAGE_EXT = ".jpg";
 	public static final String EMPTY_JSON_OBJECT_STRING = "{}";  
 
-	public static final CompressFormat BITMAP_COMPRESS_FORMAT = Bitmap.CompressFormat.PNG;
+	public static final CompressFormat BITMAP_COMPRESS_FORMAT = Bitmap.CompressFormat.JPEG;
 	public static final int COMPRESSION_QUALITY = 100;
 	public static final Bitmap.Config DEFAULT_IN_PREFERRED_CONFIG = Bitmap.Config.RGB_565;
 	public static BitmapFactory.Options bitmapFactoryOptions = new BitmapFactory.Options();

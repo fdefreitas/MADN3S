@@ -24,7 +24,7 @@ import android.util.Log;
 
 public class CameraCalibrator {
 	private static final String tag = "CameraCalibrator";
-	private final Size mPatternSize = new Size(4, 11);
+	private final Size mPatternSize = new Size(8, 10);
 	private final int mCornersSize = (int)(mPatternSize.width * mPatternSize.height);
 	private MatOfPoint2f mCorners = new MatOfPoint2f();
 	private double mSquareSize = 0.0181;
@@ -71,7 +71,10 @@ public class CameraCalibrator {
 	
 	
 	public void calibrate(){
-		boolean found = Calib3d.findChessboardCorners(mat, mPatternSize, mCorners, Calib3d.CALIB_CB_ADAPTIVE_THRESH | Calib3d.CALIB_CB_FAST_CHECK | Calib3d.CALIB_CB_NORMALIZE_IMAGE);
+		boolean found = Calib3d.findChessboardCorners(mat, mPatternSize, mCorners
+				, Calib3d.CALIB_CB_ADAPTIVE_THRESH | Calib3d.CALIB_CB_FAST_CHECK 
+					| Calib3d.CALIB_CB_NORMALIZE_IMAGE);
+//		boolean found = Calib3d.findCirclesGridDefault(mat, mPatternSize, mCorners, Calib3d.CALIB_CB_ASYMMETRIC_GRID);
 		if(found){
 			ArrayList<Mat> rvecs = new ArrayList<Mat>();
 	        ArrayList<Mat> tvecs = new ArrayList<Mat>();
@@ -91,6 +94,7 @@ public class CameraCalibrator {
 		} else {
 			Log.d(tag, "Missing pattern");
 		}
+		drawPoints(mat, found);
 	}
 	
 	private double computeReprojectionErrors(List<Mat> objectPoints,
@@ -143,4 +147,11 @@ public class CameraCalibrator {
 		Log.d(tag, "imgBitmap config: " + imgBitmap.getConfig().toString() + " hasAlpha: " + imgBitmap.hasAlpha());
 		return imgBitmap;
 	}
+	
+	private void drawPoints(Mat rgbaFrame, boolean mPatternWasFound) {
+        Calib3d.drawChessboardCorners(rgbaFrame, mPatternSize, mCorners, mPatternWasFound);
+        Bitmap drawChessBitmap = Bitmap.createBitmap(rgbaFrame.cols(), rgbaFrame.rows(), Bitmap.Config.RGB_565);
+		Utils.matToBitmap(rgbaFrame, drawChessBitmap);
+        MADN3SCamera.saveBitmapAsJpeg(drawChessBitmap, "draw_chess");
+    }
 }

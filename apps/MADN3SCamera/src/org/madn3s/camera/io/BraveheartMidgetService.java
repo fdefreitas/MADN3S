@@ -6,10 +6,12 @@ import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.UUID;
 import java.util.Vector;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.madn3s.camera.Consts;
 import org.madn3s.camera.MADN3SCamera;
+import org.madn3s.camera.MainActivity;
 import org.madn3s.camera.R;
 
 import java.io.File;
@@ -63,6 +65,7 @@ public class BraveheartMidgetService extends IntentService {
     public Vector<Byte> packdata = new Vector<Byte>(2048);
     public static BluetoothDevice device = null;
 	public static UniversalComms cameraCallback;
+	public static MainActivity mActivity;
     
     private JSONObject config;
 
@@ -193,6 +196,7 @@ public class BraveheartMidgetService extends IntentService {
 		if(filepath != null){
 			if(mSocketWeakReference != null){
 				HiddenMidgetWriter writerTask = new HiddenMidgetWriter(mSocketWeakReference, bitmap);
+				writerTask.setmActivity(mActivity);
 		        Log.d(tag, "Ejecutando a HiddenMidgetWriter desde sendPicture");
 		        writerTask.execute();
 		        MADN3SCamera.isPictureTaken.set(true);

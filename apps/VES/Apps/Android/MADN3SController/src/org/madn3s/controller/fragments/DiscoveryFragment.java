@@ -143,8 +143,11 @@ public class DiscoveryFragment extends BaseFragment {
 				for(int i = 0; i < points; i++){
 					JSONObject frame = MADN3SController.sharedPrefsGetJSONObject(FRAME_PREFIX + i);
 					framesJson.put(frame);
-//					Log.d(tag, FRAME_PREFIX + i + " = " + frame.toString());
+					Log.d(tag, FRAME_PREFIX + i + " = " + frame.toString());
 				}
+				
+				Log.d(tag, "the complete framesJson: ");
+				Log.d(tag, framesJson.toString());
 				
 				try {
 					MidgetOfSeville.calculateFrameOpticalFlow(framesJson.getJSONObject(0));

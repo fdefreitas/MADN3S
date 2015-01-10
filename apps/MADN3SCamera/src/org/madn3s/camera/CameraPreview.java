@@ -27,7 +27,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         super(context);
         this.context = context;
         mCamera = camera;
-        boolean hasFlash = context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);//this is lying...
+        boolean hasFlash = context.getPackageManager()
+        		.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
         if(hasFlash){
             Log.d(tag, "Flash Available");
 //            Camera.Parameters p = mCamera.getParameters();
@@ -40,32 +41,33 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         // underlying surface is created and destroyed.
         mHolder = getHolder();
         mHolder.addCallback(this);
-        // deprecated setting, but required on Android versions prior to 3.0
-//        mHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
+	@Override
     public void surfaceCreated(SurfaceHolder holder) {
-//    	if(holder == null){
-//    		Log.d(tag, "holder null");
-//		}
-//    	
-//    	if(mCamera == null){
-//    		Log.d(tag, "mCamera null");
-//		}
-        // The Surface has been created, now tell the camera where to draw the preview.
-        try {
-            mCamera.setPreviewDisplay(holder);
-            mCamera.startPreview();
-        } catch (IOException e) {
-            Log.d(tag, "Error setting camera preview: " + e.getMessage());
-        }
+		Log.d(tag, "surfaceCreated. ");
+//        try {
+//            mCamera.setPreviewDisplay(holder);
+//            mCamera.startPreview();
+//        } catch (Exception e) {
+//            Log.d(tag, "surfaceCreated. Error setting camera preview: ", e);
+//        }
     }
 
+	@Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        // empty. Take care of releasing the Camera preview in your activity.
+		Log.d(tag, "surfaceDestroyed. ");
+//		if(mCamera != null){
+//			mCamera.stopPreview();
+//			mCamera.setPreviewCallback(null);
+//	        mCamera.release();
+//	        mCamera = null;
+//		}
     }
 
+	@Override
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
+		Log.d(tag, "surfaceChanged. ");
         // If your preview can change or rotate, take care of those events here.
         // Make sure to stop the preview before resizing or reformatting it.
 

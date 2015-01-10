@@ -8,6 +8,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.opencv.android.Utils;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
@@ -62,9 +63,9 @@ public class MidgetOfSeville {
 				Imgproc.cvtColor(rightMat, rightMat, Imgproc.COLOR_BGR2GRAY);
 				
 				Log.d(tag, "calculateFrameOpticalFlow. rightMat: " + (rightMat == null));
-				Bitmap rightGrayBitmap = Bitmap.createBitmap(rightMat.cols(), rightMat.rows(), Bitmap.Config.RGB_565);
-				Utils.matToBitmap(rightMat, rightGrayBitmap);
-				MADN3SController.saveBitmapAsPng(rightGrayBitmap, "rightGray");
+//				Bitmap rightGrayBitmap = Bitmap.createBitmap(rightMat.cols(), rightMat.rows(), Bitmap.Config.RGB_565);
+//				Utils.matToBitmap(rightMat, rightGrayBitmap);
+//				MADN3SController.saveBitmapAsPng(rightGrayBitmap, "rightGray");
 			}
 			
 			if(leftFilepath != null){
@@ -78,9 +79,9 @@ public class MidgetOfSeville {
 				Imgproc.cvtColor(leftMat, leftMat, Imgproc.COLOR_BGR2GRAY);
 				
 				Log.d(tag, "calculateFrameOpticalFlow. leftMat: " + (leftMat == null));
-				Bitmap leftGrayBitmap = Bitmap.createBitmap(leftMat.cols(), leftMat.rows(), Bitmap.Config.RGB_565);
-				Utils.matToBitmap(leftMat, leftGrayBitmap);
-				MADN3SController.saveBitmapAsPng(leftGrayBitmap, "letfGray");
+//				Bitmap leftGrayBitmap = Bitmap.createBitmap(leftMat.cols(), leftMat.rows(), Bitmap.Config.RGB_565);
+//				Utils.matToBitmap(leftMat, leftGrayBitmap);
+//				MADN3SController.saveBitmapAsPng(leftGrayBitmap, "letfGray");
 			}
 	
 			JSONObject pointJson;
@@ -99,13 +100,15 @@ public class MidgetOfSeville {
 			
 			rightMop = new MatOfPoint2f();
 			
-			MatOfByte status = new MatOfByte();
+			MatOfByte opticalFlowFoundFeatures = new MatOfByte();
 			MatOfFloat err = new MatOfFloat();
 			
-			Video.calcOpticalFlowPyrLK(leftMat, rightMat, leftMop, rightMop, status, err);
+			Video.calcOpticalFlowPyrLK(leftMat, rightMat, leftMop, rightMop, opticalFlowFoundFeatures, err);
 			
-			byte[] statusBytes = status.toArray();
-			Log.d(tag, "lenghts. leftPoints: " + leftPoints.size()
+//			Core.SVDecomp(src, w, u, vt);
+			
+			byte[] statusBytes = opticalFlowFoundFeatures.toArray();
+			Log.d(tag, "lengths. leftPoints: " + leftPoints.size()
 					+ " rightPoints: " + rightPoints.size()
 					+ " status: " + statusBytes.length);
 			

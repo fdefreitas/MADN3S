@@ -25,11 +25,13 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Chronometer;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -55,6 +57,7 @@ public class ScannerFragment extends BaseFragment {
 	private Button viewModelButton;
 	private TextView scanStepCurrentTextView;
 	private TextView scanStepTotalTextView;
+	private Chronometer elapsedChronometer;
 	
 	public ScannerFragment() {
 		BraveHeartMidgetService.scannerBridge = new UniversalComms() {
@@ -67,27 +70,22 @@ public class ScannerFragment extends BaseFragment {
 				final int iter = MADN3SController.sharedPrefsGetInt(KEY_ITERATION);
 				final boolean scan_finished = bundle.containsKey(KEY_SCAN_FINISHED);
 				Log.d(tag, "Device: " + device.toString() + " State: " + state.toString() + " " + iter);
-//				mFragment.getView().post(
-//					new Runnable() { 
-//						public void run() {
-//							setDeviceActionState(device, state);
-//							if(scan_finished){
-//								generateModelButton.setEnabled(true);
-//								globalProgressBar.setVisibility(View.INVISIBLE);
-//							}
-//						} 
-//					}
-//				); 
 				
 				new Handler(Looper.getMainLooper()).post(new Runnable() {             
 	                @Override
 	                public void run() { 
+	                	stopChron();
+	                	showElapsedTime("last elapsed time");
+	                	
 	                	setDeviceActionState(device, state);
 	                	setCurrentScanStep(iter + 1);
 						if(scan_finished){
 							generateModelButton.setEnabled(true);
 							globalProgressBar.setVisibility(View.INVISIBLE);
 						}
+						
+						resetChron();
+						startChron();
 	                }
 				});
 			}
@@ -250,6 +248,9 @@ public class ScannerFragment extends BaseFragment {
 				}
 			}
 		});
+		
+		elapsedChronometer = (Chronometer) view.findViewById(R.id.elapsed_chronometer);
+		resetChron();
 	}
 
 	@Override
@@ -299,5 +300,23 @@ public class ScannerFragment extends BaseFragment {
 		}
 	}
 
+	public void showElapsedTime(String msg) {
+        long elapsedMillis = SystemClock.elapsedRealtime() - elapsedChronometer.getBase();
+        Toast.makeText(getActivity(), (msg == null? "" : msg) + " : " + elapsedMillis, 
+                Toast.LENGTH_SHORT).show();
+    }
+    
+    public void startChron(){
+    	elapsedChronometer.start();
+    }
+    
+    public void stopChron(){
+    	elapsedChronometer.stop();
+    }
+    
+    public void resetChron(){
+    	elapsedChronometer.setBase(SystemClock.elapsedRealtime());
+    	showElapsedTime("resetChron");
+    }
 	
 }

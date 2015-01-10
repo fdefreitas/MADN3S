@@ -122,6 +122,14 @@ public class MainActivity extends Activity implements
 		finishCommunications();
 		super.onDestroy();
 	}
+    
+    
+
+	@Override
+	protected void onStop() {
+		finishCommunications();
+		super.onStop();
+	}
 
 	/**
 	 * Sends <code>abort</code> signal to cameras and robot and 

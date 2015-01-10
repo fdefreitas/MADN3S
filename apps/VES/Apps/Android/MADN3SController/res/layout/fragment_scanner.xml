@@ -240,6 +240,16 @@
             android:text="@string/example_total"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
+    
+    <Chronometer
+        android:id="@+id/elapsed_chronometer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/scan_progress_relativeLayout"
+        android:format="%s"
+        android:textSize="24sp"
+        android:gravity="center_vertical" />
 
     <ProgressBar
         android:id="@+id/model_generation_progressBar"
@@ -251,7 +261,7 @@
         android:layout_marginLeft="@dimen/element_horizontal_margin"
         android:layout_marginRight="@dimen/element_horizontal_margin"
         android:indeterminate="true"
-        android:layout_below="@id/scan_progress_relativeLayout" />
+        android:layout_below="@id/elapsed_chronometer" />
 
     <Button
         android:id="@+id/model_generation_button"
