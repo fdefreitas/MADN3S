@@ -26,11 +26,13 @@ public class Consts {
 	public static final String KEY_MD5 = "md5";
 	public static final String KEY_MD5_BASE_64 = "md5_base64";
 	public static final String KEY_ITERATION = "iter";
+	public static final String KEY_RESULT = "result";
 	
 	public static final String ACTION_TAKE_PICTURE = "take_picture";
 	public static final String ACTION_SEND_PICTURE = "send_picture";
 	public static final String ACTION_END_PROJECT = "end_project";
 	public static final String ACTION_CALIBRATE = "calibrate";
+	public static final String ACTION_SEND_CALIBRATION_RESULT = "send_calibration";
 	public static final String ACTION_EXIT_APP = "exit_app";
 	
 	public final static String EXTRA_CALLBACK_MSG = "message";
@@ -47,6 +49,10 @@ public class Consts {
 	public static final Bitmap.Config DEFAULT_IN_PREFERRED_CONFIG = Bitmap.Config.RGB_565;
 	public static BitmapFactory.Options bitmapFactoryOptions = new BitmapFactory.Options();
 	public static BitmapFactory.Options bitmapFactoryOptionsOnSend = new BitmapFactory.Options();
+
+	public static final String KEY_ACTIVITY_RESULT = "result";
+
+	public static final String ORG_MADN3S_ACTION_CALIBRATE = "org.madn3s.action.CALIBRATE";
     
 	public static void init(){
 		Log.d(tag, "init()");

@@ -2,14 +2,11 @@ package org.madn3s.camera.io;
 
 import android.bluetooth.BluetoothSocket;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Base64;
 import android.util.Log;
-import android.widget.Toast;
-
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.lang.ref.WeakReference;

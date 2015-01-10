@@ -36,8 +36,6 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	
-	public static final String KEY_ACTIVITY_RESULT = "result";
-	public static final String ORG_MADN3S_ACTION_CALIBRATE = "org.madn3s.action.CALIBRATE";
 	private static final String tag = MainActivity.class.getSimpleName();
     private Camera mCamera;
     private CameraPreview mPreview;
@@ -125,8 +123,8 @@ public class MainActivity extends Activity {
 		switch (resultCode) {
 		case RESULT_OK:
 			Log.i(tag, "Result Ok");
-			if(data.hasExtra(KEY_ACTIVITY_RESULT)){
-				Bundle bundle = data.getBundleExtra(KEY_ACTIVITY_RESULT);
+			if(data.hasExtra(Consts.KEY_ACTIVITY_RESULT)){
+				Bundle bundle = data.getBundleExtra(Consts.KEY_ACTIVITY_RESULT);
 				Log.i(tag, "Result: " + bundle.getString("calib_result"));
 			}
 			Log.i(tag, "Result: No Result Bundle on Intent");
@@ -399,21 +397,21 @@ public class MainActivity extends Activity {
 	};
 
 	protected void startCalibration(){
-		Intent intent = new Intent(ORG_MADN3S_ACTION_CALIBRATE);
-		List<ResolveInfo> activitiesCapableOfHandlingIntent = getPackageManager().queryIntentActivities(intent, 0);
-		Log.d(tag, "Apps that can handle the intent: " + activitiesCapableOfHandlingIntent.size() + ". ");
-		for(ResolveInfo info: activitiesCapableOfHandlingIntent){
-			String name = info.activityInfo.packageName;
-			Log.d(tag, (name != null && !name.isEmpty()? name: "null") + ".");
-		}
-		
-		if(activitiesCapableOfHandlingIntent.size() > 0){
-			Log.d(tag, "starting activity for result");
-			MADN3SCamera.hasInvokedCalibration = true;
-			startActivityForResult(intent, 0);
-		} else {
-			Log.e(tag, "No Activities capable of handling intent for Action: \"" + intent.getAction() + "\"");
-		}
+//		Intent intent = new Intent(ORG_MADN3S_ACTION_CALIBRATE);
+//		List<ResolveInfo> activitiesCapableOfHandlingIntent = getPackageManager().queryIntentActivities(intent, 0);
+//		Log.d(tag, "Apps that can handle the intent: " + activitiesCapableOfHandlingIntent.size() + ". ");
+//		for(ResolveInfo info: activitiesCapableOfHandlingIntent){
+//			String name = info.activityInfo.packageName;
+//			Log.d(tag, (name != null && !name.isEmpty()? name: "null") + ".");
+//		}
+//		
+//		if(activitiesCapableOfHandlingIntent.size() > 0){
+//			Log.d(tag, "starting activity for result");
+//			MADN3SCamera.hasInvokedCalibration = true;
+//			startActivityForResult(intent, 0);
+//		} else {
+//			Log.e(tag, "No Activities capable of handling intent for Action: \"" + intent.getAction() + "\"");
+//		}
 	}
 	
 	

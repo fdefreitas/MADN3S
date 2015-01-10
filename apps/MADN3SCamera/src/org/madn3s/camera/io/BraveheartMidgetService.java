@@ -4,6 +4,7 @@ import static org.madn3s.camera.Consts.*;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
 
@@ -24,6 +25,7 @@ import android.bluetooth.BluetoothServerSocket;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Binder;
@@ -89,7 +91,7 @@ public class BraveheartMidgetService extends IntentService {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-    	if(intent.hasExtra(Consts.EXTRA_CALLBACK_MSG) || intent.hasExtra("result")){
+    	if(intent.hasExtra(Consts.EXTRA_CALLBACK_MSG) || intent.hasExtra(Consts.EXTRA_RESULT)){
     		Log.d(tag, "Onstart Command. Llamando a onHandleIntent.");
     		return super.onStartCommand(intent,flags,startId);
     	} else {
@@ -124,7 +126,8 @@ public class BraveheartMidgetService extends IntentService {
 			String jsonString;
 			JSONObject msg;
 			if(intent.hasExtra(Consts.EXTRA_CALLBACK_MSG)){
-				jsonString = intent.getExtras().getString(Consts.EXTRA_CALLBACK_MSG, Consts.EMPTY_JSON_OBJECT_STRING);
+				jsonString = intent.getExtras().getString(Consts.EXTRA_CALLBACK_MSG
+					, Consts.EMPTY_JSON_OBJECT_STRING);
 				msg = new JSONObject(jsonString);
 				if(msg.has(KEY_ITERATION)){
 					MADN3SCamera.iteration = msg.getInt(KEY_ITERATION);
@@ -160,7 +163,13 @@ public class BraveheartMidgetService extends IntentService {
 					} else if(action.equalsIgnoreCase(Consts.ACTION_CALIBRATE)){
 						Log.d(tag, "ACTION_CALIBRATE");
 						calibrate();
-						sendResult();
+					} else if(action.equalsIgnoreCase(Consts.ACTION_SEND_CALIBRATION_RESULT)){
+						Log.d(tag, "ACTION_SEND_CALIBRATION_RESULT");
+						if(msg.has(Consts.KEY_RESULT)){
+							sendCalibrationResult(msg.getString(Consts.KEY_RESULT));
+						} else {
+							Log.d(tag, "Calibration result not present on msg");
+						}
 					} else if(action.equalsIgnoreCase(Consts.ACTION_EXIT_APP)){
 						Log.d(tag, "ACTION_EXIT_APP");
 						Log.d(tag, "onHandleIntent: action: " + Consts.ACTION_EXIT_APP);	
@@ -207,12 +216,35 @@ public class BraveheartMidgetService extends IntentService {
 	}
 
 	private void calibrate() throws JSONException {
+		Intent intent = new Intent(Consts.ORG_MADN3S_ACTION_CALIBRATE);
+		List<ResolveInfo> activitiesCapableOfHandlingIntent = getPackageManager()
+				.queryIntentActivities(intent, 0);
+		Log.d(tag, "Apps that can handle the intent: " + activitiesCapableOfHandlingIntent.size() + ". ");
+		for(ResolveInfo info: activitiesCapableOfHandlingIntent){
+			String name = info.activityInfo.packageName;
+			Log.d(tag, (name != null && !name.isEmpty()? name: "null") + ".");
+		}
+		
+		if(activitiesCapableOfHandlingIntent.size() > 0){
+			Log.d(tag, "starting activity for result");
+			MADN3SCamera.hasInvokedCalibration = true;
+			mActivity.startActivityForResult(intent, 0);
+		} else {
+			Log.e(tag, "No Activities capable of handling intent for Action: \"" + intent.getAction() + "\"");
+		}
+	}
+	
+	private void sendCalibrationResult(String calibrationStr) throws JSONException{
 		try {
+			result = new JSONObject(calibrationStr);
 			result.put(Consts.KEY_ERROR, false);
-    		result.remove(Consts.KEY_POINTS);
+			result.remove(Consts.KEY_POINTS);
 		} catch (Exception e) {
 			e.printStackTrace();
+			result = new JSONObject();
 			result.put(Consts.KEY_ERROR, true);
+		} finally {
+			sendResult();
 		}
 	}
 
