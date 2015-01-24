@@ -165,8 +165,8 @@ public class BraveheartMidgetService extends IntentService {
 						calibrate();
 					} else if(action.equalsIgnoreCase(Consts.ACTION_SEND_CALIBRATION_RESULT)){
 						Log.d(tag, "ACTION_SEND_CALIBRATION_RESULT");
-						if(msg.has(Consts.KEY_RESULT)){
-							sendCalibrationResult(msg.getString(Consts.KEY_RESULT));
+						if(msg.has(Consts.KEY_CALIBRATION_RESULT)){
+							sendCalibrationResult(msg.getString(Consts.KEY_CALIBRATION_RESULT));
 						} else {
 							Log.d(tag, "Calibration result not present on msg");
 						}
@@ -238,7 +238,6 @@ public class BraveheartMidgetService extends IntentService {
 		try {
 			result = new JSONObject(calibrationStr);
 			result.put(Consts.KEY_ERROR, false);
-			result.remove(Consts.KEY_POINTS);
 		} catch (Exception e) {
 			e.printStackTrace();
 			result = new JSONObject();

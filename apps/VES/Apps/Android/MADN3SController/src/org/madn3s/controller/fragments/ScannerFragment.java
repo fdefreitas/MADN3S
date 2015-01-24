@@ -144,7 +144,8 @@ public class ScannerFragment extends BaseFragment {
 				if(projectName != null && !projectName.isEmpty()){
 					projectNameEditText.setEnabled(false);
 					MADN3SController.sharedPrefsPutString(KEY_PROJECT_NAME, projectName);
-					scan(projectName);
+//					scan(projectName);
+					calibrate();
 				} else {
 					//TODO extract String resource
 					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "Falta el nombre del proyecto", Toast.LENGTH_LONG);
@@ -278,6 +279,17 @@ public class ScannerFragment extends BaseFragment {
 	        Log.d(tag, "enviando comando");
 	        bridge.callback(json.toString());
 		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void calibrate(){
+        try {
+        	JSONObject json = new JSONObject();
+			json.put(KEY_ACTION, ACTION_CALIBRATE);
+			Log.d(tag, "calibrate. sending signal");
+	        bridge.callback(json.toString());
+		} catch (JSONException e) {
 			e.printStackTrace();
 		}
 	}

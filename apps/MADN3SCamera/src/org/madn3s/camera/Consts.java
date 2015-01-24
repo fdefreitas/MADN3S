@@ -51,6 +51,7 @@ public class Consts {
 	public static BitmapFactory.Options bitmapFactoryOptionsOnSend = new BitmapFactory.Options();
 
 	public static final String KEY_ACTIVITY_RESULT = "result";
+	public static final String KEY_CALIBRATION_RESULT = "calib_result";
 
 	public static final String ORG_MADN3S_ACTION_CALIBRATE = "org.madn3s.action.CALIBRATE";
     

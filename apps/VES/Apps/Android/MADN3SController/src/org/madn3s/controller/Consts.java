@@ -57,6 +57,7 @@ public class Consts {
 	public final static String EXTRA_CALLBACK_MSG = "message";
 	public static final String EXTRA_CALLBACK_SEND = "send";
 	public static final String EXTRA_CALLBACK_NXT_MESSAGE = "nxt_message";
+	public static final String EXTRA_CALLBACK_CALIBRATION_RESULT = "calib_result";
 	public static final String EXTRA_CALLBACK_PICTURE = "picture";
 	public static final String EXTRA_RESULT = "result";
 	public static final String EXTRA_STOP_SERVICE = "stopservice";

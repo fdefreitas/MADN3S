@@ -8,8 +8,10 @@ import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
+import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.madn3s.controller.Consts.*; 
@@ -27,7 +29,12 @@ import org.madn3s.controller.io.UniversalComms;
 import org.madn3s.controller.ves.KiwiNative;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 
+import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.bluetooth.BluetoothClass;
@@ -193,6 +200,7 @@ public class MADN3SController extends Application {
 				}
 			};
 		};
+		
 	}
 	
 	/**
@@ -207,6 +215,7 @@ public class MADN3SController extends Application {
 		               case LoaderCallbackInterface.SUCCESS:
 		                   Log.i(tag, "OpenCV loaded successfully");
 		                   MADN3SController.isOpenCvLoaded = true;
+		                   getMatFromString("iñaki se la come");
 		                   break;
 		               default:
 		                   super.onManagerConnected(status);
@@ -404,6 +413,73 @@ public class MADN3SController extends Application {
 			e.printStackTrace();
 			Log.e(tag, "generateModelButton.OnClick. Error composing points JSONObject");
 		}
+	}
+	
+	public static void stereoCalibrateTest(){
+		ArrayList<Mat> objectPoints = new ArrayList<Mat>();
+        objectPoints.add(Mat.zeros(44, 1, CvType.CV_32FC3));
+        calcBoardCornerPositions(objectPoints.get(0));
+        for (int i = 1; i < 44; i++) {
+            objectPoints.add(objectPoints.get(0));
+        }
+	}
+	
+	private static void calcBoardCornerPositions(Mat corners) {
+		Size mPatternSize = new Size(4, 11);
+	    int mCornersSize = (int)(mPatternSize.width * mPatternSize.height);
+	    double mSquareSize = 0.0181;
+        final int cn = 3;
+        float positions[] = new float[mCornersSize * cn];
+
+        for (int i = 0; i < mPatternSize.height; i++) {
+            for (int j = 0; j < mPatternSize.width * cn; j += cn) {
+                positions[(int) (i * mPatternSize.width * cn + j + 0)] = (2 * (j / cn) + i % 2) 
+                		* (float) mSquareSize;
+                positions[(int) (i * mPatternSize.width * cn + j + 1)] = i * (float) mSquareSize;
+                positions[(int) (i * mPatternSize.width * cn + j + 2)] = 0;
+            }
+        }
+        corners.create(mCornersSize, 1, CvType.CV_32FC3);
+        corners.put(0, 0, positions);
+    }
+	
+	/**
+	 * Crea un Mat desde un String
+	 * @param str Matriz en forma de String
+	 * @return Instancia de Mat con valores en Matriz recibida como String
+	 */
+	public static Mat getMatFromString(String str){
+		str = "[672.2618351846742, 0, 359.5; 0, 672.2618351846742, 239.5; 0, 0, 1]";
+		int rows = 0; 
+		int cols = 0;
+		double[] data;
+		String[] colsStr = null;
+		String rowStr = "";
+		String colStr = "";
+		str = str.replaceAll("^\\[|\\]$", "");
+		String[] rowsStr = str.split(";");
+		rows = rowsStr.length;
+		//Por sacar cls
+		rowStr = rowsStr[0];
+		cols = rowStr.split(",").length;
+		data = new double[rows*cols];
+		
+		for(int row = 0; row < rowsStr.length; ++row){
+			rowStr = rowsStr[row];
+			colsStr = rowStr.split(",");
+			cols = colsStr.length;
+//			Log.d(tag, "row[" + row + "]: " + rowStr);
+			for(int col = 0; col < colsStr.length; ++col){
+				colStr = colsStr[col];
+				data[row*cols+col] = Double.valueOf(colStr);
+//				Log.d(tag, "row[" + row + "]col[" + col + "]: " + colStr);
+			}
+		}
+		int type = CvType.CV_64F;
+		Mat mat = new Mat(rows, cols, type);
+		mat.put(0, 0, data);
+		Log.d(tag, "getMatVectorFromString. Result Mat: " + mat.dump());
+		return mat;
 	}
 	
 	/**

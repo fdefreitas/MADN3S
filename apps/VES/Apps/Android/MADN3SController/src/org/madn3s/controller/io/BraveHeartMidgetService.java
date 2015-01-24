@@ -55,7 +55,8 @@ public class BraveHeartMidgetService extends IntentService {
 		if(intent.hasExtra(EXTRA_CALLBACK_MSG) || intent.hasExtra(EXTRA_RESULT) 
 				|| intent.hasExtra(EXTRA_CALLBACK_SEND) 
 				|| intent.hasExtra(EXTRA_CALLBACK_NXT_MESSAGE)
-				|| intent.hasExtra(EXTRA_CALLBACK_PICTURE)){
+				|| intent.hasExtra(EXTRA_CALLBACK_PICTURE)
+				|| intent.hasExtra(EXTRA_CALLBACK_CALIBRATION_RESULT)){
     		return super.onStartCommand(intent,flags,startId);
     	} else {
 	        String stopservice = intent.getStringExtra(EXTRA_STOP_SERVICE);
@@ -93,31 +94,33 @@ public class BraveHeartMidgetService extends IntentService {
 		} else if(intent.hasExtra(EXTRA_CALLBACK_NXT_MESSAGE)){
 			Log.d(tag, "EXTRA_CALLBACK_NXT_MESSAGE");
 			jsonString = intent.getExtras().getString(EXTRA_CALLBACK_NXT_MESSAGE);
-			//TODO revisar si se puede arreglar
-			jsonString = jsonString.substring(0, (jsonString.lastIndexOf("}") + 1));
-			
-			Bundle bundle = new Bundle();
-			bundle.putInt(KEY_STATE, State.CONNECTED.getState());
-			bundle.putInt(KEY_DEVICE, Device.NXT.getValue());
-			scannerBridge.callback(bundle);
-			try {
-				JSONObject json = new JSONObject(jsonString);
-				String message = json.getString(KEY_MESSAGE);
-				if(message.equalsIgnoreCase(MESSAGE_PICTURE)){
-					sendMessageToCameras();
-				} else if(message.equalsIgnoreCase(MESSAGE_FINISH)){
-					bundle.putInt(KEY_STATE, State.CONNECTED.getState());
+			processNxtMessage(jsonString);
+		} else if(intent.hasExtra(EXTRA_CALLBACK_CALIBRATION_RESULT)){
+			Log.d(tag, "EXTRA_CALLBACK_CALIBRATION_RESULT");
+			jsonString = intent.getExtras().getString(EXTRA_CALLBACK_CALIBRATION_RESULT);
+			processCalibrationResult(jsonString);
+		}
+	}
+	
+	private void processCalibrationResult(String jsonString){
+		//TODO extraer que camara es y guardar en sharedPrefs
+		try {
+			JSONObject jsonResult = new JSONObject(jsonString);
+			String side = jsonResult.getString(KEY_SIDE);
+			switch(side){
+				case SIDE_LEFT:
+					break;
+				case SIDE_RIGHT:
+					break;
+				default:
 					
-					bundle.putInt(KEY_DEVICE,  Device.RIGHT_CAMERA.getValue());
-					scannerBridge.callback(bundle);
-					
-					bundle.putInt(KEY_DEVICE,  Device.LEFT_CAMERA.getValue());
-					scannerBridge.callback(bundle);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
 			}
-		} 
+			//TODO verificar si los dos ya estan para hacer stereocalibration
+			//mandar a escanear
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	
 	//TODO cambiar nombre a algo que explique mejor que hace
@@ -272,6 +275,33 @@ public class BraveHeartMidgetService extends IntentService {
 				}
 			}
 		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void processNxtMessage(String jsonString){
+		//TODO revisar si se puede arreglar
+		jsonString = jsonString.substring(0, (jsonString.lastIndexOf("}") + 1));
+		
+		Bundle bundle = new Bundle();
+		bundle.putInt(KEY_STATE, State.CONNECTED.getState());
+		bundle.putInt(KEY_DEVICE, Device.NXT.getValue());
+		scannerBridge.callback(bundle);
+		try {
+			JSONObject json = new JSONObject(jsonString);
+			String message = json.getString(KEY_MESSAGE);
+			if(message.equalsIgnoreCase(MESSAGE_PICTURE)){
+				sendMessageToCameras();
+			} else if(message.equalsIgnoreCase(MESSAGE_FINISH)){
+				bundle.putInt(KEY_STATE, State.CONNECTED.getState());
+				
+				bundle.putInt(KEY_DEVICE,  Device.RIGHT_CAMERA.getValue());
+				scannerBridge.callback(bundle);
+				
+				bundle.putInt(KEY_DEVICE,  Device.LEFT_CAMERA.getValue());
+				scannerBridge.callback(bundle);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
