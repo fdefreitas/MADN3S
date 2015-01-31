@@ -97,7 +97,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 			if(MADN3SController.isRightCamera(mSocket.getRemoteDevice().getAddress())){
 	        	deviceIntValue = Device.RIGHT_CAMERA.getValue();
 	        	
-	        	//TODO hacer settter en Application
+	        	//TODO hacer setter en Application
 	        	if(MADN3SController.leftCamera == null){
 	        		Log.d(tag, "leftCamera null. Trying to recover.");
 	        		MADN3SController.leftCamera = mSocket.getRemoteDevice();
@@ -109,7 +109,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 	        } else if(MADN3SController.isLeftCamera(mSocket.getRemoteDevice().getAddress())){
 	        	deviceIntValue = Device.LEFT_CAMERA.getValue();
 	        	
-	        	//TODO hacer settter en Application
+	        	//TODO hacer setter en Application
 	        	if(MADN3SController.rightCamera == null){
 	        		Log.d(tag, "rightCamera null. Trying to recover.");
 	        		MADN3SController.rightCamera = mSocket.getRemoteDevice();
@@ -133,14 +133,15 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 							start = System.currentTimeMillis();
 						}
 						
-//						Log.d(tag, "Escuchando. " + mSocket.getRemoteDevice().getName());
+						Log.d(tag, "Escuchando. " + mSocket.getRemoteDevice().getName());
 						
 						JSONObject msg;
 						ByteArrayOutputStream bao = getMessage();
 						byte[] bytes = bao.toByteArray();
 						
+						Log.d(tag, "bao size: " + bytes.length);
+						
 						if(bytes.length > 0){
-							
 							bytes = Base64.decode(bytes, Base64.DEFAULT);
 							Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, Consts.bitmapFactoryOptions);
 							message = new String(bytes);
@@ -151,7 +152,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 									+ " MD5: " + md5Hex);
 							
 							if(bmp == null){
-								Log.d(tag, "instancef String");
+								Log.d(tag, "instanceof String");
 								Log.d(tag, "Received String: " + message);
 								
 								if(message != null && !message.isEmpty()){

@@ -11,7 +11,6 @@ import org.madn3s.camera.io.UniversalComms;
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -102,6 +101,11 @@ public class MainActivity extends Activity {
         }
         
         if(MADN3SCamera.hasReceivedCalibration) {
+        	try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
         	startCamera();
         	MADN3SCamera.hasReceivedCalibration = false;
         }
@@ -125,25 +129,36 @@ public class MainActivity extends Activity {
 			Log.i(tag, "Result Ok");
 			if(data.hasExtra(Consts.KEY_ACTIVITY_RESULT)){
 				Bundle bundle = data.getBundleExtra(Consts.KEY_ACTIVITY_RESULT);
-				Log.i(tag, "Result: " + bundle.getString(Consts.KEY_CALIBRATION_RESULT));
+//				Log.i(tag, "Result: ");
+//				Log.i(tag, "Calibration Coefficients: " + bundle.getString(Consts.KEY_CALIB_DISTORTION_COEFFICIENTS));
+//				Log.i(tag, "Camera Matrix: " + bundle.getString(Consts.KEY_CALIB_CAMERA_MATRIX));
+//				Log.i(tag, "Image Points: " + bundle.getString(Consts.KEY_CALIB_IMAGE_POINTS));
 				
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveheartMidgetService.class);
 				JSONObject jsonResult = new JSONObject();
 				try {
-					jsonResult.put(Consts.KEY_CALIBRATION_RESULT, data.getBundleExtra(Consts.KEY_ACTIVITY_RESULT));
+					JSONObject calibresult = new JSONObject();
+					calibresult.put(Consts.KEY_CALIB_DISTORTION_COEFFICIENTS, bundle.getString(Consts.KEY_CALIB_DISTORTION_COEFFICIENTS));
+					calibresult.put(Consts.KEY_CALIB_CAMERA_MATRIX, bundle.getString(Consts.KEY_CALIB_CAMERA_MATRIX));
+					calibresult.put(Consts.KEY_CALIB_IMAGE_POINTS, bundle.getString(Consts.KEY_CALIB_IMAGE_POINTS));
+					
 					jsonResult.put(Consts.KEY_ACTION, Consts.ACTION_SEND_CALIBRATION_RESULT);
+					jsonResult.put(Consts.KEY_CALIBRATION_RESULT, calibresult.toString());					
+					
+//					Log.d(tag, "EXTRA_CALLBACK_MSG: " + jsonResult.toString());
 					williamWallaceIntent.putExtra(Consts.EXTRA_CALLBACK_MSG, jsonResult.toString());
 					startService(williamWallaceIntent);
 				} catch (JSONException e) {
 					Log.e(tag, "Error populating result JSONObject", e);
 				}
 
+			} else {
+				Log.i(tag, "Result: No Result Bundle on Intent");
 			}
-			Log.i(tag, "Result: No Result Bundle on Intent");
 			break;
 		case RESULT_CANCELED:
 		default:
-			Log.i(tag, "Could not get Result for Calibration");
+			Log.i(tag, "Could not get Result for Calibration. Result: Canceled");
 			break;
 		}
 		MADN3SCamera.hasReceivedCalibration = true;

@@ -52,6 +52,9 @@ public class Consts {
 
 	public static final String KEY_ACTIVITY_RESULT = "result";
 	public static final String KEY_CALIBRATION_RESULT = "calib_result";
+	public static final String KEY_CALIB_DISTORTION_COEFFICIENTS = "calib_distortion_coefficients";
+    public static final String KEY_CALIB_CAMERA_MATRIX = "calib_camera_matrix";
+    public static final String KEY_CALIB_IMAGE_POINTS = "calib_image_points";
 
 	public static final String ORG_MADN3S_ACTION_CALIBRATE = "org.madn3s.action.CALIBRATE";
     

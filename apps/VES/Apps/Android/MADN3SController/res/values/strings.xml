@@ -26,6 +26,7 @@
     <string name="nxt">NXT</string>
     <string name="connect">Connect</string>
     <string name="scan">Scan</string>
+    <string name="calibrate">Calibrate</string>
     <string name="hint_indicator_device_not_connected">Device Not Connected Indicator</string>
     <string name="hint_indicator_device_connected">Device Connected Indicator</string>
 

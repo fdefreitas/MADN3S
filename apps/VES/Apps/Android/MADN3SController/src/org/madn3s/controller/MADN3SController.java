@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
-import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.madn3s.controller.Consts.*; 
@@ -31,10 +30,8 @@ import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
-import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 
-import android.R.integer;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.bluetooth.BluetoothClass;

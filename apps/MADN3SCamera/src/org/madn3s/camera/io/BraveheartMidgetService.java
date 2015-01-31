@@ -125,36 +125,36 @@ public class BraveheartMidgetService extends IntentService {
 		try {
 			String jsonString;
 			JSONObject msg;
-			if(intent.hasExtra(Consts.EXTRA_CALLBACK_MSG)){
-				jsonString = intent.getExtras().getString(Consts.EXTRA_CALLBACK_MSG
+			if(intent.hasExtra(EXTRA_CALLBACK_MSG)){
+				jsonString = intent.getExtras().getString(EXTRA_CALLBACK_MSG
 					, Consts.EMPTY_JSON_OBJECT_STRING);
 				msg = new JSONObject(jsonString);
 				if(msg.has(KEY_ITERATION)){
 					MADN3SCamera.iteration = msg.getInt(KEY_ITERATION);
 				}
-				if(msg.has(Consts.KEY_ACTION)){
-					String action = msg.getString(Consts.KEY_ACTION);
-					if(msg.has(Consts.KEY_SIDE)){
-						side = msg.getString(Consts.KEY_SIDE);
+				if(msg.has(KEY_ACTION)){
+					String action = msg.getString(KEY_ACTION);
+					if(msg.has(KEY_SIDE)){
+						side = msg.getString(KEY_SIDE);
 					}
-					if(msg.has(Consts.KEY_PROJECT_NAME)){
-						projectName = msg.getString(Consts.KEY_PROJECT_NAME);
+					if(msg.has(KEY_PROJECT_NAME)){
+						projectName = msg.getString(KEY_PROJECT_NAME);
 					}
 					if(config == null){//kind of cheating...
 						config = msg;
 					}
 					Log.d(tag, "action: " + action);
-					if(action.equalsIgnoreCase(Consts.KEY_CONFIG)){
+					if(action.equalsIgnoreCase(KEY_CONFIG)){
 						config = msg;
 						//TODO guardar en sharedPrefs
 						MADN3SCamera.isPictureTaken.set(true);
-					} else if(action.equalsIgnoreCase(Consts.ACTION_TAKE_PICTURE)){
+					} else if(action.equalsIgnoreCase(ACTION_TAKE_PICTURE)){
 						Log.d(tag, "ACTION_TAKE_PICTURE");
 						cameraCallback.callback(config);
-					} else if(action.equalsIgnoreCase(Consts.ACTION_SEND_PICTURE)) {
+					} else if(action.equalsIgnoreCase(ACTION_SEND_PICTURE)) {
 						Log.d(tag, "ACTION_SEND_PICTURE");
 						sendPicture();
-					} else if(action.equalsIgnoreCase(Consts.ACTION_END_PROJECT)){
+					} else if(action.equalsIgnoreCase(ACTION_END_PROJECT)){
 						Log.d(tag, "ACTION_END_PROJECT");
 						if(msg.has(Consts.KEY_CLEAN) && msg.getBoolean(Consts.VALUE_CLEAN)){
 							cleanTakenPictures(projectName);
@@ -235,6 +235,7 @@ public class BraveheartMidgetService extends IntentService {
 	}
 	
 	private void sendCalibrationResult(String calibrationStr) throws JSONException{
+		Log.d(tag, "calibrationStr: " + calibrationStr);
 		try {
 			result = new JSONObject(calibrationStr);
 			result.put(Consts.KEY_ERROR, false);
@@ -249,6 +250,7 @@ public class BraveheartMidgetService extends IntentService {
 
 	private void sendResult() {
 		Log.d(tag, "mSocketWeakReference == null: " + (mSocketWeakReference == null));
+		Log.d(tag, "sendResult: " + result.toString());
 		if(mSocketWeakReference != null){
 			HiddenMidgetWriter writerTask = new HiddenMidgetWriter(mSocketWeakReference, result.toString());
 	        Log.d(tag, "Ejecutando a HiddenMidgetWriter desde sendResult");

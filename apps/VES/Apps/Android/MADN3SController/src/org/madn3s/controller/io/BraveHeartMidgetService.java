@@ -103,6 +103,7 @@ public class BraveHeartMidgetService extends IntentService {
 	}
 	
 	private void processCalibrationResult(String jsonString){
+		Log.d(tag, "processCalibrationResult: " + jsonString);
 		//TODO extraer que camara es y guardar en sharedPrefs
 		try {
 			JSONObject jsonResult = new JSONObject(jsonString);

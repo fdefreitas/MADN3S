@@ -53,6 +53,7 @@ public class ScannerFragment extends BaseFragment {
 	private ProgressBar generateModelProgressBar;
 	private EditText projectNameEditText;
 	private Button scanButton;
+	private Button calibrateButton;
 	private Button generateModelButton;
 	private Button viewModelButton;
 	private TextView scanStepCurrentTextView;
@@ -151,6 +152,13 @@ public class ScannerFragment extends BaseFragment {
 					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "Falta el nombre del proyecto", Toast.LENGTH_LONG);
 					missingName.show();
 				}
+			}
+		});
+		calibrateButton = (Button) getView().findViewById(R.id.calibrate_button);
+		calibrateButton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				calibrate();
 			}
 		});
 		calibrationViewHolder = new ScanStepViewHolder(
