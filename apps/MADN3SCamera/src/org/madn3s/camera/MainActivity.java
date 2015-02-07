@@ -137,13 +137,14 @@ public class MainActivity extends Activity {
 				Intent williamWallaceIntent = new Intent(getBaseContext(), BraveheartMidgetService.class);
 				JSONObject jsonResult = new JSONObject();
 				try {
-					JSONObject calibresult = new JSONObject();
-					calibresult.put(Consts.KEY_CALIB_DISTORTION_COEFFICIENTS, bundle.getString(Consts.KEY_CALIB_DISTORTION_COEFFICIENTS));
-					calibresult.put(Consts.KEY_CALIB_CAMERA_MATRIX, bundle.getString(Consts.KEY_CALIB_CAMERA_MATRIX));
-					calibresult.put(Consts.KEY_CALIB_IMAGE_POINTS, bundle.getString(Consts.KEY_CALIB_IMAGE_POINTS));
+					JSONObject calibPayload = new JSONObject();
+					calibPayload.put(Consts.KEY_CALIB_DISTORTION_COEFFICIENTS, bundle.getString(Consts.KEY_CALIB_DISTORTION_COEFFICIENTS));
+					calibPayload.put(Consts.KEY_CALIB_CAMERA_MATRIX, bundle.getString(Consts.KEY_CALIB_CAMERA_MATRIX));
+					calibPayload.put(Consts.KEY_CALIB_IMAGE_POINTS, bundle.getString(Consts.KEY_CALIB_IMAGE_POINTS));
+					calibPayload.put(Consts.KEY_ACTION, Consts.ACTION_CALIBRATION_RESULT);
 					
 					jsonResult.put(Consts.KEY_ACTION, Consts.ACTION_SEND_CALIBRATION_RESULT);
-					jsonResult.put(Consts.KEY_CALIBRATION_RESULT, calibresult.toString());					
+					jsonResult.put(Consts.KEY_CALIBRATION_RESULT, calibPayload.toString());					
 					
 //					Log.d(tag, "EXTRA_CALLBACK_MSG: " + jsonResult.toString());
 					williamWallaceIntent.putExtra(Consts.EXTRA_CALLBACK_MSG, jsonResult.toString());

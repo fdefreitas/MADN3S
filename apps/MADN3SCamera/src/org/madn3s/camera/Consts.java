@@ -18,6 +18,7 @@ public class Consts {
 	public static final String KEY_SIDE = "side";
 	public static final String KEY_CONFIG = "config";
 	public static final String KEY_COMMAND = "command";
+	public static final String KEY_CAMERA_NAME = "camera_name";
 	public static final String KEY_ACTION = "action";
 	public static final String KEY_CLEAN = "clean";
 	public static final String KEY_ERROR = "error";
@@ -33,6 +34,7 @@ public class Consts {
 	public static final String ACTION_END_PROJECT = "end_project";
 	public static final String ACTION_CALIBRATE = "calibrate";
 	public static final String ACTION_SEND_CALIBRATION_RESULT = "send_calibration";
+	public static final String ACTION_CALIBRATION_RESULT = "calibration_result";
 	public static final String ACTION_EXIT_APP = "exit_app";
 	
 	public final static String EXTRA_CALLBACK_MSG = "message";

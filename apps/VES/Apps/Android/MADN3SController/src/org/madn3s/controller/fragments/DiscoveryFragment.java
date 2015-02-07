@@ -1,10 +1,7 @@
 package org.madn3s.controller.fragments;
 
 import static org.madn3s.controller.Consts.FRAME_PREFIX;
-import static org.madn3s.controller.Consts.KEY_NAME;
-import static org.madn3s.controller.Consts.KEY_PICTURES;
 import static org.madn3s.controller.Consts.KEY_POINTS;
-import static org.madn3s.controller.Consts.KEY_PROJECT_NAME;
 import static org.madn3s.controller.MADN3SController.isCameraDevice;
 import static org.madn3s.controller.MADN3SController.isToyDevice;
 import static org.madn3s.controller.MADN3SController.nxt;
@@ -16,6 +13,7 @@ import java.util.ArrayList;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.madn3s.controller.Consts;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.MidgetOfSeville;
 import org.madn3s.controller.MADN3SController.Mode;
@@ -23,8 +21,8 @@ import org.madn3s.controller.R;
 import org.madn3s.controller.components.CameraSelectionDialogFragment;
 import org.madn3s.controller.models.NewDevicesAdapter;
 import org.madn3s.controller.models.PairedDevicesAdapter;
-import org.madn3s.controller.ves.KiwiNative;
 
+import android.R.integer;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.BroadcastReceiver;
@@ -32,6 +30,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.provider.SyncStateContract.Constants;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -137,23 +136,48 @@ public class DiscoveryFragment extends BaseFragment {
 		testsButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				int points = MADN3SController.sharedPrefsGetInt(KEY_POINTS);
-				JSONArray framesJson = new JSONArray();
-				JSONObject pointsJson = new JSONObject();
-				for(int i = 0; i < points; i++){
-					JSONObject frame = MADN3SController.sharedPrefsGetJSONObject(FRAME_PREFIX + i);
-					framesJson.put(frame);
-					Log.d(tag, FRAME_PREFIX + i + " = " + frame.toString());
-				}
+//				try {
+//					JSONObject calibrationJson = MADN3SController.sharedPrefsGetJSONObject(Consts.KEY_CALIBRATION);
+//					JSONObject left = calibrationJson.getJSONObject(Consts.SIDE_LEFT);
+//					JSONObject right = calibrationJson.getJSONObject(Consts.SIDE_RIGHT);
+//					
+//					
+//					JSONArray leftArr = new JSONArray(left.getString(Consts.KEY_CALIB_IMAGE_POINTS));
+//					left.put(Consts.KEY_CALIB_IMAGE_POINTS, "--Moved for testing--");
+//					Log.d(tag, "calibration. left: " + left.toString(1));
+//					for(int i = 0; i < leftArr.length(); ++i){
+//						Log.d(tag, "[" + i + "]" + leftArr.get(i));
+//					}
+//					
+//					JSONArray rightArr = new JSONArray(right.getString(Consts.KEY_CALIB_IMAGE_POINTS));
+//					right.put(Consts.KEY_CALIB_IMAGE_POINTS, "--Moved for testing--");
+//					Log.d(tag, "calibration. right: " + right.toString(1));
+//					for(int i = 0; i < rightArr.length(); ++i){
+//						Log.d(tag, "[" + i + "]" + rightArr.get(i));
+//					}
+					
+					MidgetOfSeville.doStereoCalibration();
+					
+//				} catch (JSONException e) {
+//					e.printStackTrace();
+//				}
+//				int points = MADN3SController.sharedPrefsGetInt(KEY_POINTS);
+//				JSONArray framesJson = new JSONArray();
+//				JSONObject pointsJson = new JSONObject();
+//				for(int i = 0; i < points; i++){
+//					JSONObject frame = MADN3SController.sharedPrefsGetJSONObject(FRAME_PREFIX + i);
+//					framesJson.put(frame);
+//					Log.d(tag, FRAME_PREFIX + i + " = " + frame.toString());
+//				}
+//				
+//				Log.d(tag, "the complete framesJson: ");
+//				Log.d(tag, framesJson.toString());
 				
-				Log.d(tag, "the complete framesJson: ");
-				Log.d(tag, framesJson.toString());
-				
-				try {
-					MidgetOfSeville.calculateFrameOpticalFlow(framesJson.getJSONObject(0));
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
+//				try {
+//					MidgetOfSeville.calculateFrameOpticalFlow(framesJson.getJSONObject(0));
+//				} catch (JSONException e) {
+//					e.printStackTrace();
+//				}
 				
 //				try {
 //					pointsJson.put(KEY_NAME, MADN3SController.sharedPrefsGetString(KEY_PROJECT_NAME));

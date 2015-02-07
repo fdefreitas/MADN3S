@@ -4,6 +4,7 @@ import static org.madn3s.camera.Consts.*;
 
 import java.io.IOException;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
@@ -145,8 +146,9 @@ public class BraveheartMidgetService extends IntentService {
 					}
 					Log.d(tag, "action: " + action);
 					if(action.equalsIgnoreCase(KEY_CONFIG)){
+						Log.d(tag, "Received config: " + config.toString(1));
 						config = msg;
-						//TODO guardar en sharedPrefs
+						MADN3SCamera.sharedPrefsPutJSONObject(KEY_CONFIG, config);
 						MADN3SCamera.isPictureTaken.set(true);
 					} else if(action.equalsIgnoreCase(ACTION_TAKE_PICTURE)){
 						Log.d(tag, "ACTION_TAKE_PICTURE");
@@ -239,6 +241,14 @@ public class BraveheartMidgetService extends IntentService {
 		try {
 			result = new JSONObject(calibrationStr);
 			result.put(Consts.KEY_ERROR, false);
+//			result.put(KEY_CALIB_IMAGE_POINTS, "-- Empty for Testing --");
+			
+			JSONObject tempConfigJsonObject = MADN3SCamera.sharedPrefsGetJSONObject(KEY_CONFIG);
+			if(tempConfigJsonObject.has(KEY_CAMERA_NAME)){
+				result.put(Consts.KEY_CAMERA_NAME, tempConfigJsonObject.getString(KEY_CAMERA_NAME));
+			} else {
+				Log.d(tag, "CAMERA_NAME not found on persisted Config");
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			result = new JSONObject();

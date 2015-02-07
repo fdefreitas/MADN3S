@@ -28,6 +28,7 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 	public static UniversalComms bridge;
 	public static UniversalComms connectionFragmentBridge;
 	public static UniversalComms pictureBridge;
+	public static UniversalComms calibrationBridge;
 	private Handler handler, callback;
 	private WeakReference<BluetoothSocket> mBluetoothSocketWeakReference;
     private BluetoothSocket mSocket;
@@ -40,7 +41,8 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 		this.side = Consts.VALUE_DEFAULT_SIDE;
 	}
 	
-	public HiddenMidgetReader(String name, WeakReference<BluetoothSocket> mBluetoothSocketWeakReference, AtomicBoolean read, String side) {
+	public HiddenMidgetReader(String name, WeakReference<BluetoothSocket> mBluetoothSocketWeakReference
+			, AtomicBoolean read, String side) {
 		super(name);
 		this.mBluetoothSocketWeakReference = mBluetoothSocketWeakReference;
 		this.read = read;
@@ -133,17 +135,17 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 							start = System.currentTimeMillis();
 						}
 						
-						Log.d(tag, "Escuchando. " + mSocket.getRemoteDevice().getName());
-						
 						JSONObject msg;
 						ByteArrayOutputStream bao = getMessage();
 						byte[] bytes = bao.toByteArray();
 						
-						Log.d(tag, "bao size: " + bytes.length);
+//						Log.d(tag, "Escuchando. " + mSocket.getRemoteDevice().getName() 
+//								+ ". bao size: " + bytes.length);
 						
 						if(bytes.length > 0){
 							bytes = Base64.decode(bytes, Base64.DEFAULT);
-							Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length, Consts.bitmapFactoryOptions);
+							Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length
+									, Consts.bitmapFactoryOptions);
 							message = new String(bytes);
 							String md5Hex = new String(MADN3SController.getMD5EncryptedString(bytes));
 							Log.d(tag, "device: " + mSocket.getRemoteDevice().getName()
@@ -157,16 +159,23 @@ public class HiddenMidgetReader extends HandlerThread implements Callback {
 								
 								if(message != null && !message.isEmpty()){
 									msg = new JSONObject(message);
+									String action = null;
 									if(msg.has(Consts.KEY_ACTION)){
-										String action = msg.getString(Consts.KEY_ACTION);
+										action = msg.getString(Consts.KEY_ACTION);
 										 if(action.equalsIgnoreCase(Consts.ACTION_EXIT_APP)){
 											break;
 										}
+									} else {
+										Log.d(tag, "Message Received with no action: " + msg.toString(1));
 									}
 									msg.put(Consts.KEY_CAMERA, mSocket.getRemoteDevice().getName());
 									msg.put(Consts.KEY_SIDE, side);
 									msg.put(Consts.KEY_TIME, System.currentTimeMillis() - start);
-									bridge.callback(msg.toString());
+									if(action != null && action.equalsIgnoreCase(Consts.ACTION_CALIBRATION_RESULT)){
+										calibrationBridge.callback(msg.toString());
+									} else {
+										bridge.callback(msg.toString());
+									}
 									start = 0;
 									read.set(false);
 								}

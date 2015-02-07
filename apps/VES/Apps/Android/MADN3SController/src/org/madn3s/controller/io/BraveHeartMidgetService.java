@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import org.madn3s.controller.MADN3SController;
 import org.madn3s.controller.MADN3SController.Device;
 import org.madn3s.controller.MADN3SController.State;
+import org.madn3s.controller.MidgetOfSeville;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -28,6 +29,7 @@ public class BraveHeartMidgetService extends IntentService {
 	private static Handler mHandler = null;
 	private final IBinder mBinder = new LocalBinder();
 	public static UniversalComms scannerBridge;
+	public static UniversalComms calibrationBridge;
 	
 	public class LocalBinder extends Binder {
 		 BraveHeartMidgetService getService() {
@@ -106,18 +108,33 @@ public class BraveHeartMidgetService extends IntentService {
 		Log.d(tag, "processCalibrationResult: " + jsonString);
 		//TODO extraer que camara es y guardar en sharedPrefs
 		try {
+			JSONObject calibrationJson = MADN3SController.sharedPrefsGetJSONObject(KEY_CALIBRATION);
 			JSONObject jsonResult = new JSONObject(jsonString);
 			String side = jsonResult.getString(KEY_SIDE);
+			
+			JSONObject sideCalibration = new JSONObject();
+			sideCalibration.put(KEY_CALIB_DISTORTION_COEFFICIENTS, jsonResult.getString(KEY_CALIB_DISTORTION_COEFFICIENTS));
+			sideCalibration.put(KEY_CALIB_CAMERA_MATRIX, jsonResult.getString(KEY_CALIB_CAMERA_MATRIX));
+			sideCalibration.put(KEY_CALIB_IMAGE_POINTS, jsonResult.getString(KEY_CALIB_IMAGE_POINTS));
+			
 			switch(side){
 				case SIDE_LEFT:
+					calibrationJson.put(SIDE_LEFT, sideCalibration);
 					break;
 				case SIDE_RIGHT:
+					calibrationJson.put(SIDE_RIGHT, sideCalibration);
 					break;
 				default:
 					
 			}
-			//TODO verificar si los dos ya estan para hacer stereocalibration
-			//mandar a escanear
+			
+			MADN3SController.sharedPrefsPutJSONObject(KEY_CALIBRATION, calibrationJson);
+			
+			if(calibrationJson.has(SIDE_LEFT) && calibrationJson.has(SIDE_RIGHT)){
+				MidgetOfSeville.doStereoCalibration();
+				calibrationBridge.callback(null);
+			}
+			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}

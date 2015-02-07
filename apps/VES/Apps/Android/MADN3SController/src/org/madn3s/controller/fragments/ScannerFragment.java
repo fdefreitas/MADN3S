@@ -91,6 +91,21 @@ public class ScannerFragment extends BaseFragment {
 				});
 			}
 		};
+		
+		BraveHeartMidgetService.calibrationBridge = new UniversalComms() {
+			@Override
+			public void callback(Object msg) {
+				Log.d(tag, "ScannerFragment. calibrationBridge. Enabling Scanner button");
+				
+				new Handler(Looper.getMainLooper()).post(new Runnable() {             
+	                @Override
+	                public void run() {
+	                	calibrateButton.setEnabled(false);
+	                	scanButton.setEnabled(true);
+	                }
+				});
+			}
+		};
 	}
 	
 	private void setDeviceActionState(Device device, State state){
@@ -146,7 +161,6 @@ public class ScannerFragment extends BaseFragment {
 					projectNameEditText.setEnabled(false);
 					MADN3SController.sharedPrefsPutString(KEY_PROJECT_NAME, projectName);
 //					scan(projectName);
-					calibrate();
 				} else {
 					//TODO extract String resource
 					Toast missingName = Toast.makeText(getActivity().getBaseContext(), "Falta el nombre del proyecto", Toast.LENGTH_LONG);
@@ -293,6 +307,7 @@ public class ScannerFragment extends BaseFragment {
 	
 	public void calibrate(){
         try {
+//        	MADN3SController.removeKeyFromSharedPreferences(KEY_CALIBRATION);
         	JSONObject json = new JSONObject();
 			json.put(KEY_ACTION, ACTION_CALIBRATE);
 			Log.d(tag, "calibrate. sending signal");

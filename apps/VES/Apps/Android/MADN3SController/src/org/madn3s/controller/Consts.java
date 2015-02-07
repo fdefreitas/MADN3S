@@ -17,6 +17,7 @@ public class Consts {
 	public static final String KEY_PROJECT_NAME = "project_name";
 	public static final String KEY_SIDE = "side";
 	public static final String KEY_CONFIG = "config";
+	public static final String KEY_CALIBRATION = "calibration";
 	public static final String KEY_COMMAND = "command";
 	public static final String KEY_ACTION = "action";
 	public static final String KEY_CLEAN = "clean";
@@ -35,6 +36,10 @@ public class Consts {
 	public static final String KEY_NAME = "name";
 	public static final String KEY_PICTURES = "pictures";
 	public static final String KEY_FILE = "file";
+	public static final String KEY_R = "R";
+	public static final String KEY_T = "T";
+	public static final String KEY_E = "E";
+	public static final String KEY_F = "F";
 	
 	public static final String COMMAND_ABORT = "abort";
 	public static final String COMMAND_SCANNER = "scanner";
@@ -46,6 +51,7 @@ public class Consts {
 	public static final String ACTION_SEND_PICTURE = "send_picture";
 	public static final String ACTION_END_PROJECT = "end_project";
 	public static final String ACTION_CALIBRATE = "calibrate";
+	public static final String ACTION_CALIBRATION_RESULT = "calibration_result";
 	public static final String ACTION_EXIT_APP = "exit_app";
 	
 	public static final String MESSAGE_PICTURE = "picture";
@@ -69,6 +75,10 @@ public class Consts {
 	public static final String IMAGE_EXT = ".jpg";
 	public static final String MODEL_EXT = ".off";
 	public static final String EMPTY_JSON_OBJECT_STRING = "{}";  
+	
+	public static final String KEY_CALIB_DISTORTION_COEFFICIENTS = "calib_distortion_coefficients";
+    public static final String KEY_CALIB_CAMERA_MATRIX = "calib_camera_matrix";
+    public static final String KEY_CALIB_IMAGE_POINTS = "calib_image_points";
 
 	public static final CompressFormat BITMAP_COMPRESS_FORMAT = Bitmap.CompressFormat.JPEG;
 	public static final int COMPRESSION_QUALITY = 100;

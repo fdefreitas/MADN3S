@@ -8,9 +8,14 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.net.Uri;
@@ -30,6 +35,9 @@ public class MADN3SCamera extends Application {
 	public static boolean isOpenCvLoaded = false;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
+    
+    public static final String defaultJSONObjectString = "{}";
+	public static final String defaultJSONArrayString = "[]";
 
     public static String projectName;
     public static String position;
@@ -46,6 +54,9 @@ public class MADN3SCamera extends Application {
 	private static Camera mCamera;
     public static boolean hasInvokedCalibration = false;
     public static boolean hasReceivedCalibration = false;
+    
+    public static SharedPreferences sharedPreferences;
+	public static Editor sharedPreferencesEditor;
 
     @SuppressLint("HandlerLeak")
 	@Override
@@ -54,6 +65,7 @@ public class MADN3SCamera extends Application {
         appContext = super.getBaseContext();
         appDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
         		, appContext.getString(R.string.app_name));
+        setSharedPreferences();
         
         mBluetoothHandler = new Handler() {
     	    public void handleMessage(android.os.Message msg) {
@@ -177,5 +189,89 @@ public class MADN3SCamera extends Application {
 	
 	public void setBluetoothHandlerCallBack(Handler.Callback callback) {
 	    this.mBluetoothHandlerCallback = callback;
+	}
+	
+	/**
+	 * Sets SharedPreferences and SharedPreferences Editor for later use with methods defined further
+	 */
+	private void setSharedPreferences() {
+		sharedPreferences = getSharedPreferences(getString(R.string.app_name), MODE_PRIVATE);
+		sharedPreferencesEditor = MADN3SCamera.sharedPreferences.edit();
+	}
+	
+	public static void clearSharedPreferences() {
+		sharedPreferencesEditor.clear().apply();
+	}
+	
+	public static void removeKeyFromSharedPreferences(String key) {
+		sharedPreferencesEditor.remove(key).apply();
+	}
+	
+	public static void sharedPrefsPutJSONArray(String key, JSONArray value){
+		sharedPreferencesEditor.putString(key, value.toString()).apply();
+	}
+	
+	public static JSONArray sharedPrefsGetJSONArray(String key){
+		String jsonString = sharedPreferences.getString(key, defaultJSONArrayString);
+		try {
+			return new JSONArray(jsonString);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new JSONArray();
+		}
+	}
+	
+	public static void sharedPrefsPutJSONObject(String key, JSONObject value){
+		sharedPreferencesEditor.putString(key, value.toString()).apply();
+	}
+	
+	public static JSONObject sharedPrefsGetJSONObject(String key){
+		String jsonString = sharedPreferences.getString(key, defaultJSONObjectString);
+		try {
+			return new JSONObject(jsonString);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new JSONObject();
+		}
+	}
+	
+	public static void sharedPrefsPutString(String key, String value){
+		sharedPreferencesEditor.putString(key, value).apply();
+	}
+	
+	public static String sharedPrefsGetString(String key){
+		return sharedPreferences.getString(key, "");
+	}
+	
+	public static void sharedPrefsPutBoolean(String key, Boolean value){
+		sharedPreferencesEditor.putBoolean(key, value).apply();
+	}
+	
+	public static Boolean sharedPrefsGetBoolean(String key){
+		return sharedPreferences.getBoolean(key, false);
+	}
+	
+	public static void sharedPrefsPutInt(String key, int value){
+		sharedPreferencesEditor.putInt(key, value).apply();
+	}
+	
+	public static int sharedPrefsGetInt(String key){
+		return sharedPreferences.getInt(key, 0);
+	}
+	
+	public static void sharedPrefsPutLong(String key, Long value){
+		sharedPreferencesEditor.putLong(key, value).apply();
+	}
+	
+	public static Long sharedPrefsGetLong(String key){
+		return sharedPreferences.getLong(key, (long) 0);
+	}
+	
+	public static void sharedPrefsPutFloat(String key, Float value){
+		sharedPreferencesEditor.putFloat(key, value).apply();
+	}
+	
+	public static Float sharedPrefsGetFloat(String key){
+		return sharedPreferences.getFloat(key, 0);
 	}
 }
