@@ -3,6 +3,7 @@ package org.madn3s.controller;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.math.BigInteger;
 import java.security.MessageDigest;
@@ -64,6 +65,7 @@ public class MADN3SController extends Application {
 	public static final String defaultJSONObjectString = "{}";
 	public static final String defaultJSONArrayString = "[]";
 	
+	public static final int MEDIA_TYPE_TEXT = 0;
 	public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
     
@@ -399,7 +401,7 @@ public class MADN3SController extends Application {
 	public void setBluetoothHandlerCallBack(Handler.Callback callback) {
 		this.mBluetoothHandlerCallback = callback;
 	}
-	
+
 	public static void pointsTest(){
 		int points = MADN3SController.sharedPrefsGetInt("points");
 		JSONArray framesJson = new JSONArray();
@@ -509,13 +511,13 @@ public class MADN3SController extends Application {
     }
 
     @SuppressLint("SimpleDateFormat")
-	public static File getOutputMediaFile(int type, String position){
-    	return getOutputMediaFile(type, sharedPrefsGetString(KEY_PROJECT_NAME), position);
+	public static File getOutputMediaFile(int type, String name){
+    	return getOutputMediaFile(type, sharedPrefsGetString(KEY_PROJECT_NAME), name);
     }
 
     @SuppressLint("SimpleDateFormat")
-	public static File getOutputMediaFile(int type, String projectName, String side){
-    	Log.d(tag, "getOutputMediaFile. projectName: " + projectName + " side: " + side);
+	public static File getOutputMediaFile(int type, String projectName, String name){
+    	Log.d(tag, "getOutputMediaFile. projectName: " + projectName + " name: " + name);
         File mediaStorageDir = new File(getAppDirectory(), projectName);
 
         if (!mediaStorageDir.exists()){
@@ -525,8 +527,8 @@ public class MADN3SController extends Application {
             }
         }
 
-        if(side == null){
-        	side = "";
+        if(name == null){
+        	name = "";
         }
         
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
@@ -535,7 +537,9 @@ public class MADN3SController extends Application {
         File mediaFile;
         
         if (type == MEDIA_TYPE_IMAGE){
-            filename = "IMG_" + iteration + "_" + side + "_" + timeStamp + Consts.IMAGE_EXT;
+            filename = "IMG_" + iteration + "_" + name + "_" + timeStamp + Consts.IMAGE_EXT;
+        } else if(type == MEDIA_TYPE_TEXT){
+        	filename = name + "_" + timeStamp + Consts.JSON_EXT;
         } else {
             return null;
         }
@@ -544,6 +548,24 @@ public class MADN3SController extends Application {
 
         return mediaFile;
     }
+    
+    public static String saveJsonToExternal(String output, String fileName) throws JSONException {
+		try {
+			File calibrationFile = getOutputMediaFile(MEDIA_TYPE_TEXT, fileName);
+			Log.i(MidgetOfSeville.tag, "saveJsonToExternal. filepath: " + calibrationFile.getAbsolutePath());
+			FileOutputStream fos = new FileOutputStream(calibrationFile);
+			fos.write(output.getBytes());
+			fos.flush();
+			fos.close();
+			return calibrationFile.getAbsolutePath();
+		} catch (FileNotFoundException e) {
+			Log.e(tag, "saveJsonToExternal. " + fileName + " FileNotFoundException", e);
+		} catch (IOException e) {
+			Log.e(tag, "saveJsonToExternal. " + fileName + " IOException", e);
+		}
+		
+		return null;
+	}
     
     public static String saveBitmapAsPng(Bitmap bitmap, String position){
     	FileOutputStream out;

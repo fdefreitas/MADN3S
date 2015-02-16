@@ -36,6 +36,9 @@ public class Consts {
 	public static final String KEY_NAME = "name";
 	public static final String KEY_PICTURES = "pictures";
 	public static final String KEY_FILE = "file";
+	public static final String KEY_X = "x";
+	public static final String KEY_Y = "y";
+	public static final String KEY_Z = "z";
 	public static final String KEY_R = "R";
 	public static final String KEY_T = "T";
 	public static final String KEY_E = "E";
@@ -73,6 +76,7 @@ public class Consts {
 	public static final String VALUE_DEFAULT_SIDE = "default";
 	public static final String FRAME_PREFIX = "frame-";
 	public static final String IMAGE_EXT = ".jpg";
+	public static final String JSON_EXT = ".json";
 	public static final String MODEL_EXT = ".off";
 	public static final String EMPTY_JSON_OBJECT_STRING = "{}";  
 	

@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 public class BraveHeartMidgetService extends IntentService {
 	
@@ -100,6 +101,7 @@ public class BraveHeartMidgetService extends IntentService {
 		} else if(intent.hasExtra(EXTRA_CALLBACK_CALIBRATION_RESULT)){
 			Log.d(tag, "EXTRA_CALLBACK_CALIBRATION_RESULT");
 			jsonString = intent.getExtras().getString(EXTRA_CALLBACK_CALIBRATION_RESULT);
+			Toast.makeText(getBaseContext(), "Calibration Result has Arrived", Toast.LENGTH_LONG).show();
 			processCalibrationResult(jsonString);
 		}
 	}

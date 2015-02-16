@@ -29,12 +29,14 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.SyncStateContract.Constants;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView.FindListener;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -136,6 +138,60 @@ public class DiscoveryFragment extends BaseFragment {
 		testsButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				new AsyncTask<Void, Void, Void>() {
+					
+					@Override
+					protected Void doInBackground(Void... params) {
+//						MidgetOfSeville.doStereoCalibration();
+						
+						JSONArray framePointsJsonArr = new JSONArray();
+						JSONArray result;
+						
+						int points = MADN3SController.sharedPrefsGetInt(KEY_POINTS);
+						JSONArray framesJson = new JSONArray();
+//						JSONObject pointsJson = new JSONObject();
+						for(int i = 0; i < points; i++){
+							JSONObject frame = MADN3SController.sharedPrefsGetJSONObject(FRAME_PREFIX + i);
+							framesJson.put(frame);
+//							Log.d(tag, FRAME_PREFIX + i + " = " + frame.toString());
+						}
+						
+						try {
+							Log.d(tag, "Saving the complete framesJson to External. ");
+							MADN3SController.saveJsonToExternal(framesJson.toString(1), "frames");
+						} catch (JSONException e) {
+							Log.d(tag, "Couldn't save the complete framesJson to External. ", e);
+						}
+						
+						try {
+							for(int f = 0; f < points; ++f){
+								result = MidgetOfSeville.calculateFrameOpticalFlow(framesJson.getJSONObject(f));
+								if(result != null){
+									int length = framePointsJsonArr.length();
+									for(int i = 0; i < result.length(); ++i){
+										framePointsJsonArr.put(i + length, result.get(i));
+									}
+								} else {
+									Log.e(tag, "result null");
+								}
+							}
+							
+							String pointsJsonPath = MADN3SController.saveJsonToExternal(framePointsJsonArr.toString(1), "final-points");
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+						
+						return null;
+					}
+
+					@Override
+					protected void onPostExecute(Void result) {
+						super.onPostExecute(result);
+						Toast.makeText(getActivity(), "Calibration Finished", Toast.LENGTH_LONG).show();
+					}
+				}.execute();
+				
+//				Imprime los puntos
 //				try {
 //					JSONObject calibrationJson = MADN3SController.sharedPrefsGetJSONObject(Consts.KEY_CALIBRATION);
 //					JSONObject left = calibrationJson.getJSONObject(Consts.SIDE_LEFT);
@@ -155,30 +211,12 @@ public class DiscoveryFragment extends BaseFragment {
 //					for(int i = 0; i < rightArr.length(); ++i){
 //						Log.d(tag, "[" + i + "]" + rightArr.get(i));
 //					}
-					
-					MidgetOfSeville.doStereoCalibration();
-					
+//					
 //				} catch (JSONException e) {
 //					e.printStackTrace();
 //				}
-//				int points = MADN3SController.sharedPrefsGetInt(KEY_POINTS);
-//				JSONArray framesJson = new JSONArray();
-//				JSONObject pointsJson = new JSONObject();
-//				for(int i = 0; i < points; i++){
-//					JSONObject frame = MADN3SController.sharedPrefsGetJSONObject(FRAME_PREFIX + i);
-//					framesJson.put(frame);
-//					Log.d(tag, FRAME_PREFIX + i + " = " + frame.toString());
-//				}
+//				Fin imprime los puntos
 //				
-//				Log.d(tag, "the complete framesJson: ");
-//				Log.d(tag, framesJson.toString());
-				
-//				try {
-//					MidgetOfSeville.calculateFrameOpticalFlow(framesJson.getJSONObject(0));
-//				} catch (JSONException e) {
-//					e.printStackTrace();
-//				}
-				
 //				try {
 //					pointsJson.put(KEY_NAME, MADN3SController.sharedPrefsGetString(KEY_PROJECT_NAME));
 //					pointsJson.put(KEY_PICTURES, framesJson);
